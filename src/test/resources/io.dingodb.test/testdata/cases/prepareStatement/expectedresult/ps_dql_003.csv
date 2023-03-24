@@ -1,0 +1,8 @@
+amount,id,name,age,birthday,is_delete
+23.5,1,zhangsan,18,1998-04-06,true
+1.2389245204123E10,3,l3,55,2022-03-04,false
+12.3,8,zhangsan,18,2015-09-10,true
+1.18111600657875E11,9,op ,76,1995-12-15,true
+2345.0,12, abcdef,2,2018-05-31,true
+2000.01,21,Z,76,2022-07-07,false
+12.3,25,zhangsan,-18,2015-09-10,true

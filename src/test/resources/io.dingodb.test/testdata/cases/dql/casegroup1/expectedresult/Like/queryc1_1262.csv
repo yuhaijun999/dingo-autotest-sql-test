@@ -1,0 +1,12 @@
+id,name,age,amount,address,birthday
+7,yamaha,76,2.3,beijing changyang,1949-01-01
+14,Sity,15,2000.0,beijing changyang,1949-10-01
+25,,34,123.001,Beijing Shijingshan,1910-04-19
+28,Adidas,99,7788.88,Beijing Haidian,2002-12-12
+47,Carsen,null,-1234.78,Ringer,2021-11-10
+48,Carson,100,200.0,Minger,1898-04-07
+49,Karsen,101,-2000.0,Zinger,2018-11-10
+50,Karson,111,-3000.9,null,2013-03-21
+53, MMQ,55,20010.1234,Beijing ,1942-01-01
+62,carson,68,39.87, ,1942-01-01
+65,lisi,88,797.0,BeiJing ,1942-01-01
