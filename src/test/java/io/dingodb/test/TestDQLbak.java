@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class TestDQL extends BaseTestSuite {
+public class TestDQLbak extends BaseTestSuite {
     private static SQLHelper sqlHelper;
     private static HashSet<String> createTableSet = new HashSet<>();
     
@@ -72,42 +72,28 @@ public class TestDQL extends BaseTestSuite {
             for (int i = 0; i < schemaList.size(); i++) {
                 String tableName = "";
                 if (!schemaList.get(i).trim().contains("_")) {
-                    if (param.get("Case_table_dependency").trim().length() > 0) {
-                        tableName = param.get("Case_table_dependency").trim() + "_0" + i + schemaList.get(i).trim();
-                        sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
-                    } else {
-                        tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                        sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
-                        tableList.add(tableName);
-                        sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
-                    }
+                    tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
+                    sqlHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
-                    if (param.get("Case_table_dependency").trim().length() > 0) {
-                        tableName = param.get("Case_table_dependency").trim() + "_0" + i + schemaName;
-                        sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
-                    } else {
-                        tableName = param.get("TestID").trim() + "_0" + i + schemaName;
-                        sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
-                        tableList.add(tableName);
-                        sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
-                    }
+                    tableName = param.get("TestID").trim() + "_0" + i + schemaName;
+                    sqlHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
                 }
+                tableList.add(tableName);
+                sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
             }
             createTableSet.addAll(tableList);
-            if (param.get("Case_table_dependency").trim().length() == 0) {
-                if (param.get("Table_value_ref").trim().length() > 0) {
-                    List<String> value_List = CastUtils.construct1DListIncludeBlank(param.get("Table_value_ref").trim(),",");
-                    for (int j = 0; j < value_List.size(); j++) {
-                        String tableName = "";
-                        if (!schemaList.get(j).trim().contains("_")) {
-                            tableName = param.get("TestID").trim() + "_0" + j + schemaList.get(j).trim();
-                        } else {
-                            String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
-                            tableName = param.get("TestID").trim() + "_0" + j + schemaName;
-                        }
-                        sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
+            if (param.get("Table_value_ref").trim().length() > 0) {
+                List<String> value_List = CastUtils.construct1DListIncludeBlank(param.get("Table_value_ref").trim(),",");
+                for (int j = 0; j < value_List.size(); j++) {
+                    String tableName = "";
+                    if (!schemaList.get(j).trim().contains("_")) {
+                        tableName = param.get("TestID").trim() + "_0" + j + schemaList.get(j).trim();
+                    } else {
+                        String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
+                        tableName = param.get("TestID").trim() + "_0" + j + schemaName;
                     }
+                    sqlHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
                 }
             }
         }
@@ -141,6 +127,12 @@ public class TestDQL extends BaseTestSuite {
             Assert.assertEquals(actualResult, expectedResult);
         } else if (param.get("Validation_type").equals("assertNull")) {
             Assert.assertNull(sqlHelper.queryWithObjReturn(sql));
+        }
+
+        if (tableList.size() > 0) {
+            for (String s : tableList) {
+                sqlHelper.doDropTable(s);
+            }
         }
     }
 

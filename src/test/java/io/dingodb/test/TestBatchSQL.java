@@ -1,6 +1,7 @@
 package io.dingodb.test;
 
 import datahelper.YamlDataHelper;
+import io.dingodb.common.utils.JDBCUtils;
 import io.dingodb.dailytest.SQLHelper;
 import org.testng.Assert;
 import org.testng.SkipException;
@@ -29,14 +30,16 @@ public class TestBatchSQL extends BaseTestSuite {
     }
 
     @AfterClass
-    public static void tearDownAll() throws SQLException {
-        System.out.println(createTableSet);
+    public static void tearDownAll() throws SQLException, IOException, ClassNotFoundException {
+//        System.out.println(createTableSet);
         if(createTableSet.size() > 0) {
+            List<String> finalTableList = JDBCUtils.getTableList();
             for (String s : createTableSet) {
-                sqlHelper.doDropTable(s);
+                if (finalTableList.contains(s.toUpperCase())) {
+                    sqlHelper.doDropTable(s);
+                }
             }
         }
-        createTableSet.clear();
     }
 
     @BeforeMethod(enabled = true)
@@ -45,12 +48,12 @@ public class TestBatchSQL extends BaseTestSuite {
 
     @AfterMethod(enabled = true)
     public void cleanUp() throws Exception {
-        if(createTableSet.size() > 0) {
-            for (String s : createTableSet) {
-                sqlHelper.doDropTable(s);
-            }
-        }
-        createTableSet.clear();
+//        if(createTableSet.size() > 0) {
+//            for (String s : createTableSet) {
+//                sqlHelper.doDropTable(s);
+//            }
+//        }
+//        createTableSet.clear();
     }
 
     @Test(priority = 0, enabled = true, dataProvider = "sqlBatchData", dataProviderClass = YamlDataHelper.class, description = "验证批量执行sql语句")
@@ -112,6 +115,12 @@ public class TestBatchSQL extends BaseTestSuite {
                 System.out.println("Actual result2: " + actualResult2);
                 Assert.assertTrue(actualResult2.containsAll(expectedResult2));
                 Assert.assertTrue(expectedResult2.containsAll(actualResult2));
+            }
+        }
+
+        if (tableList.size() > 0) {
+            for (String s : tableList) {
+                sqlHelper.doDropTable(s);
             }
         }
     }

@@ -1,6 +1,7 @@
 package io.dingodb.test;
 
 import datahelper.YamlDataHelper;
+import io.dingodb.common.utils.JDBCUtils;
 import io.dingodb.dailytest.SQLHelper;
 import org.apache.commons.io.IOUtils;
 import org.testng.Assert;
@@ -33,14 +34,16 @@ public class TestDML extends BaseTestSuite {
     }
 
     @AfterClass (alwaysRun = true)
-    public static void tearDownAll() throws SQLException {
-        System.out.println(createTableSet);
+    public static void tearDownAll() throws SQLException, IOException, ClassNotFoundException {
+//        System.out.println(createTableSet);
         if(createTableSet.size() > 0) {
+            List<String> finalTableList = JDBCUtils.getTableList();
             for (String s : createTableSet) {
-                sqlHelper.doDropTable(s);
+                if (finalTableList.contains(s.toUpperCase())) {
+                    sqlHelper.doDropTable(s);
+                }
             }
         }
-        createTableSet.clear();
     }
 
     @BeforeMethod (alwaysRun = true)
@@ -49,12 +52,12 @@ public class TestDML extends BaseTestSuite {
 
     @AfterMethod (alwaysRun = true)
     public void cleanUp() throws Exception {
-        if(createTableSet.size() > 0) {
-            for (String s : createTableSet) {
-                sqlHelper.doDropTable(s);
-            }
-        }
-        createTableSet.clear();
+//        if(createTableSet.size() > 0) {
+//            for (String s : createTableSet) {
+//                sqlHelper.doDropTable(s);
+//            }
+//        }
+//        createTableSet.clear();
     }
 
     @Test(priority = 0, enabled = true, dataProvider = "dmlInsertData", dataProviderClass = YamlDataHelper.class, description = "dml操作insert，正向用例")
@@ -62,12 +65,13 @@ public class TestDML extends BaseTestSuite {
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
+        List<String> tableList = new ArrayList<>();
         String insertSql = "";
         String dmlSql = param.get("Dml_sql").trim();
         String querySql1 = param.get("Query_sql1").trim();
         String querySql2 = param.get("Query_sql2").trim();
         if (param.get("Table_schema_ref").trim().length() > 0) {
-            List<String> tableList = new ArrayList<>();
+//            List<String> tableList = new ArrayList<>();
             List<String> schemaList = CastUtils.construct1DListIncludeBlank(param.get("Table_schema_ref"),",");
             for (int i = 0; i < schemaList.size(); i++) {
                 String tableName = "";
@@ -135,6 +139,12 @@ public class TestDML extends BaseTestSuite {
                 Assert.assertTrue(actualResultAfterDML.containsAll(expectedResultAfterDML));
                 Assert.assertTrue(expectedResultAfterDML.containsAll(actualResultAfterDML));
             }
+
+            if (tableList.size() > 0) {
+                for (String s : tableList) {
+                    sqlHelper.doDropTable(s);
+                }
+            }
         }
     }
 
@@ -143,10 +153,11 @@ public class TestDML extends BaseTestSuite {
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
+        List<String> tableList = new ArrayList<>();
         String dmlSql = param.get("Sql_state").trim();
         String querySql = param.get("Query_sql").trim();
         if (param.get("Table_schema_ref").trim().length() > 0) {
-            List<String> tableList = new ArrayList<>();
+//            List<String> tableList = new ArrayList<>();
             List<String> schemaList = CastUtils.construct1DListIncludeBlank(param.get("Table_schema_ref"),",");
             for (int i = 0; i < schemaList.size(); i++) {
                 String tableName = "";
@@ -200,6 +211,12 @@ public class TestDML extends BaseTestSuite {
             int actualEffectedRows = sqlHelper.doDMLReturnRows(dmlSql);
             System.out.println("Actual effected rows: " + actualEffectedRows);
             Assert.assertEquals(actualEffectedRows, expectedEffectedRows);
+        }
+
+        if (tableList.size() > 0) {
+            for (String s : tableList) {
+                sqlHelper.doDropTable(s);
+            }
         }
     }
 }
