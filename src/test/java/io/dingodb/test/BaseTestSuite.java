@@ -24,11 +24,15 @@ import org.testng.annotations.BeforeSuite;
 import utils.IniReader;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 
 public class BaseTestSuite {
     public static IniReader iniReader;
+    public static SQLHelper sqlHelper;
     @BeforeSuite(alwaysRun = true, description = "所有测试开始前的准备工作")
     public static void beforeSuite() {
+        sqlHelper = new SQLHelper();
         System.out.println("所有测试开始前，验证数据库连接正常");
         Assert.assertNotNull(SQLHelper.connection);
         try {
@@ -43,4 +47,11 @@ public class BaseTestSuite {
         System.out.println("所有测试结束后，关闭数据库连接");
         JDBCUtils.closeResource(SQLHelper.connection);
     }
+    
+    public void dropTableAfterMethod(List<String> tableList) throws SQLException {
+        for (String s : tableList) {
+            sqlHelper.doDropTable(s);
+        }
+    }
+    
 }

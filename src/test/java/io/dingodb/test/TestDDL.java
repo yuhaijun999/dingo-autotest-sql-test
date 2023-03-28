@@ -46,14 +46,16 @@ public class TestDDL extends BaseTestSuite{
     }
 
     @AfterClass (alwaysRun = true)
-    public static void tearDownAll() throws SQLException {
-        System.out.println(createTableSet);
+    public static void tearDownAll() throws SQLException, IOException, ClassNotFoundException {
+//        System.out.println(createTableSet);
         if(createTableSet.size() > 0) {
+            List<String> finalTableList = JDBCUtils.getTableList();
             for (String s : createTableSet) {
-                sqlHelper.doDropTable(s);
+                if (finalTableList.contains(s.toUpperCase())) {
+                    sqlHelper.doDropTable(s);
+                }
             }
         }
-        createTableSet.clear();
     }
 
     @BeforeMethod (alwaysRun = true)
@@ -62,12 +64,12 @@ public class TestDDL extends BaseTestSuite{
 
     @AfterMethod (alwaysRun = true)
     public void cleanUp() throws Exception {
-        if(createTableSet.size() > 0) {
-            for (String s : createTableSet) {
-                sqlHelper.doDropTable(s);
-            }
-        }
-        createTableSet.clear();
+//        if(createTableSet.size() > 0) {
+//            for (String s : createTableSet) {
+//                sqlHelper.doDropTable(s);
+//            }
+//        }
+//        createTableSet.clear();
     }
 
     @Test(priority = 0, enabled = true, dataProvider = "ddlData1", dataProviderClass = YamlDataHelper.class, description = "ddl操作1")
@@ -75,20 +77,21 @@ public class TestDDL extends BaseTestSuite{
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
+        List<String> tableList = new ArrayList<>();
         String ddlSql = param.get("Ddl_sql").trim();
         String querySql = param.get("Query_sql").trim();
         if (param.get("Table_schema_ref").trim().length() > 0) {
-            List<String> tableList = new ArrayList<>();
+//            List<String> tableList = new ArrayList<>();
             List<String> schemaList = CastUtils.construct1DListIncludeBlank(param.get("Table_schema_ref"),",");
             for (int i = 0; i < schemaList.size(); i++) {
                 String tableName = "";
                 if (!schemaList.get(i).contains("_")) {
                     tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                    sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    sqlHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = param.get("TestID").trim() + "_0" + i + schemaName;
-                    sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
+                    sqlHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
                 }
                 ddlSql = ddlSql.replace("$" + schemaList.get(i).trim(), tableName);
                 querySql = querySql.replace("$" + schemaList.get(i).trim(), tableName);
@@ -103,11 +106,11 @@ public class TestDDL extends BaseTestSuite{
                     String tableName = "";
                     if (!schemaList.get(j).trim().contains("_")) {
                         tableName = param.get("TestID").trim() + "_0" + j + schemaList.get(j).trim();
-                        sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                        sqlHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
                     } else {
                         String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                         tableName = param.get("TestID").trim() + "_0" + j + schemaName;
-                        sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                        sqlHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
                     }
                 }
             }
@@ -138,6 +141,12 @@ public class TestDDL extends BaseTestSuite{
             }
             List<String> existTableList = JDBCUtils.getTableList();
             Assert.assertFalse(existTableList.contains(drop_table_name));
+        }
+
+        if (tableList.size() > 0) {
+            for (String s : tableList) {
+                sqlHelper.doDropTable(s);
+            }
         }
     }
 }

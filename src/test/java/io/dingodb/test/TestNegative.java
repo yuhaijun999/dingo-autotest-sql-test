@@ -1,6 +1,7 @@
 package io.dingodb.test;
 
 import datahelper.YamlDataHelper;
+import io.dingodb.common.utils.JDBCUtils;
 import io.dingodb.dailytest.SQLHelper;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
@@ -28,14 +29,16 @@ public class TestNegative extends BaseTestSuite {
     }
 
     @AfterClass (alwaysRun = true)
-    public static void tearDownAll() throws SQLException {
-        System.out.println(createTableSet);
+    public static void tearDownAll() throws SQLException, IOException, ClassNotFoundException {
+//        System.out.println(createTableSet);
         if(createTableSet.size() > 0) {
+            List<String> finalTableList = JDBCUtils.getTableList();
             for (String s : createTableSet) {
-                sqlHelper.doDropTable(s);
+                if (finalTableList.contains(s.toUpperCase())) {
+                    sqlHelper.doDropTable(s);
+                }
             }
         }
-        createTableSet.clear();
     }
 
     @BeforeMethod (alwaysRun = true)
@@ -44,12 +47,12 @@ public class TestNegative extends BaseTestSuite {
 
     @AfterMethod (alwaysRun = true)
     public void cleanUp() throws Exception {
-        if(createTableSet.size() > 0) {
-            for (String s : createTableSet) {
-                sqlHelper.doDropTable(s);
-            }
-        }
-        createTableSet.clear();
+//        if(createTableSet.size() > 0) {
+//            for (String s : createTableSet) {
+//                sqlHelper.doDropTable(s);
+//            }
+//        }
+//        createTableSet.clear();
     }
 
     @Test(priority = 0, enabled = true, dataProvider = "negativeData", dataProviderClass = YamlDataHelper.class, 
@@ -58,9 +61,11 @@ public class TestNegative extends BaseTestSuite {
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
+        
+        List<String> tableList = new ArrayList<>();
         String sql = param.get("Sql_state").trim();
         if (param.get("Table_schema_ref").trim().length() > 0) {
-            List<String> tableList = new ArrayList<>();
+//            List<String> tableList = new ArrayList<>();
             List<String> schemaList = CastUtils.construct1DListIncludeBlank(param.get("Table_schema_ref").trim(),",");
             for (int i = 0; i < schemaList.size(); i++) {
                 String tableName = "";
@@ -90,6 +95,14 @@ public class TestNegative extends BaseTestSuite {
                 }
             }
         }
-        sqlHelper.execSql(sql);
+        try {
+            sqlHelper.execSql(sql);
+        } finally {
+            if (tableList.size() > 0) {
+                for (String s : tableList) {
+                    sqlHelper.doDropTable(s);
+                }
+            }
+        }
     }
 }
