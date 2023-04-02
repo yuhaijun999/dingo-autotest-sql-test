@@ -132,11 +132,11 @@ public class SendEmailClient {
         mp.addBodyPart(body);
 
         //附件
-        for (File file : mailObject.getFiles()) {
-            MimeBodyPart attachment = new MimeBodyPart();
-            attachment.attachFile(file);
-            mp.addBodyPart(attachment);
-        }
+//        for (File file : mailObject.getFiles()) {
+//            MimeBodyPart attachment = new MimeBodyPart();
+//            attachment.attachFile(file);
+//            mp.addBodyPart(attachment);
+//        }
 
         message.setContent(mp);
         Transport.send(message);

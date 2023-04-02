@@ -64,5 +64,6 @@
     
     <listeners>
         <listener class-name="listener.EmailableReporterListener"/>
+        <listener class-name="listener.DetailReporterListener"/>
     </listeners>
 </suite>

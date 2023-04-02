@@ -17,7 +17,6 @@
 package listener;
 
 import io.dingodb.common.utils.CommonArgs;
-import jakarta.mail.MessagingException;
 import org.testng.IReporter;
 import org.testng.ISuite;
 import org.testng.ISuiteResult;
@@ -29,7 +28,6 @@ import org.testng.internal.Utils;
 import org.testng.log4testng.Logger;
 import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlSuite.ParallelMode;
-import utils.SendEmailClient;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,8 +44,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.newBufferedWriter;
 
 
-public class EmailableReporterListener implements IReporter{
-    private static final Logger LOG = Logger.getLogger(EmailableReporterListener.class);
+public class DetailReporterListener implements IReporter{
+    private static final Logger LOG = Logger.getLogger(DetailReporterListener.class);
 
     protected PrintWriter writer;
 
@@ -56,15 +54,15 @@ public class EmailableReporterListener implements IReporter{
     // Reusable buffer
     private final StringBuilder buffer = new StringBuilder();
 
-    private String fileNameSum = "DingoDB-SQLTest-Summary_" + CommonArgs.getCurDateStr("yyyyMMdd") +".html";
+    private String fileNameRep = "DingoDB-SQLTest-ReportDetail_" + CommonArgs.getCurDateStr("yyyyMMdd") +".html";
     private String hostIP = CommonArgs.getDefaultDingoClusterIP();
 
-    public void setFileNameSum(String fileName) {
-        this.fileNameSum = fileName;
+    public void setFileNameRep(String fileName) {
+        this.fileNameRep = fileName;
     }
 
-    public String getFileNameSum() {
-        return fileNameSum;
+    public String getFileNameRep() {
+        return fileNameRep;
     }
     
 
@@ -78,21 +76,21 @@ public class EmailableReporterListener implements IReporter{
                 throw new RuntimeException("创建测试报告目录失败！");
             }
             try {
-                writer = new PrintWriter(newBufferedWriter(new File("./dailyreport/" + dateNowStr + "/", fileNameSum).toPath(), UTF_8));
+                writer = new PrintWriter(newBufferedWriter(new File("./dailyreport/" + dateNowStr + "/", fileNameRep).toPath(), UTF_8));
             } catch (IOException e) {
                 throw new RuntimeException("创建测试报告文件失败！");
             }
         } else {
             try {
-                File file = new File("./dailyreport/" + dateNowStr + "/", fileNameSum);
+                File file = new File("./dailyreport/" + dateNowStr + "/", fileNameRep);
                 if (file.exists()) {
                     file.delete();
-                    writer = new PrintWriter(newBufferedWriter(new File("./dailyreport/" + dateNowStr + "/", fileNameSum).toPath(), UTF_8));
+                    writer = new PrintWriter(newBufferedWriter(new File("./dailyreport/" + dateNowStr + "/", fileNameRep).toPath(), UTF_8));
                 } else {
-                    writer = new PrintWriter(newBufferedWriter(new File("./dailyreport/" + dateNowStr + "/", fileNameSum).toPath(), UTF_8));
+                    writer = new PrintWriter(newBufferedWriter(new File("./dailyreport/" + dateNowStr + "/", fileNameRep).toPath(), UTF_8));
                 }
             } catch (IOException e) {
-                throw new RuntimeException("创建测试报告概况文件失败！");
+                throw new RuntimeException("创建测试报告详情文件失败！");
             }
         }
 
@@ -106,13 +104,13 @@ public class EmailableReporterListener implements IReporter{
         writeDocumentEnd();
         writer.close();
         
-        SendEmailClient sendEmailClient = new SendEmailClient.SendEmailClientBuilder().build();
-        try {
-            Thread.sleep(3000);
-            sendEmailClient.sendHTMLEmail("./dailyreport/" + dateNowStr + "/" + fileNameSum);
-        } catch (InterruptedException | MessagingException | IOException | NullPointerException e) {
-            e.printStackTrace();
-        }
+//        SendEmailClient sendEmailClient = new SendEmailClient.SendEmailClientBuilder().build();
+//        try {
+//            Thread.sleep(3000);
+//            sendEmailClient.sendHTMLEmail("./dailyreport/" + dateNowStr + "/" + fileNameRep);
+//        } catch (InterruptedException | MessagingException | IOException | NullPointerException e) {
+//            e.printStackTrace();
+//        }
     }
 
     protected void writeDocumentStart() {
@@ -158,8 +156,8 @@ public class EmailableReporterListener implements IReporter{
         writer.println("<h4>. 测试日期：" + dateNowStr + "</h4>");
         writer.println("<h4>. 测试节点IP：" + hostIP + "</h4>");
         writeSuiteSummary();
-//        writeScenarioSummary();
-//        writeScenarioDetails();
+        writeScenarioSummary();
+        writeScenarioDetails();
         writer.println("</body>");
     }
 
@@ -262,10 +260,10 @@ public class EmailableReporterListener implements IReporter{
         }
         
         writer.println("</table>");
-        writer.println("<br>");
-        String hrefUrl = "http://172.20.3.27/dingo/auto_tests/sql_report/" + CommonArgs.getCurDateStr("yyyyMMdd") + "/";
-        String hrefTxt = "报告详情参见：" + hrefUrl;
-        writer.println("<a href=" + hrefUrl  + " target=\"_blank\" rel=\"noopener noreferrer\"><b>" + hrefTxt + "</b></a>");
+//        writer.println("");
+//        String hrefUrl = "http://172.20.3.27/dingo/auto_tests/sql_report/" + CommonArgs.getCurDateStr("yyyyMMdd") + "/";
+//        String hrefTxt = "报告详情参见：" + hrefUrl;
+//        writer.println("<a href=" + hrefUrl  + " target=\"_blank\" rel=\"noopener noreferrer\"><b>" + hrefTxt + "</b></a>");
     }
 
     protected void writeScenarioSummary() {
