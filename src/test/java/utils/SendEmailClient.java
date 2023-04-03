@@ -97,9 +97,9 @@ public class SendEmailClient {
     public void sendHTMLEmail(String htmlPath) throws MessagingException, IOException {
         MailObject mailObject = new MailObject();
         mailObject.setFrom(System.getenv("EMAILFROM"));
-        mailObject.setCc(new String[]{System.getenv("EMAILCC")});
+        mailObject.setCc(new String[]{System.getenv("EMAILCCSQL")});
         mailObject.setTo(new String[]{System.getenv("EMAILTO")});
-        mailObject.setSubject("DingoDB每日测试报告" + CommonArgs.getCurDateStr("-yyyyMMddHHmmss"));
+        mailObject.setSubject("DingoDB-SQL测试报告" + CommonArgs.getCurDateStr("-yyyyMMddHHmmss"));
 //        mailObject.setBody("测试报告");
         mailObject.setFiles(new File[] {new File(htmlPath)});
 
