@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ParseCsv {
-    public static List<List<String>> splitCsvString(String csvPath) {
+    public static List<List<String>> splitCsvString(String csvPath, String splitCha) {
         List<List<String>> splitList = new ArrayList<>();
 
         try {
@@ -36,7 +36,7 @@ public class ParseCsv {
                 String line = null;
                 while ((line = bufferedReader.readLine()) != null) {
                     List<String> rowList = new ArrayList<>();
-                    rowList = CastUtils.construct1DListIncludeBlank(line,",");
+                    rowList = CastUtils.construct1DListIncludeBlank(line, splitCha);
                     splitList.add(rowList);
                 }
                 bufferedReader.close();

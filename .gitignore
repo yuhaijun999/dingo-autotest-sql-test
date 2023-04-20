@@ -17,6 +17,8 @@
 *.zip
 *.tar.gz
 *.rar
+*.yml
+*.yaml
 
 .*
 !.gitignore
@@ -67,7 +69,7 @@ dependency-reduced-pom.xml
 # Ignore Gradle build output directory
 build
 dailyreport
-*/yaml
+yaml
 
 # Error log
 hs_err_*
