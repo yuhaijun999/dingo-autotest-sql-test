@@ -109,14 +109,24 @@ public class TestDML extends BaseTestSuite {
         
         if (param.get("Validation_type").equals("csv_equals")) {
             String resultFile1 = param.get("Expected_result1").trim();
-            List<List<String>> expectedResult = ParseCsv.splitCsvString(resultFile1);
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile1,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile1,"&");
+            }
             System.out.println("Expected: " + expectedResult);
             List<List<String>> actualResult = sqlHelper.doDMLAndQueryWithHead(insertSql, querySql1);
             System.out.println("Actual: " + actualResult);
             Assert.assertEquals(actualResult, expectedResult);
             if (dmlSql.length() > 0) {
                 String resultFile2 = param.get("Expected_result2").trim();
-                List<List<String>> expectedResultAfterDML = ParseCsv.splitCsvString(resultFile2);
+                List<List<String>> expectedResultAfterDML = new ArrayList<>();
+                if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                    expectedResultAfterDML = ParseCsv.splitCsvString(resultFile2,",");
+                } else {
+                    expectedResultAfterDML = ParseCsv.splitCsvString(resultFile2,"&");
+                }
                 System.out.println("Expected after dml: " + expectedResultAfterDML);
                 List<List<String>> actualResultAfterDML = sqlHelper.doDMLAndQueryWithHead(dmlSql, querySql2);
                 System.out.println("Actual after dml: " + actualResultAfterDML);
@@ -124,7 +134,12 @@ public class TestDML extends BaseTestSuite {
             }
         } else if (param.get("Validation_type").equals("csv_containsAll")) {
             String resultFile1 = param.get("Expected_result1").trim();
-            List<List<String>> expectedResult = ParseCsv.splitCsvString(resultFile1);
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile1,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile1,"&");
+            }
             System.out.println("Expected: " + expectedResult);
             List<List<String>> actualResult = sqlHelper.doDMLAndQueryWithHead(insertSql, querySql1);
             System.out.println("Actual: " + actualResult);
@@ -132,7 +147,12 @@ public class TestDML extends BaseTestSuite {
             Assert.assertTrue(expectedResult.containsAll(actualResult));
             if (dmlSql.length() > 0) {
                 String resultFile2 = param.get("Expected_result2").trim();
-                List<List<String>> expectedResultAfterDML = ParseCsv.splitCsvString(resultFile2);
+                List<List<String>> expectedResultAfterDML = new ArrayList<>();
+                if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                    expectedResultAfterDML = ParseCsv.splitCsvString(resultFile2,",");
+                } else {
+                    expectedResultAfterDML = ParseCsv.splitCsvString(resultFile2,"&");
+                }
                 System.out.println("Expected after dml: " + expectedResultAfterDML);
                 List<List<String>> actualResultAfterDML = sqlHelper.doDMLAndQueryWithHead(dmlSql, querySql2);
                 System.out.println("Actual after dml: " + actualResultAfterDML);
@@ -192,14 +212,24 @@ public class TestDML extends BaseTestSuite {
         
         if (param.get("Validation_type").equals("csv_equals")) {
             String resultFile = param.get("Expected_result").trim();
-            List<List<String>> expectedResult = ParseCsv.splitCsvString(resultFile);
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+            }
             System.out.println("Expected: " + expectedResult);
             List<List<String>> actualResult = sqlHelper.doDMLAndQueryWithHead(dmlSql, querySql);
             System.out.println("Actual: " + actualResult);
             Assert.assertEquals(actualResult, expectedResult);
         } else if (param.get("Validation_type").equals("csv_containsAll")) {
             String resultFile = param.get("Expected_result").trim();
-            List<List<String>> expectedResult = ParseCsv.splitCsvString(resultFile);
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+            }
             System.out.println("Expected: " + expectedResult);
             List<List<String>> actualResult = sqlHelper.doDMLAndQueryWithHead(dmlSql, querySql);
             System.out.println("Actual: " + actualResult);

@@ -15,6 +15,7 @@ import utils.ParseCsv;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -80,7 +81,12 @@ public class TestBatchSQL extends BaseTestSuite {
         if (param.get("Validation_type").equals("csv_equals")) {
             if (param.get("Query_result1").trim().length() > 0) {
                 String resultFile1 = param.get("Query_result1").trim();
-                List<List<String>> expectedResult1 = ParseCsv.splitCsvString(resultFile1);
+                List<List<String>> expectedResult1 = new ArrayList<>();
+                if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                    expectedResult1 = ParseCsv.splitCsvString(resultFile1,",");
+                } else {
+                    expectedResult1 = ParseCsv.splitCsvString(resultFile1,"&");
+                }
                 System.out.println("Expected result1: " + expectedResult1);
                 List<List<String>> actualResult1 = sqlHelper.statementQueryWithHead(querySql1);
                 System.out.println("Actual result1: " + actualResult1);
@@ -89,7 +95,12 @@ public class TestBatchSQL extends BaseTestSuite {
 
             if (param.get("Query_result2").trim().length() > 0) {
                 String resultFile2 = param.get("Query_result2").trim();
-                List<List<String>> expectedResult2 = ParseCsv.splitCsvString(resultFile2);
+                List<List<String>> expectedResult2 = new ArrayList<>();
+                if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                    expectedResult2 = ParseCsv.splitCsvString(resultFile2,",");
+                } else {
+                    expectedResult2 = ParseCsv.splitCsvString(resultFile2,"&");
+                }
                 System.out.println("Expected result2: " + expectedResult2);
                 List<List<String>> actualResult2 = sqlHelper.statementQueryWithHead(querySql2);
                 System.out.println("Actual result2: " + actualResult2);
@@ -99,7 +110,12 @@ public class TestBatchSQL extends BaseTestSuite {
         } else if (param.get("Validation_type").equals("csv_containsAll")) {
             if (param.get("Query_result1").trim().length() > 0) {
                 String resultFile1 = param.get("Query_result1").trim();
-                List<List<String>> expectedResult1 = ParseCsv.splitCsvString(resultFile1);
+                List<List<String>> expectedResult1 = new ArrayList<>();
+                if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                    expectedResult1 = ParseCsv.splitCsvString(resultFile1,",");
+                } else {
+                    expectedResult1 = ParseCsv.splitCsvString(resultFile1,"&");
+                }
                 System.out.println("Expected result1: " + expectedResult1);
                 List<List<String>> actualResult1 = sqlHelper.statementQueryWithHead(querySql1);
                 System.out.println("Actual result1: " + actualResult1);
@@ -109,7 +125,12 @@ public class TestBatchSQL extends BaseTestSuite {
 
             if (param.get("Query_result2").trim().length() > 0) {
                 String resultFile2 = param.get("Query_result2").trim();
-                List<List<String>> expectedResult2 = ParseCsv.splitCsvString(resultFile2);
+                List<List<String>> expectedResult2 = new ArrayList<>();
+                if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                    expectedResult2 = ParseCsv.splitCsvString(resultFile2,",");
+                } else {
+                    expectedResult2 = ParseCsv.splitCsvString(resultFile2,"&");
+                }
                 System.out.println("Expected result2: " + expectedResult2);
                 List<List<String>> actualResult2 = sqlHelper.statementQueryWithHead(querySql2);
                 System.out.println("Actual result2: " + actualResult2);

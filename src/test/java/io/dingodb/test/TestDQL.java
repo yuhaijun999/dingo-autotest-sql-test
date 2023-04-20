@@ -114,14 +114,24 @@ public class TestDQL extends BaseTestSuite {
         
         if (param.get("Validation_type").equals("csv_equals")) {
             String resultFile = param.get("Expected_result").trim();
-            List<List<String>> expectedResult = ParseCsv.splitCsvString(resultFile);
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+            }
             System.out.println("Expected: " + expectedResult);
             List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
             System.out.println("Actual: " + actualResult);
             Assert.assertEquals(actualResult, expectedResult);
         } else if (param.get("Validation_type").equals("csv_containsAll")) {
             String resultFile = param.get("Expected_result").trim();
-            List<List<String>> expectedResult = ParseCsv.splitCsvString(resultFile);
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+            }
             System.out.println("Expected: " + expectedResult);
             List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
             System.out.println("Actual: " + actualResult);

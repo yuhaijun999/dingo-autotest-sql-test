@@ -218,17 +218,22 @@ public class SQLHelper {
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             List<List<String>> resultList = new ArrayList<>();
             List<String> lableList = new ArrayList<>();
+            List<String> typeList = new ArrayList<>();
             int columnCount = resultSetMetaData.getColumnCount();
             for (int l = 1; l <= columnCount; l++) {
                 lableList.add(resultSetMetaData.getColumnLabel(l));
+                typeList.add(resultSetMetaData.getColumnTypeName(l));
             }
             resultList.add(lableList);
             while (resultSet.next()) {
                 List rowList = new ArrayList();
                 for (int i = 1; i <= columnCount; i++) {
                     String columnLabel = resultSetMetaData.getColumnLabel(i);
+//                    System.out.println(columnLabel);
                     if (resultSet.getObject(columnLabel) == null) {
                         rowList.add(String.valueOf(resultSet.getObject(columnLabel)));
+                    } else if (typeList.get(i - 1).equalsIgnoreCase("ARRAY")) {
+                        rowList.add(resultSet.getArray(columnLabel).toString());
                     } else {
                         rowList.add(resultSet.getString(columnLabel));
                     }
