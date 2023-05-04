@@ -11,9 +11,9 @@ prerequisite:
 
     . name: EMAILFROM    value: [your send email address]
 
-    . name: EMAILTO      value: [your receive email address] 
+    . name: EMAILTOSQL      value: [your receive email address] 
 
-    . name: EMAILCC      value: [your cc email address]
+    . name: EMAILCCSQL      value: [your cc email address]
 
     . name: EMAILUSER    value: [your send email user]
 
