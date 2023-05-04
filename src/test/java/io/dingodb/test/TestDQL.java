@@ -110,6 +110,22 @@ public class TestDQL extends BaseTestSuite {
                     }
                 }
             }
+            if (param.get("Case_table_dependency").trim().length() > 0) {
+                if (param.get("Table_value_ref").trim().length() > 0) {
+                    List<String> value_List = CastUtils.construct1DListIncludeBlank(param.get("Table_value_ref").trim(),",");
+                    for (int j = 0; j < value_List.size(); j++) {
+//                        String tableName = "";
+//                        if (!schemaList.get(j).trim().contains("_")) {
+//                            tableName = param.get("TestID").trim() + "_0" + j + schemaList.get(j).trim();
+//                        } else {
+//                            String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
+//                            tableName = param.get("TestID").trim() + "_0" + j + schemaName;
+//                        }
+                        String tableName = param.get("Case_table_dependency").trim() + "_0" + j + schemaList.get(j).trim();
+                        sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
+                    }
+                }
+            }
         }
         
         if (param.get("Validation_type").equals("csv_equals")) {

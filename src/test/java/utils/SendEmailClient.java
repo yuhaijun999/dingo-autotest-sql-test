@@ -98,7 +98,7 @@ public class SendEmailClient {
         MailObject mailObject = new MailObject();
         mailObject.setFrom(System.getenv("EMAILFROM"));
         mailObject.setCc(new String[]{System.getenv("EMAILCCSQL")});
-        mailObject.setTo(new String[]{System.getenv("EMAILTO")});
+        mailObject.setTo(new String[]{System.getenv("EMAILTOSQL")});
         mailObject.setSubject("DingoDB-SQL测试报告" + CommonArgs.getCurDateStr("-yyyyMMddHHmmss"));
 //        mailObject.setBody("测试报告");
         mailObject.setFiles(new File[] {new File(htmlPath)});
