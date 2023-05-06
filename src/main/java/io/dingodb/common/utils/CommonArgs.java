@@ -41,6 +41,13 @@ public class CommonArgs {
         return  null;
     }
 
+    public static String getCommitID() {
+        if (System.getenv().containsKey("COMMIT_ID")) {
+            return System.getenv("COMMIT_ID");
+        }
+        return  "";
+    }
+
     //获取当前日期的字符串
     public static String getCurDateStr(String pattern) {
         Date date = new Date();
