@@ -58,6 +58,7 @@ public class EmailableReporterListener implements IReporter{
 
     private String fileNameSum = "DingoDB-SQLTest-Summary_" + CommonArgs.getCurDateStr("yyyyMMdd") +".html";
     private String hostIP = CommonArgs.getDefaultDingoClusterIP();
+    private String commitID = CommonArgs.getCommitID();
 
     public void setFileNameSum(String fileName) {
         this.fileNameSum = fileName;
@@ -157,6 +158,7 @@ public class EmailableReporterListener implements IReporter{
         writer.println();
         writer.println("<h4>. 测试日期：" + dateNowStr + "</h4>");
         writer.println("<h4>. 测试节点IP：" + hostIP + "</h4>");
+        writer.println("<h4>. 本次测试CommitID：" + commitID + "</h4>");
         writeSuiteSummary();
 //        writeScenarioSummary();
 //        writeScenarioDetails();
@@ -263,7 +265,8 @@ public class EmailableReporterListener implements IReporter{
         
         writer.println("</table>");
         writer.println("*注：Skipped表示本次测试被标记不需要执行的用例，并不是由于用例间依赖原因导致的跳过");
-        writer.println("<br/>");
+        writer.println("<br>");
+        writer.println("<br>");
         String hrefUrl = "http://172.20.3.27/dingo/auto_tests/sql_report/" + CommonArgs.getCurDateStr("yyyyMMdd") + "/";
         String hrefTxt = "报告详情参见：" + hrefUrl;
         writer.println("<a href=" + hrefUrl  + " target=\"_blank\" rel=\"noopener noreferrer\"><b>" + hrefTxt + "</b></a>");
