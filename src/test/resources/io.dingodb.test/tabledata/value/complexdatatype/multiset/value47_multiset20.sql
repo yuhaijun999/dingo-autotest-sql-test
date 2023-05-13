@@ -1,0 +1,4 @@
+insert into $table values
+(1, 'zhangsan', 18, multiset[10,200,3000], multiset['male','BJHD','1901'], multiset[2345.78,24.0,0.001], multiset['2022-08-18','2022-08-19'], multiset['00:00:00','12:23:34','23:59:59'], multiset['2008-10-31 15:38:02'], multiset[true,false,true,false,true,true]),
+(2, 'lisi', 25, multiset[99999999], multiset['female'], multiset[0.0], multiset['2022-01-01'], multiset['03:02:01'], multiset['2028-10-31 15:38:02'], multiset[false]),
+(3, 'lisi', 25, multiset[99999999], multiset['female'], multiset[0.0], multiset['2022-01-01'], multiset['03:02:01'], multiset['2028-10-31 15:38:02'], multiset[false])

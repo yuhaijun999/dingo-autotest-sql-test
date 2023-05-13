@@ -3,13 +3,13 @@ CREATE TABLE $table (
     name varchar(32),
     age int,
     gmt bigint,
-    price float,
+    price DOUBLE,
     amount DOUBLE,
     address varchar(255),
     birthday DATE,
     create_time TIME,
     update_time TIMESTAMP,
-    zip_code char,
+    zip_code varchar(10),
     is_delete boolean,
     PRIMARY KEY (birthday)
 )

@@ -43,7 +43,7 @@ public class JDBCUtils {
     }
 
     //获取数据库连接
-    public static Connection getConnection() throws IOException, ClassNotFoundException, SQLException {
+    public static Connection getConnection() throws ClassNotFoundException, SQLException {
         String timeout = properties.getProperty("timeout");
         String JDBC_DRIVER = properties.getProperty("JDBC_Driver");
         String port = properties.getProperty("port");
@@ -71,7 +71,7 @@ public class JDBCUtils {
 
         List<String> tableList = new ArrayList<String>();
 //        ResultSet rst = dmd.getTables(null, schemaList.get(0), "%", null);
-        ResultSet rst = dmd.getTables(null, "DINGO", "%", null);
+        ResultSet rst = dmd.getTables(null, null, "%", null);
         while (rst.next()) {
             tableList.add(rst.getString("TABLE_NAME").toUpperCase());
         }

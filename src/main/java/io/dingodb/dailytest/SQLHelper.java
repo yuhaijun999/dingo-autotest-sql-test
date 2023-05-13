@@ -579,6 +579,7 @@ public class SQLHelper {
                     
                     //清空batch
                     ps.clearBatch();
+                    System.out.println("已写入数据：" + i);
                 }
             }
         }

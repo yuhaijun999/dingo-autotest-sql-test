@@ -33,9 +33,10 @@ public class TestDQL extends BaseTestSuite {
 
     @AfterClass (alwaysRun = true)
     public void tearDownAll() throws SQLException, IOException, ClassNotFoundException {
-//        System.out.println(createTableSet);
+        System.out.println("Create table set: " + createTableSet);
         if(createTableSet.size() > 0) {
             List<String> finalTableList = JDBCUtils.getTableList();
+            System.out.println("Get table list: " + finalTableList);
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
                     sqlHelper.doDropTable(s);
