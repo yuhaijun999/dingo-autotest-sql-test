@@ -59,7 +59,6 @@ public class TestDQLMySQL {
 
     @AfterClass (alwaysRun = true)
     public void tearDownAll() throws SQLException, IOException, ClassNotFoundException {
-        MySQLUtils.closeResource(connection);
         if(createTableSet.size() > 0) {
             List<String> finalTableList = MySQLUtils.getTableList();
             for (String s : createTableSet) {
@@ -68,6 +67,7 @@ public class TestDQLMySQL {
                 }
             }
         }
+        MySQLUtils.closeResource(connection);
     }
 
     @BeforeMethod (alwaysRun = true)

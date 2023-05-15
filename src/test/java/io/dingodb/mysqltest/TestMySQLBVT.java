@@ -22,8 +22,10 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -59,13 +61,14 @@ public class TestMySQLBVT {
     }
     
     @Test(enabled = true, description = "测试创建表")
-    public void test01TableCreate() throws SQLException {
+    public void test01TableCreate() throws SQLException, IOException, ClassNotFoundException {
         String sql = "create table " + tableName + "(id int, name varchar(20), age int, amount double, primary key(id))";
         try(Statement statement = connection.createStatement();) {
             statement.execute(sql);
-//            List<String> tableList = MySQLUtils.getTableList();
-//            Assert.assertTrue(tableList.contains(tableName));
-//            System.out.println(tableList);
+            List<String> tableList = MySQLUtils.getTableList();
+            System.out.println("TableList: " + tableList);
+            Assert.assertTrue(tableList.contains(tableName));
+            System.out.println(tableList);
         }
     }
 
@@ -90,26 +93,35 @@ public class TestMySQLBVT {
     @Test(enabled = true, description = "测试查询数据")
     public void test03Query() throws SQLException {
         String sql = "select id,name,age,amount from " + tableName + " where id < 5";
+        String[][] dataArray = {
+                {"1", "Alice", "18", "3.5"},
+                {"2", "Betty", "22", "4.1"},
+                {"3", "Cindy", "39", "4.6"},
+                {"4", "Doris", "25", "5.2"}
+        };
+        List<List> expectedList = expectedOutData(dataArray);
+        System.out.println("Expected: " + expectedList);
+        
         List<List> queryList = new ArrayList<>();
         try(Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(sql);
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
             while (resultSet.next()) {
                 List rowList = new ArrayList<>();
-                rowList.add(resultSet.getString("id"));
-                rowList.add(resultSet.getString("name"));
-                rowList.add(resultSet.getString("age"));
-                rowList.add(resultSet.getString("amount"));
+                for (int i = 1; i <= columnCount; i++) {
+                    String columnTypeName = metaData.getColumnTypeName(i);
+//                    System.out.println(columnTypeName);
+                    String columnName = metaData.getColumnName(i);
+//                    System.out.println(columnName);
+                    String s = resultSet.getString(columnName);
+                    rowList.add(s);
+                }
                 queryList.add(rowList);
             }
             resultSet.close();
         }
-        String[][] dataArray = {
-                {"1", "Alice", "18", "3.5"},
-                {"2", "Betty", "22", "4.1"}, 
-                {"3", "Cindy", "39", "4.6"}, 
-                {"4", "Doris", "25", "5.2"}
-        };
-        List<List> expectedList = expectedOutData(dataArray);
+        System.out.println("Actual: " + queryList);
         Assert.assertTrue(queryList.containsAll(expectedList));
         Assert.assertTrue(expectedList.containsAll(queryList));
     }
@@ -134,10 +146,12 @@ public class TestMySQLBVT {
             }
             resultSet.close();
         }
+        System.out.println("Actual: " + queryList);
         String[][] dataArray = {
                 {"1", "Alice", "100", "3.5"}
         };
         List<List> expectedList = expectedOutData(dataArray);
+        System.out.println("Expected: " + expectedList);
         Assert.assertEquals(queryList,expectedList);
     }
 
@@ -157,16 +171,15 @@ public class TestMySQLBVT {
     
 
     @Test(enabled = true, description = "删除表")
-    public void test06DropTable() throws SQLException{
+    public void test06DropTable() throws SQLException, IOException, ClassNotFoundException {
         String sql = "drop table " + tableName;
         try(Statement statement = connection.createStatement();) {
             statement.execute(sql);
-//            List<String> tableList = MySQLUtils.getTableList();
-//            Assert.assertTrue(tableList.contains(tableName));
-//            System.out.println(tableList);
+            List<String> tableList = MySQLUtils.getTableList();
+            Assert.assertFalse(tableList.contains(tableName));
+            System.out.println(tableList);
         }
     }
-    
     
     @AfterClass(alwaysRun = true, description = "测试结束后，关闭数据库连接资源")
     public static void tearDownAll() {
