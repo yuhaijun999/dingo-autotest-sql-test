@@ -16,52 +16,11 @@
   -->
 
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite name="DingoDB-auto-tests" parallel="tests" thread-count="1">
-    <test name="Base_Test_Suite" parallel="methods" thread-count="1">
-        <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
-        <classes>
-            <class name="io.dingodb.test.BaseTestSuite"></class>
-        </classes>
-    </test>
-    
-    <!-- name中的值表示命名，可随意命名 -->
-    <test name="DQL_Test" enabled="true" parallel="methods" thread-count="1">
-        <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
-        <classes>
-            <class name="io.dingodb.test.TestDQL"></class>
-        </classes>
-    </test>
-    <test name="DDL_Test" enabled="true" parallel="methods" thread-count="1">
-        <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
-        <classes>
-            <class name="io.dingodb.test.TestDDL"></class>
-        </classes>
-    </test>
-    <test name="DML_Test" enabled="true" parallel="methods" thread-count="1">
-        <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
-        <classes>
-            <class name="io.dingodb.test.TestDML"></class>
-        </classes>
-    </test>
-    <test name="PrepareStatement_Test" enabled="true" parallel="methods" thread-count="1">
-        <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
-        <classes>
-            <class name="io.dingodb.test.TestPreparedStatement"></class>
-        </classes>
-    </test>
-    <test name="Batch_SQL_Test" enabled="true" parallel="methods" thread-count="1">
-        <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
-        <classes>
-            <class name="io.dingodb.test.TestBatchSQL"></class>
-        </classes>
-    </test>
-    <test name="Negative_Test" enabled="true" parallel="methods" thread-count="1">
-        <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
-        <classes>
-            <class name="io.dingodb.test.TestNegative"></class>
-        </classes>
-    </test>
-    
+<suite name="DingoDB-auto-tests">
+    <suite-files>
+        <suite-file path="DingoTest.xml"></suite-file>
+        <suite-file path="MySQLTest.xml"></suite-file>
+    </suite-files>
     <listeners>
         <listener class-name="listener.EmailableReporterListener"/>
         <listener class-name="listener.DetailReporterListener"/>

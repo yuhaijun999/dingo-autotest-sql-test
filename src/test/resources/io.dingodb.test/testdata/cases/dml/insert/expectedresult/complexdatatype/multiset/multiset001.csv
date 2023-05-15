@@ -1,0 +1,4 @@
+3
+ID&NAME&AGE&AMOUNT&CLASS_NO
+1&zhangsan&18&23.5&[0, 1024, -65536]
+2&lisi&25&895.89&[0, 1024, -65536]
