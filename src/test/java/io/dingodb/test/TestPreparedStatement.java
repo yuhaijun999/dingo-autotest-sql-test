@@ -66,12 +66,6 @@ public class TestPreparedStatement extends BaseTestSuite {
 
     @AfterMethod (alwaysRun = true)
     public void cleanUp() throws Exception {
-//        if(createTableSet.size() > 0) {
-//            for (String s : createTableSet) {
-//                sqlHelper.doDropTable(s);
-//            }
-//        }
-//        createTableSet.clear();
     }
     
     @Test(priority = 0, enabled = true, dataProvider = "psDQLData", dataProviderClass = YamlDataHelper.class, description = "验证通过预编译语句进行查询")
@@ -280,7 +274,7 @@ public class TestPreparedStatement extends BaseTestSuite {
             }
         }
         sqlHelper.preparedStatementBatchInsert(
-                insertSql,200000, value_type_tuple,6,
+                insertSql,Integer.parseInt(param.get("Insert_count")), value_type_tuple,6,
                 100,0,10000,2, -1000000,1000000,2, 
                 "yyyy-MM-dd","1970-10-01","2022-03-31","HH:mm:ss",
                 "00:00:00","23:59:59","yyyy-MM-dd HH:mm:ss", 
