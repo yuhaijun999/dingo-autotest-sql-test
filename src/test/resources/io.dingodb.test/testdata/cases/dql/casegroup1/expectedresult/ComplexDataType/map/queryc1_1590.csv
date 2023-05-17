@@ -1,4 +1,4 @@
 ID&NAME&AGE&AMOUNT&USER_INFO&DATA&GOOD_INFO
-1&lala&27&132.5&{sex=female, birthday1=1998-12-11, birthday2=2010-09-15}&{score=98, tno=1476821, sno=3001}&{avg_sale=1234.5678, price=23.58}
+1&Lala&27&132.5&{sex=female, birthday1=1998-12-11, birthday2=2010-09-15}&{score=98, tno=1476821, sno=3001}&{avg_sale=1234.5678, price=23.58}
 2&zhangsan&39&100.0&{sex=female, birthday1=1949-07-26, birthday2=2013-03-13}&{score=90, tno=2290832, sno=3002}&{avg_sale=10000.00, price=67.33}
-3&huha&56&-78.6&{sex=male, birthday1=1970-01-01, birthday2=2000-10-10}&{score=78, tno=1809000, sno=3003}&{avg_sale=39287.23, price=111.5}
+3&Huha&56&-78.6&{sex=male, birthday1=1970-01-01, birthday2=2000-10-10}&{score=78, tno=1809000, sno=3003}&{avg_sale=39287.23, price=111.5}

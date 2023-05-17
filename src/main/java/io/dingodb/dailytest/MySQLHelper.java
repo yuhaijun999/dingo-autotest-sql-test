@@ -91,34 +91,15 @@ public class MySQLHelper {
     //更新或删除表数据并查询变更后数据，输出包含表头
     public List<List<String>> doDMLAndQueryWithHead(String dmlSql, String querySql) throws SQLException {
         try(Statement statement = connection.createStatement()) {
-            List<List<String>> resultList = new ArrayList<>();
+            List<List<String>> rowList = new ArrayList<>();
             List<String> effectRows = new ArrayList<>();
             int effectCnt = statement.executeUpdate(dmlSql);
             effectRows.add(String.valueOf(effectCnt));
-            resultList.add(effectRows);
+            rowList.add(effectRows);
 
             //更新后查询表数据
             ResultSet resultSet = statement.executeQuery(querySql);
-            //获取查询相关信息
-            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-            List<String> lableList = new ArrayList<>();
-            int columnCount = resultSetMetaData.getColumnCount();
-            for (int l = 1; l <= columnCount; l++) {
-                lableList.add(resultSetMetaData.getColumnLabel(l));
-            }
-            resultList.add(lableList);
-            while (resultSet.next()) {
-                List rowList = new ArrayList();
-                for (int i = 1; i <= columnCount; i++) {
-                    String columnLabel = resultSetMetaData.getColumnLabel(i);
-                    if (resultSet.getObject(columnLabel) == null) {
-                        rowList.add(String.valueOf(resultSet.getObject(columnLabel)));
-                    } else {
-                        rowList.add(resultSet.getString(columnLabel));
-                    }
-                }
-                resultList.add(rowList);
-            }
+            List<List<String>> resultList = getResultListWithLabel(resultSet, rowList);
             resultSet.close();
             return resultList;
         }
@@ -160,7 +141,7 @@ public class MySQLHelper {
                 if (resultSet.getObject(1) == null) {
                     queryStr = null;
                 } else {
-                    queryStr = resultSet.getString(1);
+                    queryStr = resultSet.getObject(1).toString();
                 }
             }
             resultSet.close();
@@ -186,25 +167,10 @@ public class MySQLHelper {
     }
 
     //通过statement查询表数据, 返回List<List>,不含表头
-    public List<List> statementQuery(String sql) throws SQLException {
+    public List<List<String>> statementQuery(String sql) throws SQLException {
         try(Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(sql);
-            //获取查询相关信息
-            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-            int columnCount = resultSetMetaData.getColumnCount();
-            List<List> resultList = new ArrayList<>();
-            while (resultSet.next()) {
-                List rowList = new ArrayList();
-                for (int i = 1; i <= columnCount; i++) {
-                    String columnLabel = resultSetMetaData.getColumnLabel(i);
-                    if (resultSet.getObject(columnLabel) == null) {
-                        rowList.add(String.valueOf(resultSet.getObject(columnLabel)));
-                    } else {
-                        rowList.add(resultSet.getString(columnLabel));
-                    }
-                }
-                resultList.add(rowList);
-            }
+            List<List<String>> resultList = getResultListWithoutLabel(resultSet);
             resultSet.close();
             return resultList;
         }
@@ -214,32 +180,7 @@ public class MySQLHelper {
     public List<List<String>> statementQueryWithHead(String sql) throws SQLException {
         try(Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(sql);
-            //获取查询相关信息
-            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-            List<List<String>> resultList = new ArrayList<>();
-            List<String> lableList = new ArrayList<>();
-            List<String> typeList = new ArrayList<>();
-            int columnCount = resultSetMetaData.getColumnCount();
-            for (int l = 1; l <= columnCount; l++) {
-                lableList.add(resultSetMetaData.getColumnLabel(l));
-                typeList.add(resultSetMetaData.getColumnTypeName(l));
-            }
-            resultList.add(lableList);
-            while (resultSet.next()) {
-                List rowList = new ArrayList();
-                for (int i = 1; i <= columnCount; i++) {
-                    String columnLabel = resultSetMetaData.getColumnLabel(i);
-//                    System.out.println(columnLabel);
-                    if (resultSet.getObject(columnLabel) == null) {
-                        rowList.add(String.valueOf(resultSet.getObject(columnLabel)));
-                    } else if (typeList.get(i - 1).equalsIgnoreCase("ARRAY")) {
-                        rowList.add(resultSet.getArray(columnLabel).toString());
-                    } else {
-                        rowList.add(resultSet.getString(columnLabel));
-                    }
-                }
-                resultList.add(rowList);
-            }
+            List<List<String>> resultList = getResultListWithLabel(resultSet);
             resultSet.close();
             return resultList;
         }
@@ -311,27 +252,7 @@ public class MySQLHelper {
                 
             }
             ResultSet resultSet = ps.executeQuery();
-            //获取查询相关信息
-            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-            List<List<String>> resultList = new ArrayList<>();
-            List<String> lableList = new ArrayList<>();
-            int columnCount = resultSetMetaData.getColumnCount();
-            for (int l = 1; l <= columnCount; l++) {
-                lableList.add(resultSetMetaData.getColumnLabel(l));
-            }
-            resultList.add(lableList);
-            while (resultSet.next()) {
-                List rowList = new ArrayList();
-                for (int i = 1; i <= columnCount; i++) {
-                    String columnLabel = resultSetMetaData.getColumnLabel(i);
-                    if (resultSet.getObject(columnLabel) == null) {
-                        rowList.add(String.valueOf(resultSet.getObject(columnLabel)));
-                    } else {
-                        rowList.add(resultSet.getString(columnLabel));
-                    }
-                }
-                resultList.add(rowList);
-            }
+            List<List<String>> resultList = getResultListWithLabel(resultSet);
             resultSet.close();
             return resultList;
         }
@@ -480,29 +401,10 @@ public class MySQLHelper {
         
         try(Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(query_sql);
-            //获取查询相关信息
-            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-            List<String> lableList = new ArrayList<>();
-            int columnCount = resultSetMetaData.getColumnCount();
-            for (int l = 1; l <= columnCount; l++) {
-                lableList.add(resultSetMetaData.getColumnLabel(l));
-            }
-            dml_result.add(lableList);
-            while (resultSet.next()) {
-                List rowList = new ArrayList();
-                for (int i = 1; i <= columnCount; i++) {
-                    String columnLabel = resultSetMetaData.getColumnLabel(i);
-                    if (resultSet.getObject(columnLabel) == null) {
-                        rowList.add(String.valueOf(resultSet.getObject(columnLabel)));
-                    } else {
-                        rowList.add(resultSet.getString(columnLabel));
-                    }
-                }
-                dml_result.add(rowList);
-            }
+            List<List<String>> resultList = getResultListWithLabel(resultSet, dml_result);
             resultSet.close();
+            return resultList;
         }
-        return dml_result;
     }
 
     //通过preparedStatement对表进行批量插入操作
@@ -593,5 +495,113 @@ public class MySQLHelper {
         }
     }
 
+    //获取查询结果集，包含表头
+    public List<List<String>> getResultListWithLabel(ResultSet resultSet, List<List<String>> resultList) throws SQLException {
+        ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+        List<String> lableList = new ArrayList<>();
+//        List<String> typeList = new ArrayList<>();
+        int columnCount = resultSetMetaData.getColumnCount();
+        for (int l = 1; l <= columnCount; l++) {
+            lableList.add(resultSetMetaData.getColumnLabel(l));
+//            typeList.add(resultSetMetaData.getColumnTypeName(l));
+        }
+        resultList.add(lableList);
 
+        while (resultSet.next()) {
+            List rowList = new ArrayList();
+            for (int i = 1; i <= columnCount; i++) {
+                String columnLabel = resultSetMetaData.getColumnLabel(i);
+                String columnTypeName = resultSetMetaData.getColumnTypeName(i);
+                if (resultSet.getObject(columnLabel) == null) {
+                    rowList.add(String.valueOf(resultSet.getObject(columnLabel)));
+                } else if (columnTypeName.equalsIgnoreCase("ARRAY")) {
+                    rowList.add(resultSet.getArray(columnLabel).toString());
+                } else if (columnTypeName.equalsIgnoreCase("DATE")) {
+                    rowList.add(resultSet.getDate(columnLabel).toString().substring(0,10));
+                } else if (columnTypeName.equalsIgnoreCase("TIME")) {
+                    rowList.add(resultSet.getTime(columnLabel).toString().substring(0,8));
+                } else if (columnTypeName.equalsIgnoreCase("TIMESTAMP")) {
+                    rowList.add(resultSet.getTimestamp(columnLabel).toString().substring(0,19));
+                } else {
+                    rowList.add(resultSet.getObject(columnLabel).toString());
+                }
+            }
+            resultList.add(rowList);
+        }
+        return resultList;
+    }
+
+    //获取查询结果集，包含表头
+    public List<List<String>> getResultListWithLabel(ResultSet resultSet) throws SQLException {
+        List<List<String>> resultList = new ArrayList<>();
+        ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+        List<String> lableList = new ArrayList<>();
+//        List<String> typeList = new ArrayList<>();
+        int columnCount = resultSetMetaData.getColumnCount();
+        for (int l = 1; l <= columnCount; l++) {
+            lableList.add(resultSetMetaData.getColumnLabel(l));
+//            typeList.add(resultSetMetaData.getColumnTypeName(l));
+        }
+        resultList.add(lableList);
+
+        while (resultSet.next()) {
+            List rowList = new ArrayList();
+            for (int i = 1; i <= columnCount; i++) {
+                String columnLabel = resultSetMetaData.getColumnLabel(i);
+                String columnTypeName = resultSetMetaData.getColumnTypeName(i);
+                if (resultSet.getObject(columnLabel) == null) {
+                    rowList.add(String.valueOf(resultSet.getObject(columnLabel)));
+                } else if (columnTypeName.equalsIgnoreCase("ARRAY")) {
+                    rowList.add(resultSet.getArray(columnLabel).toString());
+                } else if (columnTypeName.equalsIgnoreCase("DATE")) {
+                    rowList.add(resultSet.getDate(columnLabel).toString().substring(0,10));
+                } else if (columnTypeName.equalsIgnoreCase("TIME")) {
+                    rowList.add(resultSet.getTime(columnLabel).toString().substring(0,8));
+                } else if (columnTypeName.equalsIgnoreCase("TIMESTAMP")) {
+                    rowList.add(resultSet.getTimestamp(columnLabel).toString().substring(0,19));
+                } else {
+                    rowList.add(resultSet.getObject(columnLabel).toString());
+                }
+            }
+            resultList.add(rowList);
+        }
+        return resultList;
+    }
+
+    //获取查询结果集，不包含表头
+    public List<List<String>> getResultListWithoutLabel(ResultSet resultSet) throws SQLException {
+        List<List<String>> resultList = new ArrayList<>();
+        ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+        List<String> lableList = new ArrayList<>();
+//        List<String> typeList = new ArrayList<>();
+        int columnCount = resultSetMetaData.getColumnCount();
+        for (int l = 1; l <= columnCount; l++) {
+            lableList.add(resultSetMetaData.getColumnLabel(l));
+//            typeList.add(resultSetMetaData.getColumnTypeName(l));
+        }
+
+        while (resultSet.next()) {
+            List rowList = new ArrayList();
+            for (int i = 1; i <= columnCount; i++) {
+                String columnLabel = resultSetMetaData.getColumnLabel(i);
+                String columnTypeName = resultSetMetaData.getColumnTypeName(i);
+                if (resultSet.getObject(columnLabel) == null) {
+                    rowList.add(String.valueOf(resultSet.getObject(columnLabel)));
+                } else if (columnTypeName.equalsIgnoreCase("ARRAY")) {
+                    rowList.add(resultSet.getArray(columnLabel).toString());
+                } else if (columnTypeName.equalsIgnoreCase("DATE")) {
+                    rowList.add(resultSet.getDate(columnLabel).toString().substring(0,10));
+                } else if (columnTypeName.equalsIgnoreCase("TIME")) {
+                    rowList.add(resultSet.getTime(columnLabel).toString().substring(0,8));
+                } else if (columnTypeName.equalsIgnoreCase("TIMESTAMP")) {
+                    rowList.add(resultSet.getTimestamp(columnLabel).toString().substring(0,19));
+                } else {
+                    rowList.add(resultSet.getObject(columnLabel).toString());
+                }
+            }
+            resultList.add(rowList);
+        }
+        return resultList;
+    }
+    
 }

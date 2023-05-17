@@ -228,7 +228,7 @@ public class TestDQLMySQL {
                     case "getCurTimestamp": {
                         String expectedResult = o.toString();
                         System.out.println("Expected: " + expectedResult);
-                        Assert.assertEquals(actualResult.length(),19);
+                        Assert.assertEquals(actualResult.length(),23);
                         Assert.assertEquals(actualResult.substring(0,16), expectedResult.substring(0,16));
                         break;
                     }
