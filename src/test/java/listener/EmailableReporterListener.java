@@ -264,7 +264,7 @@ public class EmailableReporterListener implements IReporter{
         }
         
         writer.println("</table>");
-        writer.println("*注：Skipped表示本次测试被标记不需要执行的用例，并不是由于用例间依赖原因导致的跳过");
+        writer.println("*注：Skipped表示本次测试被标记不需要执行的用例或者由于数据库连接失败导致，并不是由于用例间依赖原因导致的跳过");
         writer.println("<br>");
         writer.println("<br>");
         String hrefUrl = "http://172.20.3.27/dingo/auto_tests/sql_report/" + CommonArgs.getCurDateStr("yyyyMMdd") + "/";

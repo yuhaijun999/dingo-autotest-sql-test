@@ -23,6 +23,13 @@
             <class name="io.dingodb.mysqltest.TestDQLMySQL"></class>
         </classes>
     </test>
+
+    <test name="MySQL_DML_Test" parallel="methods" thread-count="1">
+        <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
+        <classes>
+            <class name="io.dingodb.mysqltest.TestDMLMySQL"></class>
+        </classes>
+    </test>
     
     <test name="MySQL_BVT_Test" parallel="methods" thread-count="1">
         <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
