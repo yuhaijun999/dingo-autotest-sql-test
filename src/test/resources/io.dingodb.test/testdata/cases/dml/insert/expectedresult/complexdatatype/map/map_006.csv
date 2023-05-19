@@ -3,7 +3,7 @@ ID&NAME&AGE&AMOUNT&USER_INFO
 1&zhangsan&33&56.78&{100=234, 101=235, 102=0}
 2&lisi&44&0.0&{200=male, 201=2022-11-22, 202=163.com}
 4&wangwu&100&1000.0&{400=138, 401=139}
-5&Haha&60&-1234.5&{501=dingo, 502=test}
+5&HaHa&60&-1234.5&{501=dingo, 502=test}
 6&Tony&9&-50.0&{birthday=2000-11-11, sex=male}
 7&Zookeeper&99&1876.54&{sno=221306, age=0}
 8&Adidas&25&100.0&{false=0, true=1}
