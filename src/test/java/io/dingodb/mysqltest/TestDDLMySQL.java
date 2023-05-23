@@ -17,7 +17,7 @@
 package io.dingodb.mysqltest;
 
 import datahelper.YamlDataHelper;
-import io.dingodb.common.utils.JDBCUtils;
+import io.dingodb.common.utils.MySQLUtils;
 import io.dingodb.dailytest.MySQLHelper;
 import io.dingodb.test.TestDQLbak;
 import org.testng.Assert;
@@ -49,7 +49,7 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
     @AfterClass (alwaysRun = true)
     public static void tearDownAll() throws SQLException, IOException, ClassNotFoundException {
         if(createTableSet.size() > 0) {
-            List<String> finalTableList = JDBCUtils.getTableList();
+            List<String> finalTableList = MySQLUtils.getTableList();
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
                     mySQLHelper.doDropTable(s);
@@ -142,7 +142,7 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
             if (ddlSql.contains("drop")) {
                 drop_table_name = ddlSql.substring(11);
             }
-            List<String> existTableList = JDBCUtils.getTableList();
+            List<String> existTableList = MySQLUtils.getTableList();
             Assert.assertFalse(existTableList.contains(drop_table_name));
         }
 

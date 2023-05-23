@@ -1,7 +1,7 @@
 package io.dingodb.mysqltest;
 
 import datahelper.YamlDataHelper;
-import io.dingodb.common.utils.JDBCUtils;
+import io.dingodb.common.utils.MySQLUtils;
 import io.dingodb.dailytest.MySQLHelper;
 import org.testng.Assert;
 import org.testng.SkipException;
@@ -33,7 +33,7 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
     @AfterClass
     public static void tearDownAll() throws SQLException, IOException, ClassNotFoundException {
         if(createTableSet.size() > 0) {
-            List<String> finalTableList = JDBCUtils.getTableList();
+            List<String> finalTableList = MySQLUtils.getTableList();
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
                     mySQLHelper.doDropTable("mysql" + s);
