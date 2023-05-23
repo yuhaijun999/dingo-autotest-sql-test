@@ -237,7 +237,6 @@ public class TestPreparedStatement extends BaseTestSuite {
         String[] value_type_tuple = param.get("Value_type").split(",");
 
         if (param.get("Table_schema_ref").trim().length() > 0) {
-//            List<String> tableList = new ArrayList<>();
             List<String> schemaList = CastUtils.construct1DListIncludeBlank(param.get("Table_schema_ref"),",");
             for (int i = 0; i < schemaList.size(); i++) {
                 String tableName = "";
@@ -280,7 +279,7 @@ public class TestPreparedStatement extends BaseTestSuite {
                 "00:00:00","23:59:59","yyyy-MM-dd HH:mm:ss", 
                 "1990-01-01 00:00:00","2023-03-21 23:59:59"
         );
-        Thread.sleep(60000);
+        Thread.sleep(30000);
        if (param.get("Validation_type").equals("effected_rows_assert")) {
            int expectedQuery1Rows = Integer.parseInt(param.get("Query_result1"));
            System.out.println("Expected query1 rows: " + expectedQuery1Rows);

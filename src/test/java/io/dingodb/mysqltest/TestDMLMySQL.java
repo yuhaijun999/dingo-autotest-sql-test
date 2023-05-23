@@ -3,7 +3,6 @@ package io.dingodb.mysqltest;
 import datahelper.YamlDataHelper;
 import io.dingodb.common.utils.MySQLUtils;
 import io.dingodb.dailytest.MySQLHelper;
-import io.dingodb.test.BaseTestSuite;
 import org.apache.commons.io.IOUtils;
 import org.testng.Assert;
 import org.testng.SkipException;
@@ -13,35 +12,25 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import utils.CastUtils;
-import utils.IniReader;
 import utils.ParseCsv;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class TestDMLMySQL extends BaseTestSuite {
+public class TestDMLMySQL extends BaseTestSuiteMySQL{
     private static MySQLHelper mySQLHelper;
-    public static IniReader iniReader;
-    public static Connection connection;
     private static HashSet<String> createTableSet = new HashSet<>();
 
 
     @BeforeClass (alwaysRun = true)
     public static void setupAll() {
         mySQLHelper = new MySQLHelper();
-        Assert.assertNotNull(MySQLHelper.connection);
-        try {
-            iniReader = new IniReader("src/test/resources/io.dingodb.test/ini/my.ini");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @AfterClass (alwaysRun = true)
@@ -54,7 +43,6 @@ public class TestDMLMySQL extends BaseTestSuite {
                 }
             }
         }
-        MySQLUtils.closeResource(connection);
     }
 
     @BeforeMethod (alwaysRun = true)

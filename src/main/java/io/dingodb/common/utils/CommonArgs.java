@@ -41,9 +41,18 @@ public class CommonArgs {
         return  null;
     }
 
-    public static String getCommitID() {
+    //获取dingo-store仓库的最近提交ID
+    public static String getStoreCommitID() {
         if (System.getenv().containsKey("COMMIT_ID")) {
             return System.getenv("COMMIT_ID");
+        }
+        return  "";
+    }
+
+    //获取dingo仓库的最近提交ID
+    public static String getDingoCommitID() {
+        if (System.getenv().containsKey("DINGO_COMMIT_ID")) {
+            return System.getenv("DINGO_COMMIT_ID");
         }
         return  "";
     }
