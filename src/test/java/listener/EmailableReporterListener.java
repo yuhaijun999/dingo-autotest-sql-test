@@ -58,7 +58,8 @@ public class EmailableReporterListener implements IReporter{
 
     private String fileNameSum = "DingoDB-SQLTest-Summary_" + CommonArgs.getCurDateStr("yyyyMMdd") +".html";
     private String hostIP = CommonArgs.getDefaultDingoClusterIP();
-    private String commitID = CommonArgs.getCommitID();
+    private String storeCommitID = CommonArgs.getStoreCommitID();
+    private String dingoCommitID = CommonArgs.getDingoCommitID();
 
     public void setFileNameSum(String fileName) {
         this.fileNameSum = fileName;
@@ -158,7 +159,8 @@ public class EmailableReporterListener implements IReporter{
         writer.println();
         writer.println("<h4>. 测试日期：" + dateNowStr + "</h4>");
         writer.println("<h4>. 测试节点IP：" + hostIP + "</h4>");
-        writer.println("<h4>. 本次测试CommitID：" + commitID + "</h4>");
+        writer.println("<h4>. 本次测试的dingo-store commit ID：" + storeCommitID + "</h4>");
+        writer.println("<h4>. 本次测试的dingo commit ID：" + dingoCommitID + "</h4>");
         writeSuiteSummary();
 //        writeScenarioSummary();
 //        writeScenarioDetails();

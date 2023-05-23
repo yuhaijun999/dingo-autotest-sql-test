@@ -47,7 +47,7 @@ public class MySQLUtils {
         String mysql_port = properties.getProperty("MySQL_Port");
         String timeout = properties.getProperty("MAX_EXECUTION_TIME");
         String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
-        String connectUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/dingo";
+        String connectUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/dingo?max_execution_time=" + timeout+"&wait_timeout=60&connectTimeout=60000";
 
         //加载驱动
         Class.forName(MySQL_JDBC_DRIVER);

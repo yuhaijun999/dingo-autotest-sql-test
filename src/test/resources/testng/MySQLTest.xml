@@ -17,24 +17,53 @@
 
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="MySQL-auto-tests" parallel="tests" thread-count="1">
-    <test name="MySQL_DQL_Test" parallel="methods" thread-count="1">
+    <test name="MySQL_Base_Test_Suite" parallel="methods" thread-count="1">
+        <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
+        <classes>
+            <class name="io.dingodb.mysqltest.BaseTestSuiteMySQL"></class>
+        </classes>
+    </test>
+    
+    <test name="MySQL_BVT_Test" enabled="true" parallel="methods" thread-count="1">
+        <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
+        <classes>
+            <class name="io.dingodb.mysqltest.TestBVTMySQL"></class>
+        </classes>
+    </test>
+    
+    <test name="MySQL_DQL_Test" enabled="true" parallel="methods" thread-count="1">
         <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
         <classes>
             <class name="io.dingodb.mysqltest.TestDQLMySQL"></class>
         </classes>
     </test>
 
-    <test name="MySQL_DML_Test" parallel="methods" thread-count="1">
+    <test name="MySQL_DML_Test" enabled="true" parallel="methods" thread-count="1">
         <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
         <classes>
             <class name="io.dingodb.mysqltest.TestDMLMySQL"></class>
         </classes>
     </test>
-    
-    <test name="MySQL_BVT_Test" parallel="methods" thread-count="1">
+
+    <test name="MySQL_DDL_Test" enabled="true" parallel="methods" thread-count="1">
         <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
         <classes>
-            <class name="io.dingodb.mysqltest.TestMySQLBVT"></class>
+            <class name="io.dingodb.mysqltest.TestDDLMySQL"></class>
         </classes>
     </test>
+
+    <test name="MySQL_BatchSQL_Test" enabled="true" parallel="methods" thread-count="1">
+        <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
+        <classes>
+            <class name="io.dingodb.mysqltest.TestBatchSQLMySQL"></class>
+        </classes>
+    </test>
+
+    <test name="MySQL_PreparedStatement_Test" enabled="true" parallel="methods" thread-count="1">
+        <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
+        <classes>
+            <class name="io.dingodb.mysqltest.TestPreparedStatementMySQL"></class>
+        </classes>
+    </test>
+    
 </suite>
