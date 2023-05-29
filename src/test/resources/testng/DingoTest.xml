@@ -43,6 +43,14 @@
             <class name="io.dingodb.test.TestDML"></class>
         </classes>
     </test>
+
+    <test name="DCL_Test" enabled="true" parallel="methods" thread-count="1">
+        <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
+        <classes>
+            <class name="io.dingodb.test.TestDCL"></class>
+        </classes>
+    </test>
+    
     <test name="PrepareStatement_Test" enabled="true" parallel="methods" thread-count="1">
         <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
         <classes>

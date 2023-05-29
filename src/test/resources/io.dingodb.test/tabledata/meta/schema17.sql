@@ -3,7 +3,7 @@ CREATE TABLE $table (
     name varchar(32),
     age int,
     gmt bigint,
-    price DOUBLE,
+    price FLOAT,
     amount DOUBLE,
     address varchar(255),
     birthday DATE,

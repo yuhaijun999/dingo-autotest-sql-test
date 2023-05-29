@@ -3,7 +3,7 @@ CREATE TABLE $table (
     name varchar(32) default 'dingo',
     age int not null default 18,
     gmt bigint not null default 13800000000,
-    price DOUBLE not null default 0.0,
+    price FLOAT not null default 0.0,
     amount DOUBLE not null default 100.000000,
     address varchar(255) not null default 'BJ',
     birthday DATE not null default '2023-03-15',

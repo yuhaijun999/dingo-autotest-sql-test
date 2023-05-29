@@ -48,9 +48,10 @@ public class TestPreparedStatement extends BaseTestSuite {
 
     @AfterClass (alwaysRun = true)
     public static void tearDownAll() throws SQLException, IOException, ClassNotFoundException {
-//        System.out.println(createTableSet);
+        System.out.println(createTableSet);
         if(createTableSet.size() > 0) {
             List<String> finalTableList = JDBCUtils.getTableList();
+            System.out.println("Get table list: " + finalTableList);
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
                     sqlHelper.doDropTable(s);
@@ -213,11 +214,11 @@ public class TestPreparedStatement extends BaseTestSuite {
             Assert.assertEquals(actualEffectedRows, expectedEffectedRows);
         }
 
-        if (tableList.size() > 0) {
-            for (String s : tableList) {
-                sqlHelper.doDropTable(s);
-            }
-        }
+//        if (tableList.size() > 0) {
+//            for (String s : tableList) {
+//                sqlHelper.doDropTable(s);
+//            }
+//        }
     }
 
     @Test(priority = 2, enabled = true, dataProvider = "psBatchData", dataProviderClass = YamlDataHelper.class, description = "验证通过prepareStatement进行批量插入数据")
@@ -318,10 +319,10 @@ public class TestPreparedStatement extends BaseTestSuite {
            Assert.assertEquals(actualQuery4Rows, expectedQuery4Rows);
         }
 
-        if (tableList.size() > 0) {
-            for (String s : tableList) {
-                sqlHelper.doDropTable(s);
-            }
-        }
+//        if (tableList.size() > 0) {
+//            for (String s : tableList) {
+//                sqlHelper.doDropTable(s);
+//            }
+//        }
     }
 }
