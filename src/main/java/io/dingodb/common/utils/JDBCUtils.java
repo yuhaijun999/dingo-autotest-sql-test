@@ -48,13 +48,30 @@ public class JDBCUtils {
         String JDBC_DRIVER = properties.getProperty("JDBC_Driver");
         String port = properties.getProperty("port");
         String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
-        String connectUrl = "jdbc:dingo:thin:url=" + defaultConnectIP + ":" + port + "/db?timeout=" + timeout;
+//        String defaultConnectIP = "172.20.3.13";
+        String connectUrl = "jdbc:dingo:thin:url=" + defaultConnectIP + ":" + port + "/dingo?timeout=" + timeout;
 
         //加载驱动
         Class.forName(JDBC_DRIVER);
 
         //获取连接
         Connection connection = DriverManager.getConnection(connectUrl, USER, PASS);
+
+        return connection;
+    }
+
+    //使用非root用户连接数据库，获取connection对象
+    public static Connection getConnectionWithNotRoot(String userName, String passwd) throws ClassNotFoundException, SQLException {
+        String JDBC_DRIVER = properties.getProperty("JDBC_Driver");
+        String port = properties.getProperty("port");
+        String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
+        String connectUrl = "jdbc:dingo:thin:url=" + defaultConnectIP + ":" + port + "/dingo";
+
+        //加载驱动
+        Class.forName(JDBC_DRIVER);
+
+        //获取连接
+        Connection connection = DriverManager.getConnection(connectUrl, userName, passwd);
 
         return connection;
     }
@@ -71,7 +88,8 @@ public class JDBCUtils {
 
         List<String> tableList = new ArrayList<String>();
 //        ResultSet rst = dmd.getTables(null, schemaList.get(0), "%", null);
-        ResultSet rst = dmd.getTables(null, null, "%", null);
+        String[] types={"TABLE"};
+        ResultSet rst = dmd.getTables(null, "DINGO", "%", types);
         while (rst.next()) {
             tableList.add(rst.getString("TABLE_NAME").toUpperCase());
         }
