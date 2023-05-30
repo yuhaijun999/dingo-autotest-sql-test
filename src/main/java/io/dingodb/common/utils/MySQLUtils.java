@@ -46,8 +46,10 @@ public class MySQLUtils {
         String MySQL_JDBC_DRIVER = properties.getProperty("MySQL_JDBC_Driver");
         String mysql_port = properties.getProperty("MySQL_Port");
         String timeout = properties.getProperty("MAX_EXECUTION_TIME");
+        String timezone = properties.getProperty("SERVER_TIMEZONE");
         String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
-        String connectUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/dingo?max_execution_time=" + timeout+"&wait_timeout=60&connectTimeout=60000";
+//        String connectUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/dingo?max_execution_time=" + timeout+"&wait_timeout=60&connectTimeout=60000";
+        String connectUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/dingo?serverTimezone=" + timezone;
 
         //加载驱动
         Class.forName(MySQL_JDBC_DRIVER);
@@ -72,7 +74,7 @@ public class MySQLUtils {
 
         List<String> tableList = new ArrayList<String>();
         String[] types={"TABLE"};
-        ResultSet rst = dmd.getTables(null, null, "%", types);
+        ResultSet rst = dmd.getTables(null, "dingo", null, types);
         while (rst.next()) {
             tableList.add(rst.getString("TABLE_NAME").toUpperCase());
         }
