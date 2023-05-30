@@ -68,7 +68,7 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
             statement.execute(sql);
             List<String> tableList = MySQLUtils.getTableList();
             System.out.println("TableList: " + tableList);
-            Assert.assertTrue(tableList.contains(tableName));
+            Assert.assertTrue(tableList.contains(tableName.toUpperCase()));
             System.out.println(tableList);
         }
     }
@@ -94,10 +94,10 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
     @Test(enabled = true, description = "测试查询数据")
     public void test03Query() throws SQLException {
         String[][] dataArray = {
-                {"1", "Alice", "18", "3.5", "1998-04-06", "08:10:10", "2022-04-08 18:05:07", "true"},
-                {"2", "Betty", "22", "4.1", "1988-02-05", "16:15:08", "2000-02-29 00:00:00", "true"},
-                {"3", "Cindy", "39", "4.6", "2022-03-04", "07:03:15", "1999-02-28 23:59:59", "false"},
-                {"4", "Doris", "25", "5.2", "1967-07-16", "01:02:03", "1952-12-31 12:12:12", "true"}
+                {"1", "Alice", "18", "3.5", "1998-04-06", "08:10:10", "2022-04-08 18:05:07.0", "true"},
+                {"2", "Betty", "22", "4.1", "1988-02-05", "16:15:08", "2000-02-29 00:00:00.0", "true"},
+                {"3", "Cindy", "39", "4.6", "2022-03-04", "07:03:15", "1999-02-28 23:59:59.0", "false"},
+                {"4", "Doris", "25", "5.2", "1967-07-16", "01:02:03", "1952-12-31 12:12:12.0", "true"}
         };
         List<List> expectedList = expectedOutData(dataArray);
         System.out.println("Expected: " + expectedList);
@@ -134,8 +134,8 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
     @Test(enabled = true, description = "测试更新数据")
     public void test04Update() throws SQLException {
         String[][] dataArray = {
-                {"1", "Alice", "100", "3.5", "1998-04-06", "08:10:10", "2022-04-08 18:05:07"},
-                {"4", "Doris", "100", "5.2", "1967-07-16", "01:02:03", "1952-12-31 12:12:12"}
+                {"1", "Alice", "100", "3.5", "1998-04-06", "08:10:10", "2022-04-08 18:05:07.0"},
+                {"4", "Doris", "100", "5.2", "1967-07-16", "01:02:03", "1952-12-31 12:12:12.0"}
         };
         List<List> expectedList = expectedOutData(dataArray);
         System.out.println("Expected: " + expectedList);
@@ -187,7 +187,7 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
         try(Statement statement = connection.createStatement();) {
             statement.execute(sql);
             List<String> tableList = MySQLUtils.getTableList();
-            Assert.assertFalse(tableList.contains(tableName));
+            Assert.assertFalse(tableList.contains(tableName.toUpperCase()));
             System.out.println(tableList);
         }
     }

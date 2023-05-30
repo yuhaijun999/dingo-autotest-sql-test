@@ -30,7 +30,7 @@ import java.util.List;
 public class BaseTestSuiteMySQL {
     public static IniReader iniReader;
     public static MySQLHelper mySQLHelper;
-    @BeforeSuite(alwaysRun = false, enabled = false, description = "所有测试开始前的准备工作")
+    @BeforeSuite(alwaysRun = true, enabled = true, description = "所有测试开始前的准备工作")
     public static void beforeSuite() {
         mySQLHelper = new MySQLHelper();
         System.out.println("所有测试开始前，验证MySQL JDBC数据库连接正常");
@@ -42,7 +42,7 @@ public class BaseTestSuiteMySQL {
         }
     }
 
-    @AfterSuite(alwaysRun = false, enabled = false, description = "所有测试结束后的操作")
+    @AfterSuite(alwaysRun = true, enabled = true, description = "所有测试结束后的操作")
     public static void afterSuite() {
         System.out.println("所有测试结束后，关闭MySQL JDBC数据库连接");
         MySQLUtils.closeResource(MySQLHelper.connection);
