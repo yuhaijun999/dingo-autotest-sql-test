@@ -16,7 +16,7 @@
 
 package io.dingodb.mysqltest;
 
-import datahelper.YamlDataHelper;
+import datahelper.MySQLYamlDataHelper;
 import io.dingodb.common.utils.MySQLUtils;
 import io.dingodb.dailytest.MySQLHelper;
 import io.dingodb.test.TestDQLbak;
@@ -66,7 +66,7 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
     public void cleanUp() throws Exception {
     }
 
-    @Test(priority = 0, enabled = true, dataProvider = "ddlData1", dataProviderClass = YamlDataHelper.class, description = "ddl操作1")
+    @Test(priority = 0, enabled = true, dataProvider = "mysqlDDLData1", dataProviderClass = MySQLYamlDataHelper.class, description = "ddl操作1")
     public void testDDL1(LinkedHashMap<String,String> param) throws SQLException, IOException, ClassNotFoundException {
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
@@ -80,11 +80,11 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                 String tableName = "";
                 if (!schemaList.get(i).contains("_")) {
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
+                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
                 }
                 ddlSql = ddlSql.replace("$" + schemaList.get(i).trim(), tableName);
                 querySql = querySql.replace("$" + schemaList.get(i).trim(), tableName);
@@ -99,11 +99,11 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                     String tableName = "";
                     if (!schemaList.get(j).trim().contains("_")) {
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaList.get(j).trim();
-                        mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                        mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
                     } else {
                         String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaName;
-                        mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                        mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
                     }
                 }
             }
