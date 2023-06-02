@@ -60,6 +60,24 @@ public class MySQLUtils {
         return connection;
     }
 
+    //使用非root用户连接数据库，获取connection对象
+    public static Connection getConnectionWithNotRoot(String userName, String passwd) throws ClassNotFoundException, SQLException {
+        String MySQL_JDBC_DRIVER = properties.getProperty("MySQL_JDBC_Driver");
+        String mysql_port = properties.getProperty("MySQL_Port");
+        String timeout = properties.getProperty("MAX_EXECUTION_TIME");
+        String timezone = properties.getProperty("SERVER_TIMEZONE");
+        String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
+        String connectUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/dingo?serverTimezone=" + timezone;
+
+        //加载驱动
+        Class.forName(MySQL_JDBC_DRIVER);
+
+        //获取连接
+        Connection connection = DriverManager.getConnection(connectUrl, userName, passwd);
+
+        return connection;
+    }
+
     //获取所有数据表
     public static List<String> getTableList() throws SQLException, ClassNotFoundException, IOException {
         Connection connection = getMySQLConnection();

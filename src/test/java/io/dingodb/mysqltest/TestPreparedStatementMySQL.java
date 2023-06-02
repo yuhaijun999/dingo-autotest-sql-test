@@ -16,10 +16,9 @@
 
 package io.dingodb.mysqltest;
 
-import datahelper.YamlDataHelper;
+import datahelper.MySQLYamlDataHelper;
 import io.dingodb.common.utils.MySQLUtils;
 import io.dingodb.dailytest.MySQLHelper;
-import io.dingodb.test.BaseTestSuite;
 import io.dingodb.test.TestDQLbak;
 import org.testng.Assert;
 import org.testng.SkipException;
@@ -39,7 +38,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class TestPreparedStatementMySQL extends BaseTestSuite {
+public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
     private static MySQLHelper mySQLHelper;
     private static HashSet<String> createTableSet = new HashSet<>();
 
@@ -70,7 +69,7 @@ public class TestPreparedStatementMySQL extends BaseTestSuite {
     public void cleanUp() throws Exception {
     }
     
-    @Test(priority = 0, enabled = true, dataProvider = "psDQLData", dataProviderClass = YamlDataHelper.class, description = "验证通过预编译语句进行查询")
+    @Test(priority = 0, enabled = true, dataProvider = "mysqlPSDQLData", dataProviderClass = MySQLYamlDataHelper.class, description = "验证通过预编译语句进行查询")
     public void test01PrepareStatementDQL(LinkedHashMap<String,String> param) throws SQLException, IOException {
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
@@ -88,11 +87,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuite {
                 String tableName = "";
                 if (!schemaList.get(i).trim().contains("_")) {
                     tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = param.get("TestID").trim() + "_0" + i + schemaName;
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
+                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
                 }
                 tableList.add(tableName);
                 querySql = querySql.replace("$" + schemaList.get(i).trim(), tableName);
@@ -108,7 +107,7 @@ public class TestPreparedStatementMySQL extends BaseTestSuite {
                         String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                         tableName = param.get("TestID").trim() + "_0" + j + schemaName;
                     }
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
+                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
                 }
             }
         }
@@ -138,7 +137,7 @@ public class TestPreparedStatementMySQL extends BaseTestSuite {
         }
     }
 
-    @Test(priority = 1, enabled = true, dataProvider = "psDMLData", dataProviderClass = YamlDataHelper.class, description = "验证通过预编译语句进行DML操作")
+    @Test(priority = 1, enabled = true, dataProvider = "mysqlPSDMLData", dataProviderClass = MySQLYamlDataHelper.class, description = "验证通过预编译语句进行DML操作")
     public void test02PrepareStatementDML(LinkedHashMap<String,String> param) throws SQLException, IOException {
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
@@ -157,11 +156,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuite {
                 String tableName = "";
                 if (!schemaList.get(i).trim().contains("_")) {
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
+                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
                 }
                 tableList.add(tableName);
                 dmlSql = dmlSql.replace("$" + schemaList.get(i).trim(), tableName);
@@ -178,7 +177,7 @@ public class TestPreparedStatementMySQL extends BaseTestSuite {
                         String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaName;
                     }
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
+                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
                 }
             }
         }
@@ -222,7 +221,7 @@ public class TestPreparedStatementMySQL extends BaseTestSuite {
         }
     }
 
-    @Test(priority = 2, enabled = true, dataProvider = "psBatchData", dataProviderClass = YamlDataHelper.class, description = "验证通过prepareStatement进行批量插入数据")
+    @Test(priority = 2, enabled = true, dataProvider = "mysqlPSBatchData", dataProviderClass = MySQLYamlDataHelper.class, description = "验证通过prepareStatement进行批量插入数据")
     public void test03PrepareStatementBatchInsert(LinkedHashMap<String,String> param) throws SQLException, IOException, ParseException, InterruptedException {
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
@@ -244,11 +243,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuite {
                 String tableName = "";
                 if (!schemaList.get(i).trim().contains("_")) {
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
+                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
                 }
                 tableList.add(tableName);
                 insertSql = insertSql.replace("$" + schemaList.get(i).trim(), tableName);
@@ -270,7 +269,7 @@ public class TestPreparedStatementMySQL extends BaseTestSuite {
                         String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaName;
                     }
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(iniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
+                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
                 }
             }
         }

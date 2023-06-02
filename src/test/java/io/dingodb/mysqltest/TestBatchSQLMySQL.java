@@ -1,6 +1,6 @@
 package io.dingodb.mysqltest;
 
-import datahelper.YamlDataHelper;
+import datahelper.MySQLYamlDataHelper;
 import io.dingodb.common.utils.MySQLUtils;
 import io.dingodb.dailytest.MySQLHelper;
 import org.testng.Assert;
@@ -50,7 +50,7 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
     public void cleanUp() throws Exception {
     }
 
-    @Test(priority = 0, enabled = true, dataProvider = "sqlBatchData", dataProviderClass = YamlDataHelper.class, description = "验证批量执行sql语句")
+    @Test(priority = 0, enabled = true, dataProvider = "mysqlSQLBatchData", dataProviderClass = MySQLYamlDataHelper.class, description = "验证批量执行sql语句")
     public void testBatchSQL(LinkedHashMap<String,String> param) throws SQLException, IOException {
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
@@ -60,7 +60,7 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
         String querySql1 = param.get("Query_sql1");
         String querySql2 = param.get("Query_sql2");
         for ( int i = 0; i < tableList.size(); i++) {
-            mySQLHelper.execFile(TestBatchSQLMySQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("BatchSQLOp", 
+            mySQLHelper.execFile(TestBatchSQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("BatchSQLOp", 
                     param.get("Batch_sql"))), "mysql" + tableList.get(i).trim());
             if (querySql1.trim().length() > 0) {
                 querySql1 = querySql1.replace("$" + tableList.get(i).trim(), "mysql" + tableList.get(i).trim());

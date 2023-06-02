@@ -75,6 +75,7 @@ public class TestDCL extends BaseTestSuite {
         if (param.get("Connection_verify").equalsIgnoreCase("yes")) {
             Connection connectionWithUser = JDBCUtils.getConnectionWithNotRoot(userName, passStr);
             Assert.assertNotNull(connectionWithUser);
+            connectionWithUser.close();
         }
         if (hostStr.length() > 0) {
             sqlHelper.execSql("drop user '" + userName + "'@'" + hostStr + "'");
