@@ -160,11 +160,11 @@ public class TestDML extends BaseTestSuite {
                 Assert.assertTrue(expectedResultAfterDML.containsAll(actualResultAfterDML));
             }
 
-            if (tableList.size() > 0) {
-                for (String s : tableList) {
-                    sqlHelper.doDropTable(s);
-                }
-            }
+//            if (tableList.size() > 0) {
+//                for (String s : tableList) {
+//                    sqlHelper.doDropTable(s);
+//                }
+//            }
         }
     }
 
@@ -243,10 +243,10 @@ public class TestDML extends BaseTestSuite {
             Assert.assertEquals(actualEffectedRows, expectedEffectedRows);
         }
 
-        if (tableList.size() > 0) {
-            for (String s : tableList) {
-                sqlHelper.doDropTable(s);
-            }
-        }
+//        if (tableList.size() > 0) {
+//            for (String s : tableList) {
+//                sqlHelper.doDropTable(s);
+//            }
+//        }
     }
 }

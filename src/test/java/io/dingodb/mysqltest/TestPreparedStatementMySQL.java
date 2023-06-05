@@ -130,11 +130,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
             Assert.assertTrue(expectedResult.containsAll(actualResult));
         }
 
-        if (tableList.size() > 0) {
-            for (String s : tableList) {
-                mySQLHelper.doDropTable(s);
-            }
-        }
+//        if (tableList.size() > 0) {
+//            for (String s : tableList) {
+//                mySQLHelper.doDropTable(s);
+//            }
+//        }
     }
 
     @Test(priority = 1, enabled = true, dataProvider = "mysqlPSDMLData", dataProviderClass = MySQLYamlDataHelper.class, description = "验证通过预编译语句进行DML操作")
@@ -214,11 +214,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
             Assert.assertEquals(actualEffectedRows, expectedEffectedRows);
         }
 
-        if (tableList.size() > 0) {
-            for (String s : tableList) {
-                mySQLHelper.doDropTable(s);
-            }
-        }
+//        if (tableList.size() > 0) {
+//            for (String s : tableList) {
+//                mySQLHelper.doDropTable(s);
+//            }
+//        }
     }
 
     @Test(priority = 2, enabled = true, dataProvider = "mysqlPSBatchData", dataProviderClass = MySQLYamlDataHelper.class, description = "验证通过prepareStatement进行批量插入数据")
@@ -319,10 +319,10 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
            Assert.assertEquals(actualQuery4Rows, expectedQuery4Rows);
         }
 
-        if (tableList.size() > 0) {
-            for (String s : tableList) {
-                mySQLHelper.doDropTable(s);
-            }
-        }
+//        if (tableList.size() > 0) {
+//            for (String s : tableList) {
+//                mySQLHelper.doDropTable(s);
+//            }
+//        }
     }
 }

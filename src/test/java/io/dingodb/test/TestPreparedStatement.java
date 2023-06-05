@@ -130,11 +130,11 @@ public class TestPreparedStatement extends BaseTestSuite {
             Assert.assertTrue(expectedResult.containsAll(actualResult));
         }
 
-        if (tableList.size() > 0) {
-            for (String s : tableList) {
-                sqlHelper.doDropTable(s);
-            }
-        }
+//        if (tableList.size() > 0) {
+//            for (String s : tableList) {
+//                sqlHelper.doDropTable(s);
+//            }
+//        }
     }
 
     @Test(priority = 1, enabled = true, dataProvider = "psDMLData", dataProviderClass = YamlDataHelper.class, description = "验证通过预编译语句进行DML操作")

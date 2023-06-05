@@ -153,11 +153,11 @@ public class TestDMLMySQL extends BaseTestSuiteMySQL{
                 Assert.assertTrue(expectedResultAfterDML.containsAll(actualResultAfterDML));
             }
 
-            if (tableList.size() > 0) {
-                for (String s : tableList) {
-                    mySQLHelper.doDropTable(s);
-                }
-            }
+//            if (tableList.size() > 0) {
+//                for (String s : tableList) {
+//                    mySQLHelper.doDropTable(s);
+//                }
+//            }
         }
     }
 
@@ -236,10 +236,10 @@ public class TestDMLMySQL extends BaseTestSuiteMySQL{
             Assert.assertEquals(actualEffectedRows, expectedEffectedRows);
         }
 
-        if (tableList.size() > 0) {
-            for (String s : tableList) {
-                mySQLHelper.doDropTable(s);
-            }
-        }
+//        if (tableList.size() > 0) {
+//            for (String s : tableList) {
+//                mySQLHelper.doDropTable(s);
+//            }
+//        }
     }
 }
