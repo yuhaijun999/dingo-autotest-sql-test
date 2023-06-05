@@ -146,10 +146,10 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
             Assert.assertFalse(existTableList.contains(drop_table_name));
         }
 
-        if (tableList.size() > 0) {
-            for (String s : tableList) {
-                mySQLHelper.doDropTable(s);
-            }
-        }
+//        if (tableList.size() > 0) {
+//            for (String s : tableList) {
+//                mySQLHelper.doDropTable(s);
+//            }
+//        }
     }
 }

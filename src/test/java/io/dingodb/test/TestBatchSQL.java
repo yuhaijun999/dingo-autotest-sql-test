@@ -139,10 +139,10 @@ public class TestBatchSQL extends BaseTestSuite {
             }
         }
 
-        if (tableList.size() > 0) {
-            for (String s : tableList) {
-                sqlHelper.doDropTable(s);
-            }
-        }
+//        if (tableList.size() > 0) {
+//            for (String s : tableList) {
+//                sqlHelper.doDropTable(s);
+//            }
+//        }
     }
 }

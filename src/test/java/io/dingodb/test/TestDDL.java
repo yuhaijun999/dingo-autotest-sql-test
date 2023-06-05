@@ -153,10 +153,10 @@ public class TestDDL extends BaseTestSuite{
             Assert.assertFalse(existTableList.contains(drop_table_name));
         }
 
-        if (tableList.size() > 0) {
-            for (String s : tableList) {
-                sqlHelper.doDropTable(s);
-            }
-        }
+//        if (tableList.size() > 0) {
+//            for (String s : tableList) {
+//                sqlHelper.doDropTable(s);
+//            }
+//        }
     }
 }
