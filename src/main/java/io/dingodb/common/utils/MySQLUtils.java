@@ -48,6 +48,11 @@ public class MySQLUtils {
         String timeout = properties.getProperty("MAX_EXECUTION_TIME");
         String timezone = properties.getProperty("SERVER_TIMEZONE");
         String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
+        Properties props = new Properties();
+//        props.setProperty("useServerPrepStmts", "true");
+//        props.setProperty("cachePrepStmts", "true");
+        props.setProperty("user", USER);
+        props.setProperty("password", PASS);
 //        String connectUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/dingo?max_execution_time=" + timeout+"&wait_timeout=60&connectTimeout=60000";
         String connectUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/dingo?serverTimezone=" + timezone;
 
@@ -55,7 +60,7 @@ public class MySQLUtils {
         Class.forName(MySQL_JDBC_DRIVER);
 
         //获取连接
-        Connection connection = DriverManager.getConnection(connectUrl, USER, PASS);
+        Connection connection = DriverManager.getConnection(connectUrl, props);
 
         return connection;
     }
