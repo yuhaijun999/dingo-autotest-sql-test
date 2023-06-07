@@ -80,6 +80,15 @@ public class SQLHelper {
         }
     }
 
+    public void execBatchSql(Statement statement, String sql) throws SQLException {
+        for (String s : sql.split(";")) {
+            if (!s.trim().isEmpty()) {
+                statement.execute(s);
+            }
+        }
+    }
+    
+
     //dml操作只返回影响行数
     public int doDMLReturnRows(String sql) throws SQLException {
         try(Statement statement = connection.createStatement()) {
