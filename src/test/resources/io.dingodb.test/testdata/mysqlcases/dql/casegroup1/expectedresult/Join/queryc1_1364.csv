@@ -18,7 +18,7 @@ id1,de1,id2,de2
 4,true,6,true
 4,true,8,true
 5,true,1,true
-20,false,10,false
+20,null,10,null
 5,true,4,true
 5,true,5,true
 5,true,6,true

@@ -1,4 +1,4 @@
 2
 ID,NAME,AGE,GMT,PRICE,AMOUNT,ADDRESS,BIRTHDAY,CREATE_TIME,UPDATE_TIME,ZIP_CODE,IS_DELETE
-1,zhangsan,null,null,null,null,null,null,null,null,null,false
-2,lisi,null,null,null,null,null,null,null,null,null,false
+1,zhangsan,null,null,null,null,null,null,null,null,null,null
+2,lisi,null,null,null,null,null,null,null,null,null,null
