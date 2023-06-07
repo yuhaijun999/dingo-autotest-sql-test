@@ -7,7 +7,7 @@ id,birthday,is_delete
 46,2013-03-21,false
 47,2021-11-10,false
 49,2018-11-10,false
-50,2013-03-21,false
+50,2013-03-21,null
 56,2010-10-31,false
 60,2008-10-30,false
 61,2013-03-21,false

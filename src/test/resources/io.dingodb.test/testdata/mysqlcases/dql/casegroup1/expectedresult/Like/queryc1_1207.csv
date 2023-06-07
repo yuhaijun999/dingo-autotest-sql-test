@@ -1,4 +1,4 @@
 id,name,age,amount,address,birthday,create_time,update_time,is_delete
-30,163.com,3,0.0, Haidian Zhongguancun No.1 Street,2015-12-12,12:12:12,2022-11-09 17:31:22,false
+30,163.com,3,0.0, Haidian Zhongguancun No.1 Street,2015-12-12,12:12:12,2022-11-09 17:31:22,null
 44,163.com,0,0.0,406 Street,1899-04-06,16:20:39,2008-08-08 00:00:00,true
 46,169.com,10,100.0,Street No1,2013-03-21,05:34:20,2017-11-01 20:20:20,false

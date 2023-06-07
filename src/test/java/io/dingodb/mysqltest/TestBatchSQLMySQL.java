@@ -132,10 +132,10 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
             }
         }
 
-//        if (tableList.size() > 0) {
-//            for (String s : tableList) {
-//                mySQLHelper.doDropTable("mysql" + s);
-//            }
-//        }
+        if (tableList.size() > 0) {
+            for (String s : tableList) {
+                mySQLHelper.doDropTable("mysql" + s);
+            }
+        }
     }
 }
