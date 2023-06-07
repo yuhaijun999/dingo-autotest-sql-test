@@ -76,7 +76,7 @@ public class JDBCUtils {
         return connection;
     }
 
-    //获取所有数据表
+    //获取Dingo数据库下的所有数据表
     public static List<String> getTableList() throws SQLException, ClassNotFoundException, IOException {
         Connection connection = getConnection();
         DatabaseMetaData dmd = connection.getMetaData();
@@ -90,6 +90,27 @@ public class JDBCUtils {
 //        ResultSet rst = dmd.getTables(null, schemaList.get(0), "%", null);
         String[] types={"TABLE"};
         ResultSet rst = dmd.getTables(null, "DINGO", "%", types);
+        while (rst.next()) {
+            tableList.add(rst.getString("TABLE_NAME").toUpperCase());
+        }
+        rst.close();
+        resultSetSchema.close();
+        return tableList;
+    }
+
+    //获取所有数据库下的所有数据表
+    public static List<String> getAllTableList() throws SQLException, ClassNotFoundException, IOException {
+        Connection connection = getConnection();
+        DatabaseMetaData dmd = connection.getMetaData();
+        ResultSet resultSetSchema = dmd.getSchemas();
+        List<String> schemaList = new ArrayList<>();
+        while (resultSetSchema.next()) {
+            schemaList.add(resultSetSchema.getString(1));
+        }
+
+        List<String> tableList = new ArrayList<String>();
+        String[] types={"TABLE"};
+        ResultSet rst = dmd.getTables(null, null, "%", types);
         while (rst.next()) {
             tableList.add(rst.getString("TABLE_NAME").toUpperCase());
         }

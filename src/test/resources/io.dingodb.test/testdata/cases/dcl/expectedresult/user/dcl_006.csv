@@ -1,0 +1,2 @@
+host,name,select_priv,insert_priv,update_priv,delete_priv,create_priv,drop_priv
+%,dcltest6,N,N,N,N,N,N
