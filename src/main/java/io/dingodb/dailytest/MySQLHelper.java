@@ -186,6 +186,16 @@ public class MySQLHelper {
         }
     }
 
+    //通过指定列索引查询表数据, 返回List<List<String>>,包含输出表头
+    public List<List<String>> statementQueryWithSpecifiedColIndex(String sql, List<Integer> colIndexList) throws SQLException {
+        try(Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(sql);
+            List<List<String>> resultList = getResultListWithColumnIndex(resultSet, colIndexList);
+            resultSet.close();
+            return resultList;
+        }
+    }
+
     //通过preparedStatement查询表数据,包含表头
     public List<List<String>> preparedStatementQuery(String sql, String[] value_type, Object ... values) throws SQLException {
         try(PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -561,6 +571,40 @@ public class MySQLHelper {
                     rowList.add(resultSet.getTimestamp(columnLabel).toString().substring(0,19));
                 } else {
                     rowList.add(resultSet.getObject(columnLabel).toString());
+                }
+            }
+            resultList.add(rowList);
+        }
+        return resultList;
+    }
+
+    //通过指定列索引获取查询结果集，包含表头
+    public List<List<String>> getResultListWithColumnIndex(ResultSet resultSet, List<Integer> colIndexList) throws SQLException {
+        List<List<String>> resultList = new ArrayList<>();
+        ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+        List<String> lableList = new ArrayList<>();
+//        int columnCount = resultSetMetaData.getColumnCount();
+        for (int l = 0; l < colIndexList.size(); l++) {
+            lableList.add(resultSetMetaData.getColumnLabel(colIndexList.get(l)));
+        }
+        resultList.add(lableList);
+
+        while (resultSet.next()) {
+            List rowList = new ArrayList();
+            for (int i = 0; i < colIndexList.size(); i++) {
+                String columnTypeName = resultSetMetaData.getColumnTypeName(colIndexList.get(i));
+                if (resultSet.getObject(colIndexList.get(i)) == null) {
+                    rowList.add(String.valueOf(resultSet.getObject(colIndexList.get(i))));
+                } else if (columnTypeName.equalsIgnoreCase("ARRAY")) {
+                    rowList.add(resultSet.getArray(colIndexList.get(i)).toString());
+                } else if (columnTypeName.equalsIgnoreCase("DATE")) {
+                    rowList.add(resultSet.getDate(colIndexList.get(i)).toString().substring(0,10));
+                } else if (columnTypeName.equalsIgnoreCase("TIME")) {
+                    rowList.add(resultSet.getTime(colIndexList.get(i)).toString().substring(0,8));
+                } else if (columnTypeName.equalsIgnoreCase("TIMESTAMP")) {
+                    rowList.add(resultSet.getTimestamp(colIndexList.get(i)).toString().substring(0,19));
+                } else {
+                    rowList.add(resultSet.getObject(colIndexList.get(i)).toString());
                 }
             }
             resultList.add(rowList);

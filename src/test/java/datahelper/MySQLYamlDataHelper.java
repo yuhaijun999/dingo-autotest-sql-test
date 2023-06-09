@@ -184,4 +184,18 @@ public class MySQLYamlDataHelper {
         }
         return cases;
     }
+
+    @DataProvider (name = "mysqlProtocolData", parallel = false)
+    public Object[][] mysqlProtocolCases() throws IOException, InterruptedException {
+        String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/protocol/mysql_protocol_cases.xlsx";
+        String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
+        List<Map<String, String>> yamlList = getYamlList(yamlPath);
+        Object[][] cases = new Object[yamlList.size()][];
+        for (int i = 0; i< yamlList.size(); i++) {
+            cases[i] = new Object[] {yamlList.get(i)};
+        }
+        return cases;
+    }
+    
+    
 }

@@ -73,6 +73,13 @@
         </classes>
     </test>
 
+    <test name="MySQL_Protocol_Test" enabled="true" parallel="methods" thread-count="1">
+        <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
+        <classes>
+            <class name="io.dingodb.mysqltest.TestProtocolMySQL"></class>
+        </classes>
+    </test>
+
     <test name="MySQL_Negative_Test" enabled="true" parallel="methods" thread-count="1">
         <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
         <classes>
