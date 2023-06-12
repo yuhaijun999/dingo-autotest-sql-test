@@ -86,7 +86,15 @@ public class TestDCL extends BaseTestSuite {
         
         String userName = param.get("User_name").trim();
         String passStr = param.get("Pass_str");
-        String hostStr = param.get("Host").trim();
+        String userStr;
+        String hostStr;
+        if (param.get("Host").trim().length() > 0) {
+            hostStr = param.get("Host").trim();
+            userStr = "'" + userName + "'@'" + hostStr + "'";
+        } else {
+            userStr = userName;
+        }
+        
         String createSql = param.get("Create_state");
         sqlHelper.execSql(createSql);
         
@@ -96,45 +104,52 @@ public class TestDCL extends BaseTestSuite {
             sqlHelper.execSql(grantState);
         }
         //show grants断言
-        String queryGrants = param.get("Query_grants");
-        List<List<String>> actualGrantsResult = sqlHelper.statementQueryWithHead(queryGrants);
-        System.out.println("Actual show grants: " + actualGrantsResult);
-        String grantsResultFile = param.get("Expected_grants");
-        List<List<String>> expectedGrantsResult = ParseCsv.splitCsvString(grantsResultFile,",");
-        System.out.println("Expected show grants: " + expectedGrantsResult);
-        Assert.assertTrue(actualGrantsResult.containsAll(expectedGrantsResult));
-        Assert.assertTrue(expectedGrantsResult.containsAll(actualGrantsResult));
+        if (param.get("Query_grants").trim().length() > 0) {
+            String queryGrants = param.get("Query_grants");
+            List<List<String>> actualGrantsResult = sqlHelper.statementQueryWithHead(queryGrants);
+            System.out.println("Actual show grants: " + actualGrantsResult);
+            String grantsResultFile = param.get("Expected_grants");
+            List<List<String>> expectedGrantsResult = ParseCsv.splitCsvString(grantsResultFile,",");
+            System.out.println("Expected show grants: " + expectedGrantsResult);
+            Assert.assertTrue(actualGrantsResult.containsAll(expectedGrantsResult));
+            Assert.assertTrue(expectedGrantsResult.containsAll(actualGrantsResult));
+        }
         
         //查询mysql.user表断言
-        String queryUser = param.get("Query_user");
-        String userResultFile = param.get("Expected_user").trim();
-        List<List<String>> expectedUser = ParseCsv.splitCsvString(userResultFile,",");
-        System.out.println("Expected user table: " + expectedUser);
-        List<List<String>> actualUser = sqlHelper.statementQueryWithHead(queryUser);
-        System.out.println("Actual user table: " + actualUser);
-        Assert.assertTrue(actualUser.containsAll(expectedUser));
-        Assert.assertTrue(expectedUser.containsAll(actualUser));
-
+        if (param.get("Query_user").trim().length() > 0) {
+            String queryUser = param.get("Query_user");
+            String userResultFile = param.get("Expected_user").trim();
+            List<List<String>> expectedUser = ParseCsv.splitCsvString(userResultFile,",");
+            System.out.println("Expected user table: " + expectedUser);
+            List<List<String>> actualUser = sqlHelper.statementQueryWithHead(queryUser);
+            System.out.println("Actual user table: " + actualUser);
+            Assert.assertTrue(actualUser.containsAll(expectedUser));
+            Assert.assertTrue(expectedUser.containsAll(actualUser));
+        }
+        
         //查询mysql.db表断言
-        String queryDb = param.get("Query_db");
-        String dbResultFile = param.get("Expected_db").trim();
-        List<List<String>> expectedDb = ParseCsv.splitCsvString(dbResultFile,",");
-        System.out.println("Expected db table: " + expectedDb);
-        List<List<String>> actualDb = sqlHelper.statementQueryWithHead(queryDb);
-        System.out.println("Actual db table: " + actualDb);
-        Assert.assertTrue(actualDb.containsAll(expectedDb));
-        Assert.assertTrue(expectedDb.containsAll(actualDb));
+        if (param.get("Query_db").trim().length() > 0) {
+            String queryDb = param.get("Query_db");
+            String dbResultFile = param.get("Expected_db").trim();
+            List<List<String>> expectedDb = ParseCsv.splitCsvString(dbResultFile,",");
+            System.out.println("Expected db table: " + expectedDb);
+            List<List<String>> actualDb = sqlHelper.statementQueryWithHead(queryDb);
+            System.out.println("Actual db table: " + actualDb);
+            Assert.assertTrue(actualDb.containsAll(expectedDb));
+            Assert.assertTrue(expectedDb.containsAll(actualDb));
+        }
         
         //查询mysql.tables_priv表断言
-        String queryTablesPriv = param.get("Query_tablesPriv");
-        String tablesPrivResultFile = param.get("Expected_tablesPriv").trim();
-        List<List<String>> expectedTablesPriv = ParseCsv.splitCsvString(tablesPrivResultFile,",");
-        System.out.println("Expected tables_priv table: " + expectedTablesPriv);
-        List<List<String>> actualTablesPriv = sqlHelper.statementQueryWithHead(queryTablesPriv);
-        System.out.println("Actual tables_priv table: " + actualTablesPriv);
-        Assert.assertTrue(actualTablesPriv.containsAll(expectedTablesPriv));
-        Assert.assertTrue(expectedTablesPriv.containsAll(actualTablesPriv));
-        
+        if (param.get("Query_tablesPriv").trim().length() > 0) {
+            String queryTablesPriv = param.get("Query_tablesPriv");
+            String tablesPrivResultFile = param.get("Expected_tablesPriv").trim();
+            List<List<String>> expectedTablesPriv = ParseCsv.splitCsvString(tablesPrivResultFile,",");
+            System.out.println("Expected tables_priv table: " + expectedTablesPriv);
+            List<List<String>> actualTablesPriv = sqlHelper.statementQueryWithHead(queryTablesPriv);
+            System.out.println("Actual tables_priv table: " + actualTablesPriv);
+            Assert.assertTrue(actualTablesPriv.containsAll(expectedTablesPriv));
+            Assert.assertTrue(expectedTablesPriv.containsAll(actualTablesPriv));
+        }
         
         if (param.get("Connection_verify").equalsIgnoreCase("yes")) {
             Connection connectionWithUser = JDBCUtils.getConnectionWithNotRoot(userName, passStr);
@@ -168,13 +183,33 @@ public class TestDCL extends BaseTestSuite {
             } finally {
                 connectionWithUser.close();
             }
+            
+            if (param.get("Reset_pass_str").length() > 0) {
+                String newPass = param.get("Reset_pass_str");
+                String resetSql = "set password for " + userStr + " = password('" + newPass + "')";
+                sqlHelper.execSql(resetSql);
+                Connection connectionWithNewPass = JDBCUtils.getConnectionWithNotRoot(userName, newPass);
+                Assert.assertNotNull(connectionWithUser);
+                connectionWithNewPass.close();
+            }
+        }
+
+        if (param.get("Revoke_state").trim().length() > 0) {
+            String revokeState = param.get("Revoke_state").trim();
+            sqlHelper.execSql(revokeState);
+
+            String queryGrantsAfterRevoke = param.get("Query_grants");
+            List<List<String>> actualGrantsAfterRevoke = sqlHelper.statementQueryWithHead(queryGrantsAfterRevoke);
+            System.out.println("Actual grants after revoke: " + actualGrantsAfterRevoke);
+            String grantsResultFile = param.get("Expected_grants_after_revoke");
+            List<List<String>> expectedGrantsAfterRevoke = ParseCsv.splitCsvString(grantsResultFile,",");
+            System.out.println("Expected grants after revoke: " + expectedGrantsAfterRevoke);
+            Assert.assertTrue(actualGrantsAfterRevoke.containsAll(expectedGrantsAfterRevoke));
+            Assert.assertTrue(expectedGrantsAfterRevoke.containsAll(actualGrantsAfterRevoke));
         }
         
         //测试完后，删除用户
-        if (hostStr.length() > 0) {
-            sqlHelper.execSql("drop user '" + userName + "'@'" + hostStr + "'");
-        } else {
-            sqlHelper.execSql("drop user '" + userName + "'");
-        }
+        sqlHelper.execSql("drop user " + userStr);
+        
     }
 }
