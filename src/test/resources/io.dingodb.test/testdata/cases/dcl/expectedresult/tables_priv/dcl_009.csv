@@ -1,0 +1,2 @@
+host,name,db,table_name,table_priv
+%,dcltest9,DINGO,STUDENTDC,select
