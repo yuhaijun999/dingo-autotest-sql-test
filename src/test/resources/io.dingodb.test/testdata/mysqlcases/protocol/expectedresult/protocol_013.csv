@@ -1,0 +1,4 @@
+Type&Value
+Range&[ Infinity, Key(false) )
+Range&[ Key(false), Key(true) )
+Range&[ Key(true), Infinity )

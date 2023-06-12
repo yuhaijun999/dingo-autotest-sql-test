@@ -1,0 +1,6 @@
+Type&Value
+Range&[ Infinity, Key(M) )
+Range&[ Key(M), Key(Z) )
+Range&[ Key(Z), Key(m) )
+Range&[ Key(m), Key(z) )
+Range&[ Key(z), Infinity )
