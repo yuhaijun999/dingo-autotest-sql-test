@@ -1,0 +1,7 @@
+Type&Value
+Range&[ Infinity, Key(-2147483648) )
+Range&[ Key(-2147483648), Key(0) )
+Range&[ Key(0), Key(10000000) )
+Range&[ Key(10000000), Key(2147483648) )
+Range&[ Key(2147483648), Key(10000000000) )
+Range&[ Key(10000000000), Infinity )
