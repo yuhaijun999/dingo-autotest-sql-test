@@ -177,6 +177,8 @@ public class TestDQLMySQL extends BaseTestSuiteMySQL{
             Assert.assertEquals(actualResult, expectedResult);
         } else if (param.get("Validation_type").equals("assertNull")) {
             Assert.assertNull(mySQLHelper.queryWithObjReturn(sql));
+        } else if (param.get("Validation_type").equals("justExec")) {
+            mySQLHelper.execSql(sql);
         }
     }
 
