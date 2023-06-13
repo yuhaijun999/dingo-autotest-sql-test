@@ -169,8 +169,12 @@ public class TestDQL extends BaseTestSuite {
         } else if (param.get("Validation_type").equals("assertNull")) {
             Assert.assertNull(sqlHelper.queryWithObjReturn(sql));
         } else if (param.get("Validation_type").equals("justExec")) {
-            Thread.sleep(330000);
-            sqlHelper.execSql(sql);
+            if (param.get("Component").equalsIgnoreCase("Explain")) {
+                Thread.sleep(330000);
+                sqlHelper.execSql(sql);
+            } else {
+                sqlHelper.execSql(sql);
+            }
         }
     }
 
