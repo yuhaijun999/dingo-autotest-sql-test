@@ -60,7 +60,7 @@ public class TestDQL extends BaseTestSuite {
     }
 
     @Test(priority = 0, enabled = true, dataProvider = "dqlData1", dataProviderClass = YamlDataHelper.class, description = "查询测试，正向用例")
-    public void testDQL1(LinkedHashMap<String,String> param) throws SQLException, IOException {
+    public void testDQL1(LinkedHashMap<String,String> param) throws SQLException, IOException, InterruptedException {
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
@@ -169,6 +169,7 @@ public class TestDQL extends BaseTestSuite {
         } else if (param.get("Validation_type").equals("assertNull")) {
             Assert.assertNull(sqlHelper.queryWithObjReturn(sql));
         } else if (param.get("Validation_type").equals("justExec")) {
+            Thread.sleep(330000);
             sqlHelper.execSql(sql);
         }
     }
