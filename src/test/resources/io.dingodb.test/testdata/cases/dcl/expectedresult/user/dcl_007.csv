@@ -1,2 +1,2 @@
-host,name,select_priv,insert_priv,update_priv,delete_priv,create_priv,drop_priv,reload_priv,shutdown_priv,PROCESS_PRIV,FILE_PRIV,GRANT_PRIV,REFERENCES_PRIV,INDEX_PRIV,SHOW_DB_PRIV,CREATE_USER_PRIV
+host,user,select_priv,insert_priv,update_priv,delete_priv,create_priv,drop_priv,reload_priv,shutdown_priv,PROCESS_PRIV,FILE_PRIV,GRANT_PRIV,REFERENCES_PRIV,INDEX_PRIV,SHOW_DB_PRIV,CREATE_USER_PRIV
 %,dcltest7,Y,Y,Y,Y,Y,Y,Y,Y,Y,Y,N,Y,Y,Y,Y

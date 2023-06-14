@@ -1,1 +1,1 @@
-host,name,db,table_name,table_priv
+host,user,db,table_name,table_priv
