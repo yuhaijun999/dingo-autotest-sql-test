@@ -24,7 +24,7 @@ public class CommonArgs {
         if (System.getenv().containsKey("ConnectIP")) {
             return System.getenv("ConnectIP");
         }
-        return  "172.20.3.27";
+        return  "172.20.61.107";
     }
 
     public static String getDefaultConnectUser() {
