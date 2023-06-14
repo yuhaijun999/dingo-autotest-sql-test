@@ -1,1 +1,1 @@
-host,name,db,select_priv,insert_priv,update_priv,delete_priv,create_priv,drop_priv
+host,user,db,select_priv,insert_priv,update_priv,delete_priv,create_priv,drop_priv
