@@ -1,6 +1,7 @@
 package io.dingodb.mysqltest;
 
 import datahelper.MySQLYamlDataHelper;
+import io.dingodb.common.utils.CommonArgs;
 import io.dingodb.common.utils.MySQLUtils;
 import io.dingodb.dailytest.MySQLHelper;
 import org.testng.Assert;
@@ -13,6 +14,7 @@ import org.testng.annotations.Test;
 import utils.ParseCsv;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,7 +60,7 @@ public class TestProtocolMySQL extends BaseTestSuiteMySQL {
     }
 
     @Test(priority = 0, enabled = true, dataProvider = "mysqlProtocolData", dataProviderClass = MySQLYamlDataHelper.class, description = "mysql协议相关用例")
-    public void test01DCL(LinkedHashMap<String,String> param) throws SQLException, ClassNotFoundException {
+    public void test01DCL(LinkedHashMap<String,String> param) throws SQLException, ClassNotFoundException, IOException {
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
@@ -108,6 +110,12 @@ public class TestProtocolMySQL extends BaseTestSuiteMySQL {
                 System.out.println("Actual: " + actualResult);
                 Assert.assertTrue(actualResult.containsAll(expectedResult));
                 Assert.assertTrue(expectedResult.containsAll(actualResult));
+            }
+            
+            if (param.get("Validation_type").equals("connection")) {
+                Connection connectionCheck = MySQLUtils.getConnectionWithNotRoot(CommonArgs.getDefaultConnectUser(), CommonArgs.getDefaultConnectPass());
+                Assert.assertNotNull(connectionCheck);
+                connectionCheck.close();
             }
         } else if (param.get("Component").equals("Distribution")) {
             if (param.get("Validation_type").equals("csv_equals")) {
