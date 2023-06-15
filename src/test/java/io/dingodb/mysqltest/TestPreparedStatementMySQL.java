@@ -86,11 +86,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
             for (int i = 0; i < schemaList.size(); i++) {
                 String tableName = "";
                 if (!schemaList.get(i).trim().contains("_")) {
-                    tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
+                    tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                     mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
-                    tableName = param.get("TestID").trim() + "_0" + i + schemaName;
+                    tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
                     mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
                 }
                 tableList.add(tableName);
@@ -102,10 +102,10 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                 for (int j = 0; j < value_List.size(); j++) {
                     String tableName = "";
                     if (!schemaList.get(j).trim().contains("_")) {
-                        tableName = param.get("TestID").trim() + "_0" + j + schemaList.get(j).trim();
+                        tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaList.get(j).trim();
                     } else {
                         String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
-                        tableName = param.get("TestID").trim() + "_0" + j + schemaName;
+                        tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaName;
                     }
                     mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
                 }

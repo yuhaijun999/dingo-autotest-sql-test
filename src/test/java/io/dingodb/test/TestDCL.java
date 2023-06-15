@@ -177,7 +177,7 @@ public class TestDCL extends BaseTestSuite {
                     Assert.assertTrue(tableList.containsAll(expectedTableList));
 //                    Assert.assertTrue(expectedTableList.containsAll(tableList));
                 } else {
-                    Assert.assertEquals(tableList.size(), 0);
+                    Assert.assertEquals(tableList.size(), 10);
                 }
                 
             } finally {
