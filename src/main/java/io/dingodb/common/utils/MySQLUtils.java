@@ -97,7 +97,7 @@ public class MySQLUtils {
 
         List<String> tableList = new ArrayList<String>();
         String[] types={"TABLE"};
-        ResultSet rst = dmd.getTables(null, "dingo", null, types);
+        ResultSet rst = dmd.getTables(null, "DINGO", null, types);
         while (rst.next()) {
             tableList.add(rst.getString("TABLE_NAME").toUpperCase());
         }
