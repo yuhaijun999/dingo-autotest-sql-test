@@ -77,7 +77,7 @@ public class MySQLYamlDataHelper {
         return cases;
     }
 
-    @DataProvider (name = "mysqlDDLData1", parallel = false)
+    @DataProvider (name = "mysqlDDLData1", parallel = true)
     public Object[][] mysqlDDLCases1() throws IOException, InterruptedException {
         String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/ddl/mysql_ddl_cases.xlsx";
         String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
@@ -89,7 +89,7 @@ public class MySQLYamlDataHelper {
         return cases;
     }
 
-    @DataProvider (name = "mysqlDMLInsertData", parallel = false)
+    @DataProvider (name = "mysqlDMLInsertData", parallel = true)
     public Object[][] mysqlDMLInsertCases() throws IOException, InterruptedException {
         String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/dml/insert/mysql_insert_cases.xlsx";
         String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
@@ -101,7 +101,7 @@ public class MySQLYamlDataHelper {
         return cases;
     }
 
-    @DataProvider (name = "mysqlDMLUpDelData", parallel = false)
+    @DataProvider (name = "mysqlDMLUpDelData", parallel = true)
     public Object[][] mysqlDMLUpDelCases() throws IOException, InterruptedException {
         String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/dml/updatedelete/mysql_updatedelete_cases.xlsx";
         String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
@@ -149,7 +149,7 @@ public class MySQLYamlDataHelper {
         return cases;
     }
 
-    @DataProvider (name = "mysqlSQLBatchData", parallel = false)
+    @DataProvider (name = "mysqlSQLBatchData", parallel = true)
     public Object[][] mysqlSQLBatchCases() throws IOException, InterruptedException {
         String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/batchsql/mysql_batchsql_cases.xlsx";
         String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
@@ -173,7 +173,7 @@ public class MySQLYamlDataHelper {
         return cases;
     }
 
-    @DataProvider (name = "mysqlDCLData", parallel = false)
+    @DataProvider (name = "mysqlDCLData", parallel = true)
     public Object[][] mysqlDCLCases() throws IOException, InterruptedException {
         String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/dcl/mysql_dcl_cases.xlsx";
         String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
@@ -185,7 +185,7 @@ public class MySQLYamlDataHelper {
         return cases;
     }
 
-    @DataProvider (name = "mysqlProtocolData", parallel = false)
+    @DataProvider (name = "mysqlProtocolData", parallel = true)
     public Object[][] mysqlProtocolCases() throws IOException, InterruptedException {
         String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/protocol/mysql_protocol_cases.xlsx";
         String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
@@ -196,6 +196,4 @@ public class MySQLYamlDataHelper {
         }
         return cases;
     }
-    
-    
 }
