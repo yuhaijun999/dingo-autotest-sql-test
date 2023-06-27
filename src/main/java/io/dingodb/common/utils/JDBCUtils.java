@@ -46,7 +46,8 @@ public class JDBCUtils {
     public static Connection getConnection() throws ClassNotFoundException, SQLException {
         String timeout = properties.getProperty("timeout");
         String JDBC_DRIVER = properties.getProperty("JDBC_Driver");
-        String port = properties.getProperty("port");
+//        String port = properties.getProperty("port");
+        String port = CommonArgs.getDefaultExecutorPort();
         String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
 //        String defaultConnectIP = "172.20.3.13";
         String connectUrl = "jdbc:dingo:thin:url=" + defaultConnectIP + ":" + port + "/dingo?timeout=" + timeout;
@@ -63,7 +64,8 @@ public class JDBCUtils {
     //使用非root用户连接数据库，获取connection对象
     public static Connection getConnectionWithNotRoot(String userName, String passwd) throws ClassNotFoundException, SQLException {
         String JDBC_DRIVER = properties.getProperty("JDBC_Driver");
-        String port = properties.getProperty("port");
+//        String port = properties.getProperty("port");
+        String port = CommonArgs.getDefaultExecutorPort();
         String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
         String connectUrl = "jdbc:dingo:thin:url=" + defaultConnectIP + ":" + port + "/dingo";
 

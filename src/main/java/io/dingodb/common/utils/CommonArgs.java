@@ -41,6 +41,20 @@ public class CommonArgs {
         return  null;
     }
 
+    public static String getDefaultExecutorPort() {
+        if (System.getenv().containsKey("ExecutorPort")) {
+            return System.getenv("ExecutorPort");
+        }
+        return  "8765";
+    }
+
+    public static String getDefaultMySQLPort() {
+        if (System.getenv().containsKey("MySQLPort")) {
+            return System.getenv("MySQLPort");
+        }
+        return  "3307";
+    }
+
     //获取dingo-store仓库的最近提交ID
     public static String getStoreCommitID() {
         if (System.getenv().containsKey("COMMIT_ID")) {
