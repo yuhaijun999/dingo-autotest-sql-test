@@ -44,7 +44,8 @@ public class MySQLUtils {
     //获取数据库连接
     public static Connection getMySQLConnection() throws IOException, ClassNotFoundException, SQLException {
         String MySQL_JDBC_DRIVER = properties.getProperty("MySQL_JDBC_Driver");
-        String mysql_port = properties.getProperty("MySQL_Port");
+//        String mysql_port = properties.getProperty("MySQL_Port");
+        String mysql_port = CommonArgs.getDefaultMySQLPort();
         String timeout = properties.getProperty("MAX_EXECUTION_TIME");
         String timezone = properties.getProperty("SERVER_TIMEZONE");
         String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
@@ -68,7 +69,8 @@ public class MySQLUtils {
     //使用非root用户连接数据库，获取connection对象
     public static Connection getConnectionWithNotRoot(String userName, String passwd) throws ClassNotFoundException, SQLException {
         String MySQL_JDBC_DRIVER = properties.getProperty("MySQL_JDBC_Driver");
-        String mysql_port = properties.getProperty("MySQL_Port");
+//        String mysql_port = properties.getProperty("MySQL_Port");
+        String mysql_port = CommonArgs.getDefaultMySQLPort();
         String timeout = properties.getProperty("MAX_EXECUTION_TIME");
         String timezone = properties.getProperty("SERVER_TIMEZONE");
         String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
