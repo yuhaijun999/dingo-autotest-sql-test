@@ -49,10 +49,26 @@ public class CommonArgs {
         return  "";
     }
 
+    //获取dingo-store仓库的最近提交作者
+    public static String getStoreCommitAuthor() {
+        if (System.getenv().containsKey("COMMIT_AUTHOR")) {
+            return System.getenv("COMMIT_AUTHOR");
+        }
+        return  "";
+    }
+
     //获取dingo仓库的最近提交ID
     public static String getDingoCommitID() {
         if (System.getenv().containsKey("DINGO_COMMIT_ID")) {
             return System.getenv("DINGO_COMMIT_ID");
+        }
+        return  "";
+    }
+
+    //获取dingo仓库的最近提交作者
+    public static String getDingoCommitAuthor() {
+        if (System.getenv().containsKey("DINGO_COMMIT_AUTHOR")) {
+            return System.getenv("DINGO_COMMIT_AUTHOR");
         }
         return  "";
     }
