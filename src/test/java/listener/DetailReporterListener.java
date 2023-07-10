@@ -54,7 +54,7 @@ public class DetailReporterListener implements IReporter{
     // Reusable buffer
     private final StringBuilder buffer = new StringBuilder();
 
-    private String fileNameRep = "DingoDB-SQLTest-ReportDetail_" + CommonArgs.getCurDateStr("yyyyMMddhhmmss") +".html";
+    private String fileNameRep = "DingoDB-SQLTest-ReportDetail_" + CommonArgs.getCurDateStr("yyyyMMddHHmmss") +".html";
     private String hostIP = CommonArgs.getDefaultDingoClusterIP();
     private String storeCommitID = CommonArgs.getStoreCommitID();
     private String storeCommitAuthor = CommonArgs.getStoreCommitAuthor();

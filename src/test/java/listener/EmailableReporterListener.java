@@ -56,7 +56,7 @@ public class EmailableReporterListener implements IReporter{
     // Reusable buffer
     private final StringBuilder buffer = new StringBuilder();
 
-    private String fileNameSum = "DingoDB-SQLTest-Summary_" + CommonArgs.getCurDateStr("yyyyMMddhhmmss") +".html";
+    private String fileNameSum = "DingoDB-SQLTest-Summary_" + CommonArgs.getCurDateStr("yyyyMMddHHmmss") +".html";
     private String hostIP = CommonArgs.getDefaultDingoClusterIP();
     private String storeCommitID = CommonArgs.getStoreCommitID();
     private String storeCommitAuthor = CommonArgs.getStoreCommitAuthor();
