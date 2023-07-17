@@ -1,6 +1,6 @@
 CREATE TABLE $table (
     id int,
-    name varchar(32) not null,
+    name varchar not null,
     age int,
     amount double,
     primary key(id,name)
