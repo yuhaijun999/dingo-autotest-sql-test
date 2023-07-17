@@ -147,7 +147,11 @@ public class TestDDL extends BaseTestSuite{
             sqlHelper.execSql(ddlSql);
             String drop_table_name = "";
             if (ddlSql.contains("drop")) {
-                drop_table_name = ddlSql.substring(11);
+                if (ddlSql.contains("if exists")) {
+                    drop_table_name = ddlSql.substring(21);
+                } else {
+                    drop_table_name = ddlSql.substring(11);
+                }
             }
             List<String> existTableList = JDBCUtils.getTableList();
             Assert.assertFalse(existTableList.contains(drop_table_name));

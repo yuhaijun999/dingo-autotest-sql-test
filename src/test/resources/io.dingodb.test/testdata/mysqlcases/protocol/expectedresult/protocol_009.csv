@@ -1,5 +1,5 @@
 Type&Value
-Range&[ Infinity, Key(-99999.0) )
+Range&[ Infinity, Key(-99999.9999) )
 Range&[ Key(-99999.0), Key(1000.1234) )
 Range&[ Key(1000.1234), Key(3.2345678769019E9) )
 Range&[ Key(3.2345678769019E9), Infinity )
