@@ -67,6 +67,7 @@ public class JDBCUtils {
 //        String port = properties.getProperty("port");
         String port = CommonArgs.getDefaultExecutorPort();
         String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
+//        String defaultConnectIP = "172.20.3.13";
         String connectUrl = "jdbc:dingo:thin:url=" + defaultConnectIP + ":" + port + "/dingo";
 
         //加载驱动
