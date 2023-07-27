@@ -38,6 +38,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SQLHelper {
@@ -523,6 +524,8 @@ public class SQLHelper {
                 String columnTypeName = resultSetMetaData.getColumnTypeName(i);
                 if (resultSet.getObject(columnLabel) == null) {
                     rowList.add(String.valueOf(resultSet.getObject(columnLabel)));
+                } else if (resultSet.getObject(columnLabel).getClass().toString().equalsIgnoreCase("class [B")) {
+                    rowList.add(Arrays.toString((byte[]) resultSet.getObject(columnLabel)));
                 } else if (columnTypeName.equalsIgnoreCase("ARRAY")) {
                     rowList.add(resultSet.getArray(columnLabel).toString());
                 } else if (columnTypeName.equalsIgnoreCase("DATE")) {
@@ -561,6 +564,8 @@ public class SQLHelper {
                 String columnTypeName = resultSetMetaData.getColumnTypeName(i);
                 if (resultSet.getObject(columnLabel) == null) {
                     rowList.add(String.valueOf(resultSet.getObject(columnLabel)));
+                } else if (resultSet.getObject(columnLabel).getClass().toString().equalsIgnoreCase("class [B")) {
+                    rowList.add(Arrays.toString((byte[]) resultSet.getObject(columnLabel)));
                 } else if (columnTypeName.equalsIgnoreCase("ARRAY")) {
                     rowList.add(resultSet.getArray(columnLabel).toString());
                 } else if (columnTypeName.equalsIgnoreCase("DATE")) {
@@ -597,6 +602,8 @@ public class SQLHelper {
                 String columnTypeName = resultSetMetaData.getColumnTypeName(i);
                 if (resultSet.getObject(columnLabel) == null) {
                     rowList.add(String.valueOf(resultSet.getObject(columnLabel)));
+                } else if (resultSet.getObject(columnLabel).getClass().toString().equalsIgnoreCase("class [B")) {
+                    rowList.add(Arrays.toString((byte[]) resultSet.getObject(columnLabel)));
                 } else if (columnTypeName.equalsIgnoreCase("ARRAY")) {
                     rowList.add(resultSet.getArray(columnLabel).toString());
                 } else if (columnTypeName.equalsIgnoreCase("DATE")) {

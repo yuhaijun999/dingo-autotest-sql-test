@@ -38,6 +38,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MySQLHelper {
@@ -524,6 +525,8 @@ public class MySQLHelper {
                 String columnTypeName = resultSetMetaData.getColumnTypeName(i);
                 if (resultSet.getObject(columnLabel) == null) {
                     rowList.add(String.valueOf(resultSet.getObject(columnLabel)));
+                } else if (resultSet.getObject(columnLabel).getClass().toString().equalsIgnoreCase("class [B")) {
+                    rowList.add(Arrays.toString((byte[]) resultSet.getObject(columnLabel)));
                 } else if (columnTypeName.equalsIgnoreCase("ARRAY")) {
                     rowList.add(resultSet.getArray(columnLabel).toString());
                 } else if (columnTypeName.equalsIgnoreCase("DATE")) {
@@ -561,6 +564,8 @@ public class MySQLHelper {
                 String columnTypeName = resultSetMetaData.getColumnTypeName(i);
                 if (resultSet.getObject(columnLabel) == null) {
                     rowList.add(String.valueOf(resultSet.getObject(columnLabel)));
+                } else if (resultSet.getObject(columnLabel).getClass().toString().equalsIgnoreCase("class [B")) {
+                    rowList.add(Arrays.toString((byte[]) resultSet.getObject(columnLabel)));
                 } else if (columnTypeName.equalsIgnoreCase("ARRAY")) {
                     rowList.add(resultSet.getArray(columnLabel).toString());
                 } else if (columnTypeName.equalsIgnoreCase("DATE")) {
@@ -595,6 +600,8 @@ public class MySQLHelper {
                 String columnTypeName = resultSetMetaData.getColumnTypeName(colIndexList.get(i));
                 if (resultSet.getObject(colIndexList.get(i)) == null) {
                     rowList.add(String.valueOf(resultSet.getObject(colIndexList.get(i))));
+                } else if (resultSet.getObject(colIndexList.get(i)).getClass().toString().equalsIgnoreCase("class [B")) {
+                    rowList.add(Arrays.toString((byte[]) resultSet.getObject(colIndexList.get(i))));
                 } else if (columnTypeName.equalsIgnoreCase("ARRAY")) {
                     rowList.add(resultSet.getArray(colIndexList.get(i)).toString());
                 } else if (columnTypeName.equalsIgnoreCase("DATE")) {
@@ -631,6 +638,8 @@ public class MySQLHelper {
                 String columnTypeName = resultSetMetaData.getColumnTypeName(i);
                 if (resultSet.getObject(columnLabel) == null) {
                     rowList.add(String.valueOf(resultSet.getObject(columnLabel)));
+                } else if (resultSet.getObject(columnLabel).getClass().toString().equalsIgnoreCase("class [B")) {
+                    rowList.add(Arrays.toString((byte[]) resultSet.getObject(columnLabel)));
                 } else if (columnTypeName.equalsIgnoreCase("ARRAY")) {
                     rowList.add(resultSet.getArray(columnLabel).toString());
                 } else if (columnTypeName.equalsIgnoreCase("DATE")) {
