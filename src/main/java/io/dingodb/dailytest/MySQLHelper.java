@@ -219,7 +219,7 @@ public class MySQLHelper {
                         break;
                     }
                     case "Float": {
-                        ps.setObject(i + 1, Double.parseDouble((String) values[i]));
+                        ps.setObject(i + 1, Float.parseFloat((String) values[i]));
                         break;
                     }
                     case "Double": {
@@ -291,7 +291,7 @@ public class MySQLHelper {
                         break;
                     }
                     case "Float": {
-                        ps.setObject(i + 1, Double.parseDouble((String) values[i]));
+                        ps.setObject(i + 1, Float.parseFloat((String) values[i]));
                         break;
                     }
                     case "Double": {
@@ -362,7 +362,7 @@ public class MySQLHelper {
                         break;
                     }
                     case "Float": {
-                        ps.setObject(i + 1, Double.parseDouble((String) values[i]));
+                        ps.setObject(i + 1, Float.parseFloat((String) values[i]));
                         break;
                     }
                     case "Double": {
@@ -452,8 +452,8 @@ public class MySQLHelper {
                             break;
                         }
                         case "Float": {
-                            double randDouble = GetRandomValue.getRandDouble(floatMin, floatMax, floatScale);
-                            ps.setObject(j + 1, randDouble);
+                            float randFloat = GetRandomValue.getRandFloat(floatMin, floatMax, floatScale);
+                            ps.setObject(j + 1, randFloat);
                             break;
                         }
                         case "Double": {
@@ -639,7 +639,7 @@ public class MySQLHelper {
                 if (resultSet.getObject(columnLabel) == null) {
                     rowList.add(String.valueOf(resultSet.getObject(columnLabel)));
                 } else if (resultSet.getObject(columnLabel).getClass().toString().equalsIgnoreCase("class [B")) {
-                    rowList.add(Arrays.toString((byte[]) resultSet.getObject(columnLabel)));
+                    rowList.add(Arrays.toString((byte[]) resultSet.getObject(columnLabel)).toString());
                 } else if (columnTypeName.equalsIgnoreCase("ARRAY")) {
                     rowList.add(resultSet.getArray(columnLabel).toString());
                 } else if (columnTypeName.equalsIgnoreCase("DATE")) {

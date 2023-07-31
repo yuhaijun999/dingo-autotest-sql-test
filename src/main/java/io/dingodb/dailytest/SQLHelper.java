@@ -218,7 +218,7 @@ public class SQLHelper {
                         break;
                     }
                     case "Float": {
-                        ps.setObject(i + 1, Double.parseDouble((String) values[i]));
+                        ps.setObject(i + 1, Float.parseFloat((String) values[i]));
                         break;
                     }
                     case "Double": {
@@ -290,7 +290,7 @@ public class SQLHelper {
                         break;
                     }
                     case "Float": {
-                        ps.setObject(i + 1, Double.parseDouble((String) values[i]));
+                        ps.setObject(i + 1, Float.parseFloat((String) values[i]));
                         break;
                     }
                     case "Double": {
@@ -361,7 +361,7 @@ public class SQLHelper {
                         break;
                     }
                     case "Float": {
-                        ps.setObject(i + 1, Double.parseDouble((String) values[i]));
+                        ps.setObject(i + 1, Float.parseFloat((String) values[i]));
                         break;
                     }
                     case "Double": {
@@ -451,8 +451,8 @@ public class SQLHelper {
                             break;
                         }
                         case "Float": {
-                            double randDouble = GetRandomValue.getRandDouble(floatMin, floatMax, floatScale);
-                            ps.setObject(j + 1, randDouble);
+                            float randFloat = GetRandomValue.getRandFloat(floatMin, floatMax, floatScale);
+                            ps.setObject(j + 1, randFloat);
                             break;
                         }
                         case "Double": {
