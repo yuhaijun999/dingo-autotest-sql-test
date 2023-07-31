@@ -39,11 +39,19 @@ public class GetRandomValue {
         return rd.nextLong();
     }
 
-    //获取max以内的随机浮点数
+    //获取max以内的随机Double浮点数
     public static double getRandDouble(int min, int max, int scaleNum) {
         double d0 = min + ((max -min) * rd.nextDouble());
         BigDecimal bg = new BigDecimal(d0);
         double d1 = bg.setScale(scaleNum, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return d1;
+    }
+
+    //获取max以内的随机Float浮点数
+    public static float getRandFloat(int min, int max, int scaleNum) {
+        float d0 = min + ((max -min) * rd.nextFloat());
+        BigDecimal bg = new BigDecimal(d0);
+        float d1 = bg.setScale(scaleNum, BigDecimal.ROUND_HALF_UP).floatValue();
         return d1;
     }
 
