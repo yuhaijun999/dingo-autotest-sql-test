@@ -101,7 +101,7 @@ public class YamlDataHelper {
         return cases;
     }
 
-    @DataProvider (name = "dmlInsertData", parallel = false)
+    @DataProvider (name = "dmlInsertData", parallel = true)
     public Object[][] dmlInsertCases() throws IOException, InterruptedException {
         String excelPath = "src/test/resources/io.dingodb.test/testdata/cases/dml/insert/sql_insert_cases.xlsx";
         String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
@@ -113,7 +113,7 @@ public class YamlDataHelper {
         return cases;
     }
 
-    @DataProvider (name = "dmlUpDelData", parallel = false)
+    @DataProvider (name = "dmlUpDelData", parallel = true)
     public Object[][] dmlUpDelCases() throws IOException, InterruptedException {
         String excelPath = "src/test/resources/io.dingodb.test/testdata/cases/dml/updatedelete/sql_updatedelete_cases.xlsx";
         String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
