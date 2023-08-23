@@ -134,7 +134,9 @@ public class GetYaml {
                 String cellValue = ParseExcel.getCellValue(sheet, k, c);
                 caseMap[k - 1].put(arrkey.get(c), cellValue);
             }
-            caselist.add(caseMap[k-1]);
+            if (!caseMap[k-1].get("Testable").equalsIgnoreCase("n")) {
+                caselist.add(caseMap[k-1]);
+            }
         }
         workbook.close();
         map.put(caseGroup, caselist);

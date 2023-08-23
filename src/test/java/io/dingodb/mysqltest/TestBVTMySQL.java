@@ -17,7 +17,6 @@
 package io.dingodb.mysqltest;
 
 import io.dingodb.common.utils.MySQLUtils;
-import io.dingodb.dailytest.MySQLHelper;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -33,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestBVTMySQL extends BaseTestSuiteMySQL {
-    private static MySQLHelper mySQLHelper;
+//    private static MySQLHelper mySQLHelper;
     public static Connection connection;
     public static String tableName = "mysqlbvttest";
 
@@ -50,9 +49,9 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
     }
     
     @BeforeClass(alwaysRun = true, description = "测试开始前验证数据库连接")
-    public static void setUpAll() {
-        mySQLHelper = new MySQLHelper();
-        connection = MySQLHelper.connection;
+    public static void setUpAll() throws SQLException, IOException, ClassNotFoundException {
+//        mySQLHelper = new MySQLHelper();
+        connection = MySQLUtils.getMySQLConnection();
         Assert.assertNotNull(connection);
     }
 
