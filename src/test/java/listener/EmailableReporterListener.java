@@ -62,6 +62,9 @@ public class EmailableReporterListener implements IReporter{
     private String storeCommitAuthor = CommonArgs.getStoreCommitAuthor();
     private String dingoCommitID = CommonArgs.getDingoCommitID();
     private String dingoCommitAuthor = CommonArgs.getDingoCommitAuthor();
+    private String dingoMergeRepo = CommonArgs.getMergeRepo();
+    private String dingoMergeTime = CommonArgs.getMergeTime();
+    private String dingoBuildCause = CommonArgs.getBuildCause();
 
     public void setFileNameSum(String fileName) {
         this.fileNameSum = fileName;
@@ -159,12 +162,17 @@ public class EmailableReporterListener implements IReporter{
         writer.println("<body>");
         writer.println("<h1>DingoDB测试报告</h1>");
         writer.println();
+        writer.println("<h4>本次构建的触发原因：" + dingoBuildCause + "</h4>");
+        writer.println("************************************************************");
         writer.println("<h4>. 测试日期：" + dateNowStr + "</h4>");
         writer.println("<h4>. 测试节点IP：" + hostIP + "</h4>");
+        writer.println("<h4>. 本次构建的触发仓库：" + dingoMergeRepo + "</h4>");
+        writer.println("<h4>. 本次构建的提交合并时间：" + dingoMergeTime + "</h4>");
         writer.println("<h4>. 本次测试的store commit ID：" + storeCommitID + "</h4>");
         writer.println("<h4>. 本次测试的store仓库提交者 " + storeCommitAuthor + "</h4>");
         writer.println("<h4>. 本次测试的dingo commit ID：" + dingoCommitID + "</h4>");
         writer.println("<h4>. 本次测试的dingo仓库提交者 " + dingoCommitAuthor + "</h4>");
+        
         writeSuiteSummary();
 //        writeScenarioSummary();
 //        writeScenarioDetails();
