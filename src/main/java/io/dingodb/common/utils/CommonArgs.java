@@ -87,6 +87,30 @@ public class CommonArgs {
         return  "";
     }
 
+    //获取代码合并的触发仓库
+    public static String getMergeRepo() {
+        if (System.getenv().containsKey("MERGE_REPO")) {
+            return System.getenv("MERGE_REPO");
+        }
+        return  "";
+    }
+
+    //获取代码合并的时间
+    public static String getMergeTime() {
+        if (System.getenv().containsKey("MERGE_TIME")) {
+            return System.getenv("MERGE_TIME");
+        }
+        return  "";
+    }
+
+    //获取构建触发原因
+    public static String getBuildCause() {
+        if (System.getenv().containsKey("BUILD_CAUSE")) {
+            return System.getenv("BUILD_CAUSE");
+        }
+        return  "";
+    }
+
     //获取当前日期的字符串
     public static String getCurDateStr(String pattern) {
         Date date = new Date();
