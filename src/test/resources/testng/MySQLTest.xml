@@ -24,63 +24,63 @@
         </classes>
     </test>
     
-    <test name="MySQL_BVT_Test" enabled="true" parallel="methods" thread-count="1">
+    <test name="MySQL_BVT_Test" enabled="true" parallel="methods" thread-count="1" time-out="120000">
         <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
         <classes>
             <class name="io.dingodb.mysqltest.TestBVTMySQL"></class>
         </classes>
     </test>
     
-    <test name="MySQL_DQL_Test" enabled="true" parallel="methods" thread-count="1">
+    <test name="MySQL_DQL_Test" enabled="true" parallel="methods" thread-count="1" time-out="1800000">
         <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
         <classes>
             <class name="io.dingodb.mysqltest.TestDQLMySQL"></class>
         </classes>
     </test>
 
-    <test name="MySQL_DML_Test" enabled="true" parallel="methods" thread-count="1">
+    <test name="MySQL_DML_Test" enabled="true" parallel="methods" thread-count="1" time-out="1800000">
         <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
         <classes>
             <class name="io.dingodb.mysqltest.TestDMLMySQL"></class>
         </classes>
     </test>
 
-    <test name="MySQL_DDL_Test" enabled="true" parallel="methods" thread-count="1">
+    <test name="MySQL_DDL_Test" enabled="true" parallel="methods" thread-count="1" time-out="120000">
         <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
         <classes>
             <class name="io.dingodb.mysqltest.TestDDLMySQL"></class>
         </classes>
     </test>
 
-    <test name="MySQL_DCL_Test" enabled="true" parallel="methods" thread-count="1">
+    <test name="MySQL_DCL_Test" enabled="true" parallel="methods" thread-count="1" time-out="120000">
         <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
         <classes>
             <class name="io.dingodb.mysqltest.TestDCLMySQL"></class>
         </classes>
     </test>
 
-    <test name="MySQL_BatchSQL_Test" enabled="true" parallel="methods" thread-count="1">
+    <test name="MySQL_BatchSQL_Test" enabled="true" parallel="methods" thread-count="1" time-out="120000">
         <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
         <classes>
             <class name="io.dingodb.mysqltest.TestBatchSQLMySQL"></class>
         </classes>
     </test>
 
-    <test name="MySQL_PreparedStatement_Test" enabled="true" parallel="methods" thread-count="1">
+    <test name="MySQL_PreparedStatement_Test" enabled="true" parallel="methods" thread-count="1" time-out="1200000">
         <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
         <classes>
             <class name="io.dingodb.mysqltest.TestPreparedStatementMySQL"></class>
         </classes>
     </test>
 
-    <test name="MySQL_Negative_Test" enabled="true" parallel="methods" thread-count="1">
+    <test name="MySQL_Negative_Test" enabled="true" parallel="methods" thread-count="1" time-out="120000">
         <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
         <classes>
             <class name="io.dingodb.mysqltest.TestNegativeMySQL"></class>
         </classes>
     </test>
 
-    <test name="MySQL_Protocol_Test" enabled="true" parallel="methods" thread-count="1">
+    <test name="MySQL_Protocol_Test" enabled="true" parallel="methods" thread-count="1" time-out="120000">
         <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
         <classes>
             <class name="io.dingodb.mysqltest.TestProtocolMySQL"></class>
