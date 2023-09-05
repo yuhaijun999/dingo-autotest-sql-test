@@ -319,6 +319,18 @@ public class TestDQL extends BaseTestSuite {
             } else {
                 sqlHelper.execSql(sql);
             }
+        } else if (param.get("Validation_type").equals("csv_containsAll")) {
+            if (param.get("Component").equalsIgnoreCase("Explain-key")) {
+                Thread.sleep(330000);
+                String resultFile = param.get("Expected_result").trim();
+                List<List<String>> expectedResult = new ArrayList<>();
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+                System.out.println("Expected: " + expectedResult);
+                List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
+                System.out.println("Actual: " + actualResult);
+                Assert.assertTrue(actualResult.containsAll(expectedResult));
+                Assert.assertTrue(expectedResult.containsAll(actualResult));
+            }
         }
     }
     
