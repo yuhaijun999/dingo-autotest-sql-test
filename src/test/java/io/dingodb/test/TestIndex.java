@@ -35,11 +35,11 @@ public class TestIndex extends BaseTestSuite {
         if(createTableSet.size() > 0) {
             List<String> finalTableList = JDBCUtils.getTableList();
             System.out.println("Get table list: " + finalTableList);
-//            for (String s : createTableSet) {
-//                if (finalTableList.contains(s.toUpperCase())) {
-//                    sqlHelper.doDropTable(s);
-//                }
-//            }
+            for (String s : createTableSet) {
+                if (finalTableList.contains(s.toUpperCase())) {
+                    sqlHelper.doDropTable(s);
+                }
+            }
         }
     }
 
@@ -138,6 +138,18 @@ public class TestIndex extends BaseTestSuite {
             System.out.println("Actual: " + actualResult);
             Assert.assertTrue(actualResult.containsAll(expectedResult));
             Assert.assertTrue(expectedResult.containsAll(actualResult));
+        } else if (param.get("Validation_type").equalsIgnoreCase("similarity")) {
+            String resultFile = param.get("Expected_result").trim();
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+            }
+            System.out.println("Expected: " + expectedResult);
+            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertTrue(assertSimilarity(actualResult, expectedResult));
         } else if (param.get("Validation_type").equals("string_equals")) {
             String expectedResult = param.get("Expected_result");
             System.out.println("Expected: " + expectedResult);
@@ -161,4 +173,59 @@ public class TestIndex extends BaseTestSuite {
             }
         }
     }
+    
+    private Boolean assertSimilarity(List<List<String>> actualList, List<List<String>> expectedList) {
+        List actualIdList = new ArrayList<>();
+        List actualDistanceList = new ArrayList<>();
+        int actualColNum = actualList.get(0).size();
+        for (int i = 1; i< actualList.size(); i++) {
+            String actualVectorId = actualList.get(i).get(actualColNum - 2);
+            actualIdList.add(actualVectorId);
+            String actualVectorDistance = actualList.get(i).get(actualColNum - 1);
+            actualDistanceList.add(Double.parseDouble(actualVectorDistance));
+        }
+
+        List expectedIdList = new ArrayList<>();
+        List expectedDistanceList = new ArrayList<>();
+        int expectedColNum = expectedList.get(0).size();
+        for (int i = 1; i< expectedList.size(); i++) {
+            String expectedVectorId = expectedList.get(i).get(expectedColNum - 2);
+            expectedIdList.add(expectedVectorId);
+            String expectedVectorDistance = expectedList.get(i).get(expectedColNum - 1);
+            expectedDistanceList.add(Double.parseDouble(expectedVectorDistance));
+        }
+        
+        //计算向量id相似度
+        int similarCount = 0;
+        for (int j = 0; j < actualIdList.size(); j++) {
+            if (expectedIdList.contains(actualIdList.get(j))) {
+                similarCount += 1;
+            } 
+        }
+        System.out.println("similarCount: " + similarCount);
+        Double similarRatio = (double) similarCount / (double) actualIdList.size();
+        System.out.println("similarKeyRatio: " + similarRatio);
+        if (similarRatio >= 0.8) {
+            return true;
+        } else {
+            double similarity = calculateSimilarity(actualDistanceList, expectedDistanceList);
+            System.out.println("similarity: " + similarity);
+            if (similarity > 0.5) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    
+    private static double calculateSimilarity(List<Double> actualDistance, List<Double> expectedDistance) {
+        double sum = 0;
+        for (int i = 0; i < actualDistance.size(); i++) {
+            double diff = actualDistance.get(i) - expectedDistance.get(i);
+            sum += diff * diff;
+        }
+        return 1/(1 + Math.sqrt(sum));
+    }
+    
+    
 }
