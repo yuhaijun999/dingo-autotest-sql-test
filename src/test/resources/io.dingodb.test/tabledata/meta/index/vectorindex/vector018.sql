@@ -5,6 +5,6 @@ CREATE TABLE $table (
     amount double,
     feature float array not null,
     feature_id bigint not null,
-    index feature_index vector(feature_id, feature) parameters(type=flat, metricType=METRIC_TYPE_COSINE, dimension=128),
+    index feature_index vector(feature_id, feature) parameters(type=flat, metricType=COSINE, dimension=128),
     primary key(id)
 )
