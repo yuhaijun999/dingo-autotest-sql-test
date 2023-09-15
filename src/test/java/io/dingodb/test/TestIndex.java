@@ -149,7 +149,7 @@ public class TestIndex extends BaseTestSuite {
             System.out.println("Expected: " + expectedResult);
             List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
             System.out.println("Actual: " + actualResult);
-            Assert.assertTrue(assertSimilarity(actualResult, expectedResult));
+            Assert.assertTrue(assertSimilarity(actualResult, expectedResult,param.get("Sub_component")));
         } else if (param.get("Validation_type").equals("string_equals")) {
             String expectedResult = param.get("Expected_result");
             System.out.println("Expected: " + expectedResult);
@@ -174,7 +174,7 @@ public class TestIndex extends BaseTestSuite {
         }
     }
     
-    private Boolean assertSimilarity(List<List<String>> actualList, List<List<String>> expectedList) {
+    private Boolean assertSimilarity(List<List<String>> actualList, List<List<String>> expectedList, String algorithm) {
         List actualIdList = new ArrayList<>();
         List actualDistanceList = new ArrayList<>();
         int actualColNum = actualList.get(0).size();
@@ -205,15 +205,41 @@ public class TestIndex extends BaseTestSuite {
         System.out.println("similarCount: " + similarCount);
         Double similarRatio = (double) similarCount / (double) actualIdList.size();
         System.out.println("similarKeyRatio: " + similarRatio);
-        if (similarRatio >= 0.8) {
-            return true;
-        } else {
-            double similarity = calculateSimilarity(actualDistanceList, expectedDistanceList);
-            System.out.println("similarity: " + similarity);
-            if (similarity > 0.5) {
+        if (algorithm.contains("hnsw")) {
+            if (similarRatio >= 0.8) {
                 return true;
             } else {
-                return false;
+                double similarity = calculateSimilarity(actualDistanceList, expectedDistanceList);
+                System.out.println("similarity: " + similarity);
+                if (similarity > 0.5) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else if (algorithm.contains("flat")) {
+            if (similarRatio == 1.0) {
+                return true;
+            } else {
+                double similarity = calculateSimilarity(actualDistanceList, expectedDistanceList);
+                System.out.println("similarity: " + similarity);
+                if (similarity > 0.9) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            if (similarRatio >= 0.6) {
+                return true;
+            } else {
+                double similarity = calculateSimilarity(actualDistanceList, expectedDistanceList);
+                System.out.println("similarity: " + similarity);
+                if (similarity >= 0.6) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
     }
