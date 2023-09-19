@@ -150,6 +150,30 @@ public class TestIndex extends BaseTestSuite {
             List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
             System.out.println("Actual: " + actualResult);
             Assert.assertTrue(assertSimilarity(actualResult, expectedResult,param.get("Sub_component")));
+        } else if (param.get("Validation_type").equalsIgnoreCase("similarityId")) {
+            String resultFile = param.get("Expected_result").trim();
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+            }
+            System.out.println("Expected: " + expectedResult);
+            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertTrue(assertSimilarityID(actualResult, expectedResult,param.get("Sub_component")));
+        } else if (param.get("Validation_type").equalsIgnoreCase("similarityDistance")) {
+            String resultFile = param.get("Expected_result").trim();
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+            }
+            System.out.println("Expected: " + expectedResult);
+            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertTrue(assertSimilarityDistance(actualResult, expectedResult,param.get("Sub_component")));
         } else if (param.get("Validation_type").equals("string_equals")) {
             String expectedResult = param.get("Expected_result");
             System.out.println("Expected: " + expectedResult);
@@ -170,6 +194,94 @@ public class TestIndex extends BaseTestSuite {
                 sqlHelper.execSql(sql);
             } else {
                 sqlHelper.execSql(sql);
+            }
+        }
+    }
+
+    private Boolean assertSimilarityID(List<List<String>> actualList, List<List<String>> expectedList, String algorithm) {
+        List actualIdList = new ArrayList<>();
+        int actualColNum = actualList.get(0).size();
+        for (int i = 1; i< actualList.size(); i++) {
+            String actualVectorId = actualList.get(i).get(actualColNum - 1);
+            actualIdList.add(actualVectorId);
+        }
+
+        List expectedIdList = new ArrayList<>();
+        int expectedColNum = expectedList.get(0).size();
+        for (int i = 1; i< expectedList.size(); i++) {
+            String expectedVectorId = expectedList.get(i).get(expectedColNum - 1);
+            expectedIdList.add(expectedVectorId);
+        }
+
+        //计算向量id相似度
+        int similarCount = 0;
+        for (int j = 0; j < actualIdList.size(); j++) {
+            if (expectedIdList.contains(actualIdList.get(j))) {
+                similarCount += 1;
+            }
+        }
+        System.out.println("similarCount: " + similarCount);
+        Double similarRatio = (double) similarCount / (double) actualIdList.size();
+        System.out.println("similarKeyRatio: " + similarRatio);
+        if (algorithm.contains("hnsw")) {
+            if (similarRatio >= 0.8) {
+                return true;
+            } else {
+                return false;
+            } 
+        } else if (algorithm.contains("flat")) {
+            if (similarRatio == 1.0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if (similarRatio >= 0.6) {
+                return true;
+            } else {
+               return false;
+            }
+        }
+    }
+
+    private Boolean assertSimilarityDistance(List<List<String>> actualList, List<List<String>> expectedList, String algorithm) {
+        List actualDistanceList = new ArrayList<>();
+        int actualColNum = actualList.get(0).size();
+        for (int i = 1; i< actualList.size(); i++) {
+            String actualVectorDistance = actualList.get(i).get(actualColNum - 1);
+            actualDistanceList.add(Double.parseDouble(actualVectorDistance));
+        }
+        
+        List expectedDistanceList = new ArrayList<>();
+        int expectedColNum = expectedList.get(0).size();
+        for (int i = 1; i< expectedList.size(); i++) {
+            String expectedVectorDistance = expectedList.get(i).get(expectedColNum - 1);
+            expectedDistanceList.add(Double.parseDouble(expectedVectorDistance));
+        }
+        
+        if (algorithm.contains("hnsw")) {
+            double similarity = calculateSimilarity(actualDistanceList, expectedDistanceList);
+            System.out.println("similarity: " + similarity);
+            if (similarity > 0.5) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (algorithm.contains("flat")) {
+            double similarity = calculateSimilarity(actualDistanceList, expectedDistanceList);
+            System.out.println("similarity: " + similarity);
+            if (similarity > 0.9) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            double similarity = calculateSimilarity(actualDistanceList, expectedDistanceList);
+            System.out.println("similarity: " + similarity);
+            if (similarity >= 0.6) {
+                return true;
+            } else {
+                return false;
             }
         }
     }
@@ -252,6 +364,5 @@ public class TestIndex extends BaseTestSuite {
         }
         return 1/(1 + Math.sqrt(sum));
     }
-    
     
 }
