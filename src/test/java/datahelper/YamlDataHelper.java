@@ -101,7 +101,7 @@ public class YamlDataHelper {
         return cases;
     }
 
-    @DataProvider (name = "dmlInsertData", parallel = true)
+    @DataProvider (name = "dmlInsertData", parallel = false)
     public Object[][] dmlInsertCases() throws IOException, InterruptedException {
         String excelPath = "src/test/resources/io.dingodb.test/testdata/cases/dml/insert/sql_insert_cases.xlsx";
         String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
@@ -113,7 +113,7 @@ public class YamlDataHelper {
         return cases;
     }
 
-    @DataProvider (name = "dmlUpDelData", parallel = true)
+    @DataProvider (name = "dmlUpDelData", parallel = false)
     public Object[][] dmlUpDelCases() throws IOException, InterruptedException {
         String excelPath = "src/test/resources/io.dingodb.test/testdata/cases/dml/updatedelete/sql_updatedelete_cases.xlsx";
         String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
@@ -208,4 +208,17 @@ public class YamlDataHelper {
         }
         return cases;
     }
+
+    @DataProvider (name = "indexData2", parallel = true)
+    public Object[][] indexCases2() throws IOException, InterruptedException {
+        String excelPath = "src/test/resources/io.dingodb.test/testdata/cases/index/index_cases2.xlsx";
+        String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
+        List<Map<String, String>> yamlList = getYamlList(yamlPath);
+        Object[][] cases = new Object[yamlList.size()][];
+        for (int i = 0; i< yamlList.size(); i++) {
+            cases[i] = new Object[] {yamlList.get(i)};
+        }
+        return cases;
+    }
+    
 }

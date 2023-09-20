@@ -47,4 +47,25 @@ public class ParseCsv {
         return splitList;
     }
 
+    public static List<String> splitCsvToList(String csvPath) {
+        List<String> splitList = new ArrayList<>();
+
+        try {
+            File file = new File(csvPath);
+            if (!file.exists()) {
+                System.out.println("csv文件不存在！");
+            } else {
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(csvPath));
+                String line = null;
+                while ((line = bufferedReader.readLine()) != null) {
+                    splitList.add(line);
+                }
+                bufferedReader.close();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return splitList;
+    }
+
 }

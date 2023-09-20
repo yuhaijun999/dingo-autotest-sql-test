@@ -198,6 +198,167 @@ public class TestIndex extends BaseTestSuite {
         }
     }
 
+    @Test(priority = 1, enabled = true, dataProvider = "indexData2", dataProviderClass = YamlDataHelper.class, description = "标量和向量混合索引测试")
+    public void testIndex2(LinkedHashMap<String,String> param) throws SQLException, IOException, InterruptedException {
+        if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
+            throw new SkipException("skip this test case");
+        }
+
+        List<String> tableList = new ArrayList<>();
+        String sql = param.get("Sql_state").trim();
+        String explainSql = param.get("Explain_state").trim();
+        if (param.get("Table_schema_ref").trim().length() > 0) {
+            List<String> schemaList = CastUtils.construct1DListIncludeBlank(param.get("Table_schema_ref"),",");
+            for (int i = 0; i < schemaList.size(); i++) {
+                String tableName = "";
+                if (!schemaList.get(i).trim().contains("_")) {
+                    if (param.get("Case_table_dependency").trim().length() > 0) {
+                        tableName = param.get("Case_table_dependency").trim() + "_0" + i + schemaList.get(i).trim();
+                        sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
+                        explainSql = explainSql.replace("$" + schemaList.get(i).trim(), tableName);
+                    } else {
+                        tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
+                        sqlHelper.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        tableList.add(tableName);
+                        sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
+                        explainSql = explainSql.replace("$" + schemaList.get(i).trim(), tableName);
+                    }
+                } else {
+                    String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
+                    if (param.get("Case_table_dependency").trim().length() > 0) {
+                        tableName = param.get("Case_table_dependency").trim() + "_0" + i + schemaName;
+                        sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
+                        explainSql = explainSql.replace("$" + schemaList.get(i).trim(), tableName);
+                    } else {
+                        tableName = param.get("TestID").trim() + "_0" + i + schemaName;
+                        sqlHelper.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
+                        tableList.add(tableName);
+                        sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
+                        explainSql = explainSql.replace("$" + schemaList.get(i).trim(), tableName);
+                    }
+                }
+            }
+            createTableSet.addAll(tableList);
+            if (param.get("Case_table_dependency").trim().length() == 0) {
+                if (param.get("Table_value_ref").trim().length() > 0) {
+                    List<String> value_List = CastUtils.construct1DListIncludeBlank(param.get("Table_value_ref").trim(),",");
+                    for (int j = 0; j < value_List.size(); j++) {
+                        String tableName = "";
+                        if (!schemaList.get(j).trim().contains("_")) {
+                            tableName = param.get("TestID").trim() + "_0" + j + schemaList.get(j).trim();
+                        } else {
+                            String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
+                            tableName = param.get("TestID").trim() + "_0" + j + schemaName;
+                        }
+                        sqlHelper.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReader.getValue("IndexValues", value_List.get(j).trim())), tableName);
+                    }
+                }
+            }
+            if (param.get("Case_table_dependency").trim().length() > 0) {
+                if (param.get("Table_value_ref").trim().length() > 0) {
+                    List<String> value_List = CastUtils.construct1DListIncludeBlank(param.get("Table_value_ref").trim(),",");
+                    for (int j = 0; j < value_List.size(); j++) {
+                        String tableName = param.get("Case_table_dependency").trim() + "_0" + j + schemaList.get(j).trim();
+                        sqlHelper.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReader.getValue("IndexValues", value_List.get(j).trim())), tableName);
+                    }
+                }
+            }
+        }
+        
+        if (param.get("Validation_type").equals("csv_equals")) {
+            String resultFile = param.get("Expected_result").trim();
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+            }
+            System.out.println("Expected: " + expectedResult);
+            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertEquals(actualResult, expectedResult);
+        } else if (param.get("Validation_type").equals("csv_containsAll")) {
+            String resultFile = param.get("Expected_result").trim();
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+            }
+            System.out.println("Expected: " + expectedResult);
+            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertTrue(actualResult.containsAll(expectedResult));
+            Assert.assertTrue(expectedResult.containsAll(actualResult));
+        } else if (param.get("Validation_type").equalsIgnoreCase("similarity")) {
+            String resultFile = param.get("Expected_result").trim();
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+            }
+            System.out.println("Expected: " + expectedResult);
+            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertTrue(assertSimilarity(actualResult, expectedResult,param.get("Sub_component")));
+        } else if (param.get("Validation_type").equalsIgnoreCase("similarityId")) {
+            String resultFile = param.get("Expected_result").trim();
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+            }
+            System.out.println("Expected: " + expectedResult);
+            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertTrue(assertSimilarityID(actualResult, expectedResult,param.get("Sub_component")));
+        } else if (param.get("Validation_type").equalsIgnoreCase("similarityDistance")) {
+            String resultFile = param.get("Expected_result").trim();
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+            }
+            System.out.println("Expected: " + expectedResult);
+            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertTrue(assertSimilarityDistance(actualResult, expectedResult,param.get("Sub_component")));
+        } else if (param.get("Validation_type").equals("string_equals")) {
+            String expectedResult = param.get("Expected_result");
+            System.out.println("Expected: " + expectedResult);
+            String actualResult = sqlHelper.queryWithStrReturn(sql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertEquals(actualResult, expectedResult);
+        } else if (param.get("Validation_type").equals("double_equals")) {
+            Double expectedResult = Double.parseDouble(param.get("Expected_result"));
+            System.out.println("Expected: " + expectedResult);
+            Double actualResult = sqlHelper.queryWithDoubleReturn(sql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertEquals(actualResult, expectedResult);
+        } else if (param.get("Validation_type").equals("assertNull")) {
+            Assert.assertNull(sqlHelper.queryWithObjReturn(sql));
+        } else if (param.get("Validation_type").equals("justExec")) {
+            if (param.get("Component").equalsIgnoreCase("Explain")) {
+                Thread.sleep(330000);
+                sqlHelper.execSql(sql);
+            } else {
+                sqlHelper.execSql(sql);
+            }
+        }
+
+        Thread.sleep(330000);
+        String explainFile = param.get("Explain_result").trim();
+        List<String> expectedExplainList = ParseCsv.splitCsvToList(explainFile);
+        System.out.println("Expected explain list: " + expectedExplainList);
+        String actualExplainStr = sqlHelper.queryWithStrReturn(explainSql);
+        for (int i = 0; i < expectedExplainList.size(); i++) {
+            Assert.assertTrue(actualExplainStr.contains(expectedExplainList.get(i)));
+        }
+    }
+
     private Boolean assertSimilarityID(List<List<String>> actualList, List<List<String>> expectedList, String algorithm) {
         List actualIdList = new ArrayList<>();
         int actualColNum = actualList.get(0).size();
