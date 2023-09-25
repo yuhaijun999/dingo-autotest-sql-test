@@ -348,14 +348,16 @@ public class TestIndex extends BaseTestSuite {
                 sqlHelper.execSql(sql);
             }
         }
-
-        Thread.sleep(330000);
-        String explainFile = param.get("Explain_result").trim();
-        List<String> expectedExplainList = ParseCsv.splitCsvToList(explainFile);
-        System.out.println("Expected explain list: " + expectedExplainList);
-        String actualExplainStr = sqlHelper.queryWithStrReturn(explainSql);
-        for (int i = 0; i < expectedExplainList.size(); i++) {
-            Assert.assertTrue(actualExplainStr.contains(expectedExplainList.get(i)));
+        
+        if (explainSql.trim().length() > 0) {
+            Thread.sleep(330000);
+            String explainFile = param.get("Explain_result").trim();
+            List<String> expectedExplainList = ParseCsv.splitCsvToList(explainFile);
+            System.out.println("Expected explain list: " + expectedExplainList);
+            String actualExplainStr = sqlHelper.queryWithStrReturn(explainSql);
+            for (int i = 0; i < expectedExplainList.size(); i++) {
+                Assert.assertTrue(actualExplainStr.contains(expectedExplainList.get(i)));
+            }
         }
     }
 
