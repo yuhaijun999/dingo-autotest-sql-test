@@ -196,6 +196,11 @@ public class TestIndex extends BaseTestSuite {
                 sqlHelper.execSql(sql);
             }
         }
+//        if (tableList.size() > 0) {
+//            for (String s : tableList) {
+//                sqlHelper.doDropTable(s);
+//            }
+//        }
     }
 
     @Test(priority = 1, enabled = true, dataProvider = "indexData2", dataProviderClass = YamlDataHelper.class, description = "标量和向量混合索引测试")
@@ -357,6 +362,12 @@ public class TestIndex extends BaseTestSuite {
             String actualExplainStr = sqlHelper.queryWithStrReturn(explainSql);
             for (int i = 0; i < expectedExplainList.size(); i++) {
                 Assert.assertTrue(actualExplainStr.contains(expectedExplainList.get(i)));
+            }
+        }
+
+        if (tableList.size() > 0) {
+            for (String s : tableList) {
+                sqlHelper.doDropTable(s);
             }
         }
     }
