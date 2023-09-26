@@ -159,13 +159,12 @@ public class TestDML extends BaseTestSuite {
                 Assert.assertTrue(actualResultAfterDML.containsAll(expectedResultAfterDML));
                 Assert.assertTrue(expectedResultAfterDML.containsAll(actualResultAfterDML));
             }
-
-//            if (tableList.size() > 0) {
-//                for (String s : tableList) {
-//                    sqlHelper.doDropTable(s);
-//                }
-//            }
         }
+//        if (tableList.size() > 0) {
+//            for (String s : tableList) {
+//                sqlHelper.doDropTable(s);
+//            }
+//        }
     }
 
     @Test(priority = 1, enabled = true, dataProvider = "dmlUpDelData", dataProviderClass = YamlDataHelper.class, description = "dml操作update&delete，正向用例")

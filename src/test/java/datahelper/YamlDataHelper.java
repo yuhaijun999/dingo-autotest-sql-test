@@ -185,7 +185,7 @@ public class YamlDataHelper {
         return cases;
     }
 
-    @DataProvider (name = "dclData", parallel = true)
+    @DataProvider (name = "dclData", parallel = false)
     public Object[][] dclCases() throws IOException, InterruptedException {
         String excelPath = "src/test/resources/io.dingodb.test/testdata/cases/dcl/sql_dcl_cases.xlsx";
         String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
