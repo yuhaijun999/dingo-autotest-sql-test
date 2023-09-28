@@ -1,3 +1,6 @@
+DingoHashJoin
 DingoGetVectorByDistance
-DingoGetByKeys
-"type" : "get"
+DingoTableScan
+DingoAggregate
+DingoValues
+"type" : "scan"
