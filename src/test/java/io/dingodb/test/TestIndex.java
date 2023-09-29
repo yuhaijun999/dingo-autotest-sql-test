@@ -306,7 +306,7 @@ public class TestIndex extends BaseTestSuite {
             System.out.println("Expected: " + expectedResult);
             List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
             System.out.println("Actual: " + actualResult);
-            Assert.assertTrue(assertSimilarity(actualResult, expectedResult,param.get("Sub_component")));
+            Assert.assertTrue(assertSimilarity(actualResult, expectedResult, param.get("Sub_component")));
         } else if (param.get("Validation_type").equalsIgnoreCase("similarityId")) {
             String resultFile = param.get("Expected_result").trim();
             List<List<String>> expectedResult = new ArrayList<>();
@@ -318,7 +318,7 @@ public class TestIndex extends BaseTestSuite {
             System.out.println("Expected: " + expectedResult);
             List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
             System.out.println("Actual: " + actualResult);
-            Assert.assertTrue(assertSimilarityID(actualResult, expectedResult,param.get("Sub_component")));
+            Assert.assertTrue(assertSimilarityID(actualResult, expectedResult, param.get("Sub_component")));
         } else if (param.get("Validation_type").equalsIgnoreCase("similarityDistance")) {
             String resultFile = param.get("Expected_result").trim();
             List<List<String>> expectedResult = new ArrayList<>();
@@ -464,22 +464,26 @@ public class TestIndex extends BaseTestSuite {
         List actualIdList = new ArrayList<>();
         List actualDistanceList = new ArrayList<>();
         int actualColNum = actualList.get(0).size();
-        for (int i = 1; i< actualList.size(); i++) {
+        for (int i = 1; i < actualList.size(); i++) {
             String actualVectorId = actualList.get(i).get(actualColNum - 2);
             actualIdList.add(actualVectorId);
             String actualVectorDistance = actualList.get(i).get(actualColNum - 1);
             actualDistanceList.add(Double.parseDouble(actualVectorDistance));
         }
+        System.out.println("ActualIdList: " + actualIdList);
+        System.out.println("ActualDistanceList: " + actualDistanceList);
 
         List expectedIdList = new ArrayList<>();
         List expectedDistanceList = new ArrayList<>();
         int expectedColNum = expectedList.get(0).size();
-        for (int i = 1; i< expectedList.size(); i++) {
+        for (int i = 1; i < expectedList.size(); i++) {
             String expectedVectorId = expectedList.get(i).get(expectedColNum - 2);
             expectedIdList.add(expectedVectorId);
             String expectedVectorDistance = expectedList.get(i).get(expectedColNum - 1);
             expectedDistanceList.add(Double.parseDouble(expectedVectorDistance));
         }
+        System.out.println("ExpectedIdList: " + expectedIdList);
+        System.out.println("ExpectedDistanceList: " + actualDistanceList);
         
         //计算向量id相似度
         int similarCount = 0;
