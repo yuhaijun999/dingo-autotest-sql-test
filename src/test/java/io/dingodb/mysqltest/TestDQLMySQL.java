@@ -69,7 +69,7 @@ public class TestDQLMySQL extends BaseTestSuiteMySQL{
     }
 
     @Test(priority = 0, enabled = true, dataProvider = "mysqlDQLData1", dataProviderClass = MySQLYamlDataHelper.class, description = "查询测试，正向用例")
-    public void testDQL1(LinkedHashMap<String,String> param) throws SQLException, IOException {
+    public void testDQL1(LinkedHashMap<String,String> param) throws SQLException, IOException, InterruptedException {
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
@@ -178,7 +178,13 @@ public class TestDQLMySQL extends BaseTestSuiteMySQL{
         } else if (param.get("Validation_type").equals("assertNull")) {
             Assert.assertNull(mySQLHelper.queryWithObjReturn(sql));
         } else if (param.get("Validation_type").equals("justExec")) {
-            mySQLHelper.execSql(sql);
+            if (param.get("Component").equalsIgnoreCase("Explain")) {
+                Thread.sleep(330000);
+                mySQLHelper.execSql(sql);
+            } else {
+                mySQLHelper.execSql(sql);
+            }
+//            mySQLHelper.execSql(sql);
         }
     }
 
