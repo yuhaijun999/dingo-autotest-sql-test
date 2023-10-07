@@ -1,5 +1,6 @@
 DingoHashJoin
-DingoVector
+DingoGetVectorByDistance
+DingoTableScan
 DingoAggregate
 DingoValues
 "type" : "scan"
