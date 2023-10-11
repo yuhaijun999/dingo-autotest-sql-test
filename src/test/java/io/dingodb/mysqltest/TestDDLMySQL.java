@@ -148,6 +148,8 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
             }
             List<String> existTableList = MySQLUtils.getTableList();
             Assert.assertFalse(existTableList.contains(drop_table_name));
+        } else if (param.get("Validation_type").equals("justExec")) {
+            mySQLHelper.execSql(ddlSql);
         }
 
 //        if (tableList.size() > 0) {

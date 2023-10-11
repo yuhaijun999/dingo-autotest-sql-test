@@ -155,6 +155,8 @@ public class TestDDL extends BaseTestSuite{
             }
             List<String> existTableList = JDBCUtils.getTableList();
             Assert.assertFalse(existTableList.contains(drop_table_name));
+        } else if (param.get("Validation_type").equals("justExec")) {
+            sqlHelper.execSql(ddlSql);
         }
 
 //        if (tableList.size() > 0) {
