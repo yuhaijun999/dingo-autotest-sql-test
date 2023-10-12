@@ -117,7 +117,7 @@ public class TestProtocolMySQL extends BaseTestSuiteMySQL {
                 Assert.assertNotNull(connectionCheck);
                 connectionCheck.close();
             }
-        } else if (param.get("Component").equals("Distribution")) {
+        } else if (param.get("Component").equalsIgnoreCase("Distribution")) {
             if (param.get("Validation_type").equals("csv_equals")) {
                 String resultFile = param.get("Query_result").trim();
                 List<List<String>> expectedResult = ParseCsv.splitCsvString(resultFile,"&");
@@ -132,6 +132,26 @@ public class TestProtocolMySQL extends BaseTestSuiteMySQL {
                 List<List<String>> expectedResult = ParseCsv.splitCsvString(resultFile,"&");
                 System.out.println("Expected: " + expectedResult);
                 List<Integer> colIndexList = Arrays.asList(2,3);
+                List<List<String>> actualResult = mySQLHelper.statementQueryWithSpecifiedColIndex(querySql, colIndexList);
+                System.out.println("Actual: " + actualResult);
+                Assert.assertTrue(actualResult.containsAll(expectedResult));
+                Assert.assertTrue(expectedResult.containsAll(actualResult));
+            }
+        } else if (param.get("Component").equalsIgnoreCase("HASH_Distribution")) {
+            if (param.get("Validation_type").equals("csv_equals")) {
+                String resultFile = param.get("Query_result").trim();
+                List<List<String>> expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+                System.out.println("Expected: " + expectedResult);
+                List<Integer> colIndexList = Arrays.asList(2);
+                List<List<String>> actualResult = mySQLHelper.statementQueryWithSpecifiedColIndex(querySql, colIndexList);
+                System.out.println("Actual: " + actualResult);
+                Assert.assertEquals(actualResult, expectedResult);
+            }
+            if (param.get("Validation_type").equals("csv_containsAll")) {
+                String resultFile = param.get("Query_result").trim();
+                List<List<String>> expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+                System.out.println("Expected: " + expectedResult);
+                List<Integer> colIndexList = Arrays.asList(2);
                 List<List<String>> actualResult = mySQLHelper.statementQueryWithSpecifiedColIndex(querySql, colIndexList);
                 System.out.println("Actual: " + actualResult);
                 Assert.assertTrue(actualResult.containsAll(expectedResult));

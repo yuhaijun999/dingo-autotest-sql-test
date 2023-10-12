@@ -1,3 +1,3 @@
 Type&Value
-Range&[ Infinity, Key(100, Dingo) )
-Range&[ Key(100, Dingo), Infinity )
+RANGE&[ Infinity, Key(100, Dingo) )
+RANGE&[ Key(100, Dingo), Infinity )

@@ -1,7 +1,7 @@
 Type&Value
-Range&[ Infinity, Key(10001) )
-Range&[ Key(10001), Key(100001) )
-Range&[ Key(100001), Key(1000001) )
-Range&[ Key(1000001), Key(10000001) )
-Range&[ Key(10000001), Key(100000001) )
-Range&[ Key(100000001), Infinity )
+RANGE&[ Infinity, Key(10001) )
+RANGE&[ Key(10001), Key(100001) )
+RANGE&[ Key(100001), Key(1000001) )
+RANGE&[ Key(1000001), Key(10000001) )
+RANGE&[ Key(10000001), Key(100000001) )
+RANGE&[ Key(100000001), Infinity )

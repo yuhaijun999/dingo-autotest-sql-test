@@ -1,5 +1,5 @@
 Type&Value
-Range&[ Infinity, Key(-1000.0) )
-Range&[ Key(-1000.0), Key(0.0) )
-Range&[ Key(0.0), Key(9999.99) )
-Range&[ Key(9999.99), Infinity )
+RANGE&[ Infinity, Key(-1000.0) )
+RANGE&[ Key(-1000.0), Key(0.0) )
+RANGE&[ Key(0.0), Key(9999.99) )
+RANGE&[ Key(9999.99), Infinity )
