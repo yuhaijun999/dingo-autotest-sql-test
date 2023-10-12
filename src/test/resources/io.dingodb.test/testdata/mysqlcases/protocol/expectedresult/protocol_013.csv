@@ -1,4 +1,4 @@
 Type&Value
-Range&[ Infinity, Key(false) )
-Range&[ Key(false), Key(true) )
-Range&[ Key(true), Infinity )
+RANGE&[ Infinity, Key(false) )
+RANGE&[ Key(false), Key(true) )
+RANGE&[ Key(true), Infinity )
