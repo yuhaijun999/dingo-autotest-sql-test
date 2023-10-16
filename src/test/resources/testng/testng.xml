@@ -18,8 +18,8 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="DingoDB-auto-tests">
     <suite-files>
-        <suite-file path="DingoTest.xml"></suite-file>
         <suite-file path="MySQLTest.xml"></suite-file>
+        <suite-file path="DingoTest.xml"></suite-file>
     </suite-files>
     <listeners>
         <listener class-name="listener.EmailableReporterListener"/>

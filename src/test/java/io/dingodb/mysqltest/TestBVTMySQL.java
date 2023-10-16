@@ -33,7 +33,7 @@ import java.util.List;
 
 public class TestBVTMySQL extends BaseTestSuiteMySQL {
 //    private static MySQLHelper mySQLHelper;
-    public static Connection connection;
+    public static Connection myConnection;
     public static String tableName = "mysqlbvttest";
 
     public static List<List> expectedOutData(String[][] dataArray) {
@@ -51,8 +51,8 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
     @BeforeClass(alwaysRun = true, description = "测试开始前验证数据库连接")
     public static void setUpAll() throws SQLException, IOException, ClassNotFoundException {
 //        mySQLHelper = new MySQLHelper();
-        connection = MySQLUtils.getMySQLConnection();
-        Assert.assertNotNull(connection);
+        myConnection = MySQLUtils.getMySQLConnection();
+        Assert.assertNotNull(myConnection);
     }
 
     @AfterClass(alwaysRun = true, description = "测试结束后，关闭数据库连接资源")
@@ -63,7 +63,7 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
     @Test(enabled = true, description = "测试创建表")
     public void test01TableCreate() throws SQLException, IOException, ClassNotFoundException {
         String sql = "create table " + tableName + "(id int, name varchar(20), age int, amount double, birthday date, create_time time, update_time timestamp, is_delete boolean, primary key(id))";
-        try(Statement statement = connection.createStatement();) {
+        try(Statement statement = myConnection.createStatement();) {
             statement.execute(sql);
             List<String> tableList = MySQLUtils.getTableList();
             System.out.println("TableList: " + tableList);
@@ -84,7 +84,7 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
                 "(7, 'Betty', 18, 6.9, '2018-05-31', '21:00:00', '2000-01-01 00:00:00', true),\n" +
                 "(8, 'Alice', 22, 7.3, '1987-12-11', '11:11:00', '1997-07-01 00:00:00', true),\n" +
                 "(9, 'Cindy', 25, 3.5, '2007-08-15', '22:10:10', '2020-02-29 05:53:44', false)";
-        try(Statement statement = connection.createStatement()) {
+        try(Statement statement = myConnection.createStatement()) {
             int effectedRows = statement.executeUpdate(sql);
             Assert.assertEquals(effectedRows, 9);
         }
@@ -103,7 +103,7 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
 
         String sql = "select * from " + tableName + " where id < 5";
         List<List> queryList = new ArrayList<>();
-        try(Statement statement = connection.createStatement()) {
+        try(Statement statement = myConnection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(sql);
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
@@ -142,7 +142,7 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
         String updateSql = "update " + tableName + " set age=100 where id=1 or id=4";
         String querySql = "select id,name,age,amount,birthday,create_time,update_time from " + tableName + " where id=1 or id=4";
         List<List> queryList = new ArrayList<>();
-        try(Statement statement = connection.createStatement()) {
+        try(Statement statement = myConnection.createStatement()) {
             int effectedRows = statement.executeUpdate(updateSql);
             Assert.assertEquals(effectedRows,2);
             
@@ -169,7 +169,7 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
     public void test05Delete() throws SQLException {
         String deleteSql = "delete from " + tableName;
         String querySql = "select * from " + tableName;
-        try(Statement statement = connection.createStatement()) {
+        try(Statement statement = myConnection.createStatement()) {
             int effectedRows = statement.executeUpdate(deleteSql);
             Assert.assertEquals(effectedRows,9);
 
@@ -183,7 +183,7 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
     @Test(enabled = true, description = "删除表")
     public void test06DropTable() throws SQLException, IOException, ClassNotFoundException {
         String sql = "drop table " + tableName;
-        try(Statement statement = connection.createStatement();) {
+        try(Statement statement = myConnection.createStatement();) {
             statement.execute(sql);
             List<String> tableList = MySQLUtils.getTableList();
             Assert.assertFalse(tableList.contains(tableName.toUpperCase()));

@@ -62,9 +62,9 @@ public class MySQLUtils {
         Class.forName(MySQL_JDBC_DRIVER);
 
         //获取连接
-        Connection connection = DriverManager.getConnection(connectUrl, props);
+        Connection myConnection = DriverManager.getConnection(connectUrl, props);
 
-        return connection;
+        return myConnection;
     }
 
     //使用非root用户连接数据库，获取connection对象
@@ -82,9 +82,9 @@ public class MySQLUtils {
         Class.forName(MySQL_JDBC_DRIVER);
 
         //获取连接
-        Connection connection = DriverManager.getConnection(connectUrl, userName, passwd);
+        Connection myConnection = DriverManager.getConnection(connectUrl, userName, passwd);
 
-        return connection;
+        return myConnection;
     }
 
     //获取所有数据表
