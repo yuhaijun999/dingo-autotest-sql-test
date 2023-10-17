@@ -1,0 +1,4 @@
+DingoHashJoin
+DingoVector
+"type" : "scan"
+"type" : "hashJoin"
