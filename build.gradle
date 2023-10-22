@@ -6,12 +6,16 @@ group 'io.dingodb'
 version '1.0-SNAPSHOT'
 
 repositories {
-//    mavenCentral()
+    mavenCentral()
     maven{ url'https://maven.aliyun.com/nexus/content/groups/public/'}
 }
 
 dependencies {
     implementation files('./lib/dingo-driver-client-all.jar')
+
+// https://mvnrepository.com/artifact/io.dingodb/dingo-driver-client
+//    implementation group: 'io.dingodb', name: 'dingo-driver-client', version: '0.7.0'
+    
 //    implementation files('./lib/mysql-connector-java-8.0.21.jar')
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
