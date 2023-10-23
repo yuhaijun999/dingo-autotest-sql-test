@@ -1,3 +1,19 @@
+/*
+ * Copyright 2021 DataCanvas
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.dingodb.mysqltest;
 
 import datahelper.MySQLYamlDataHelper;
@@ -35,7 +51,7 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
         if(createTableSet.size() > 0) {
             List<String> finalTableList = MySQLUtils.getTableList();
             for (String s : createTableSet) {
-                if (finalTableList.contains(s.toUpperCase())) {
+                if (finalTableList.contains("MYSQL" + s.toUpperCase())) {
                     mySQLHelper.doDropTable("mysql" + s);
                 }
             }
@@ -57,6 +73,7 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
         }
 
         List<String> tableList = CastUtils.construct1DListIncludeBlank(param.get("Table_name"),",");
+        createTableSet.addAll(tableList);
         String querySql1 = param.get("Query_sql1");
         String querySql2 = param.get("Query_sql2");
         for ( int i = 0; i < tableList.size(); i++) {
@@ -70,7 +87,7 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
                 querySql2 = querySql2.replace("$" + tableList.get(i).trim(), "mysql" + tableList.get(i).trim());
             }
         }
-        createTableSet.addAll(tableList);
+        
         if (param.get("Validation_type").equals("csv_equals")) {
             if (param.get("Query_result1").trim().length() > 0) {
                 String resultFile1 = param.get("Query_result1").trim();
