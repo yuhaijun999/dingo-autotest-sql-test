@@ -212,11 +212,13 @@ public class TestIndex extends BaseTestSuite {
                 sqlHelper.execSql(sql);
             }
         }
-//        if (tableList.size() > 0) {
-//            for (String s : tableList) {
-//                sqlHelper.doDropTable(s);
-//            }
-//        }
+        if (tableList.size() > 0) {
+            if (param.get("Table_deletable").equalsIgnoreCase("yes")) {
+                for (String s : tableList) {
+                    sqlHelper.doDropTable(s);
+                }
+            }
+        }
     }
 
     @Test(priority = 1, enabled = true, dataProvider = "indexData2", dataProviderClass = YamlDataHelper.class, description = "标量和向量混合索引测试")
