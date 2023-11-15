@@ -280,7 +280,7 @@ public class TestPreparedStatement extends BaseTestSuite {
                 "00:00:00","23:59:59","yyyy-MM-dd HH:mm:ss", 
                 "1990-01-01 00:00:00","2023-03-21 23:59:59"
         );
-        Thread.sleep(30000);
+        Thread.sleep(10000);
        if (param.get("Validation_type").equals("effected_rows_assert")) {
            int expectedQuery1Rows = Integer.parseInt(param.get("Query_result1"));
            System.out.println("Expected query1 rows: " + expectedQuery1Rows);
