@@ -165,7 +165,7 @@ public class TestIndex extends BaseTestSuite {
             System.out.println("Expected: " + expectedResult);
             List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
             System.out.println("Actual: " + actualResult);
-            Assert.assertTrue(assertSimilarity(actualResult, expectedResult,param.get("Sub_component")));
+            Assert.assertTrue(assertSimilarity(actualResult, expectedResult, param.get("Sub_component")));
         } else if (param.get("Validation_type").equalsIgnoreCase("similarityId")) {
             String resultFile = param.get("Expected_result").trim();
             List<List<String>> expectedResult = new ArrayList<>();
@@ -177,7 +177,7 @@ public class TestIndex extends BaseTestSuite {
             System.out.println("Expected: " + expectedResult);
             List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
             System.out.println("Actual: " + actualResult);
-            Assert.assertTrue(assertSimilarityID(actualResult, expectedResult,param.get("Sub_component")));
+            Assert.assertTrue(assertSimilarityID(actualResult, expectedResult, param.get("Sub_component")));
         } else if (param.get("Validation_type").equalsIgnoreCase("similarityDistance")) {
             String resultFile = param.get("Expected_result").trim();
             List<List<String>> expectedResult = new ArrayList<>();
@@ -189,7 +189,7 @@ public class TestIndex extends BaseTestSuite {
             System.out.println("Expected: " + expectedResult);
             List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
             System.out.println("Actual: " + actualResult);
-            Assert.assertTrue(assertSimilarityDistance(actualResult, expectedResult,param.get("Sub_component")));
+            Assert.assertTrue(assertSimilarityDistance(actualResult, expectedResult, param.get("Sub_component")));
         } else if (param.get("Validation_type").equals("string_equals")) {
             String expectedResult = param.get("Expected_result");
             System.out.println("Expected: " + expectedResult);
@@ -348,7 +348,7 @@ public class TestIndex extends BaseTestSuite {
             System.out.println("Expected: " + expectedResult);
             List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
             System.out.println("Actual: " + actualResult);
-            Assert.assertTrue(assertSimilarityDistance(actualResult, expectedResult,param.get("Sub_component")));
+            Assert.assertTrue(assertSimilarityDistance(actualResult, expectedResult, param.get("Sub_component")));
         } else if (param.get("Validation_type").equals("string_equals")) {
             String expectedResult = param.get("Expected_result");
             System.out.println("Expected: " + expectedResult);
@@ -415,7 +415,7 @@ public class TestIndex extends BaseTestSuite {
         System.out.println("similarCount: " + similarCount);
         Double similarRatio = (double) similarCount / (double) actualIdList.size();
         System.out.println("similarKeyRatio: " + similarRatio);
-        if (algorithm.contains("hnsw")) {
+        if (algorithm.contains("hnsw") || algorithm.contains("ivfflat") || algorithm.contains("ivfpq")) {
             if (similarRatio >= 0.8) {
                 return true;
             } else {
@@ -451,7 +451,7 @@ public class TestIndex extends BaseTestSuite {
             expectedDistanceList.add(Double.parseDouble(expectedVectorDistance));
         }
         
-        if (algorithm.contains("hnsw")) {
+        if (algorithm.contains("hnsw") || algorithm.contains("ivfflat") || algorithm.contains("ivfpq")) {
             double similarity = calculateSimilarity(actualDistanceList, expectedDistanceList);
             System.out.println("similarity: " + similarity);
             if (similarity > 0.5) {
@@ -513,7 +513,7 @@ public class TestIndex extends BaseTestSuite {
         System.out.println("similarCount: " + similarCount);
         Double similarRatio = (double) similarCount / (double) actualIdList.size();
         System.out.println("similarKeyRatio: " + similarRatio);
-        if (algorithm.contains("hnsw")) {
+        if (algorithm.contains("hnsw") || algorithm.contains("ivfflat") || algorithm.contains("ivfpq")) {
             if (similarRatio >= 0.8) {
                 return true;
             } else {
