@@ -24,17 +24,21 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TestBVTMySQL extends BaseTestSuiteMySQL {
 //    private static MySQLHelper mySQLHelper;
     public static Connection myConnection;
     public static String tableName = "mysqlbvttest";
+    public static String tableName2 = "autoIdStateTest1";
+    public static String tableName3 = "autoIdPSTest2";
 
     public static List<List> expectedOutData(String[][] dataArray) {
         List<List> expectedList = new ArrayList<List>();
@@ -189,6 +193,70 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
             Assert.assertFalse(tableList.contains(tableName.toUpperCase()));
             System.out.println(tableList);
         }
+    }
+
+    @Test(enabled = true, description = "Statement获取lastInsertID")
+    public void test07StateGetLastInsertId() throws SQLException, IOException, ClassNotFoundException {
+        String createSql = "create table " + tableName2 + "(" +
+                "id int not null auto_increment, " +
+                "name varchar(20), " +
+                "age int, " +
+                "birthday date, " +
+                "primary key(id)" +
+                ")";
+        String insertSql = "insert into " + tableName2 + "(name,age,birthday) values " +
+                "('zhangsan', 24, '1999-10-12')," +
+                "('lisi', 35, '1988-05-23')," +
+                "('wangwu', 18, '2005-02-08')";
+        try(Statement statement = myConnection.createStatement();) {
+            statement.execute(createSql);
+            statement.executeUpdate(insertSql, Statement.RETURN_GENERATED_KEYS);
+            ResultSet resultSet = statement.getGeneratedKeys();
+            List<String> actualGenerateKeys = new ArrayList<>();
+            while (resultSet.next()) {
+                actualGenerateKeys.add(resultSet.getObject(1).toString());
+            }
+            resultSet.close();
+            statement.execute("drop table " + tableName2);
+            List<String> expectedKeys = Arrays.asList("1", "2", "3");
+            System.out.println("Expected: " + expectedKeys);
+            System.out.println("Actual: " + actualGenerateKeys);
+            Assert.assertEquals(expectedKeys, actualGenerateKeys);
+        }
+    }
+
+    @Test(enabled = false, description = "PreparedStatement获取lastInsertID")
+    public void test08PSGetLastInsertId() throws SQLException, IOException, ClassNotFoundException {
+        String createSql = "create table " + tableName3 + "(" +
+                "id int not null auto_increment, " +
+                "name varchar(20), " +
+                "age int, " +
+                "birthday date, " +
+                "primary key(id)" +
+                ")";
+        Statement statement = myConnection.createStatement();
+        statement.execute(createSql);
+        
+        String insertSql = "insert into " + tableName3 + "(name,age,birthday) values " +
+                "('zhangsan', 24, '1999-10-12')," +
+                "('lisi', 35, '1988-05-23')," +
+                "('wangwu', 18, '2005-02-08')," +
+                "('liuliu', 40, '2010-12-12')";
+        PreparedStatement ps = myConnection.prepareStatement(insertSql);
+        ps.executeUpdate(insertSql, PreparedStatement.RETURN_GENERATED_KEYS);
+        ResultSet resultSet = ps.getGeneratedKeys();
+        List<String> actualGenerateKeys = new ArrayList<>();
+        while (resultSet.next()) {
+            actualGenerateKeys.add(resultSet.getObject(1).toString());
+        }
+        resultSet.close();
+        ps.close();
+        statement.execute("drop table " + tableName3);
+        statement.close();
+        List<String> expectedKeys = Arrays.asList("1", "2", "3", "4");
+        System.out.println("Expected: " + expectedKeys);
+        System.out.println("Actual: " + actualGenerateKeys);
+        Assert.assertEquals(expectedKeys, actualGenerateKeys);
     }
     
 }
