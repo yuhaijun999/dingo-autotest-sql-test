@@ -185,7 +185,7 @@ public class MySQLYamlDataHelper {
         return cases;
     }
 
-    @DataProvider (name = "mysqlProtocolData", parallel = true)
+    @DataProvider (name = "mysqlProtocolData", parallel = false)
     public Object[][] mysqlProtocolCases() throws IOException, InterruptedException {
         String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/protocol/mysql_protocol_cases.xlsx";
         String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
