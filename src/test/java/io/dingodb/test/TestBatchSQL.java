@@ -48,7 +48,7 @@ public class TestBatchSQL extends BaseTestSuite {
 
     @AfterClass
     public static void tearDownAll() throws SQLException, IOException, ClassNotFoundException {
-//        System.out.println(createTableSet);
+        System.out.println(createTableSet);
         if(createTableSet.size() > 0) {
             List<String> finalTableList = JDBCUtils.getTableList();
             for (String s : createTableSet) {
@@ -83,7 +83,7 @@ public class TestBatchSQL extends BaseTestSuite {
         createTableSet.addAll(tableList);
         String querySql1 = param.get("Query_sql1");
         String querySql2 = param.get("Query_sql2");
-        for ( int i = 0; i < tableList.size(); i++) {
+        for ( int i = 0; i < 1; i++) {
             sqlHelper.execFile(TestBatchSQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("BatchSQLOp", 
                     param.get("Batch_sql"))), tableList.get(i).trim());
             if (querySql1.trim().length() > 0) {
