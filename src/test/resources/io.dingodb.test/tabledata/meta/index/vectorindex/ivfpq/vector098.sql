@@ -5,6 +5,6 @@ CREATE TABLE $table (
     amount double,
     feature float array not null,
     feature_id bigint not null,
-    index feature_index vector(feature_id, feature) parameters(type=ivfpq, metricType=L2, dimension=512, ncentroids=32, nsubvector=16, nbits_per_idx=2),
+    index feature_index vector(feature_id, feature) parameters(type=ivfpq, metricType=L2, dimension=512, ncentroids=32, nsubvector=16, nbitsPerIdx=2),
     primary key(id)
 )
