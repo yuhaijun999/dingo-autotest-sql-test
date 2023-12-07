@@ -373,7 +373,9 @@ public class TestIndex extends BaseTestSuite {
         }
         
         if (explainSql.trim().length() > 0) {
-//            Thread.sleep(330000);
+            if (param.get("Sub_component").equalsIgnoreCase("scalar_explain")) {
+                Thread.sleep(330000);
+            }
             String explainFile = param.get("Explain_result").trim();
             List<String> expectedExplainList = ParseCsv.splitCsvToList(explainFile);
             System.out.println("Expected explain list: " + expectedExplainList);
