@@ -39,6 +39,7 @@ import java.util.List;
 public class TestDDL extends BaseTestSuite{
     private static SQLHelper sqlHelper;
     private static HashSet<String> createTableSet = new HashSet<>();
+    private static HashSet<String> createSchemaSet = new HashSet<>();
 
     @BeforeClass (alwaysRun = true)
     public static void setupAll() {
@@ -53,6 +54,15 @@ public class TestDDL extends BaseTestSuite{
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
                     sqlHelper.doDropTable(s);
+                }
+            }
+        }
+
+        if(createSchemaSet.size() > 0) {
+            List<String> finalSchemaList = JDBCUtils.getSchemaList();
+            for (String s : createSchemaSet) {
+                if (finalSchemaList.contains(s.toUpperCase())) {
+                    sqlHelper.doDropSchema(s);
                 }
             }
         }
@@ -116,6 +126,16 @@ public class TestDDL extends BaseTestSuite{
             }
         }
         
+        if (param.get("Sub_component").equalsIgnoreCase("databaseCreate")) {
+            String databaseName = param.get("Ddl_sql").substring(16);
+            createSchemaSet.add(databaseName);
+        }
+
+        if (param.get("Sub_component").equalsIgnoreCase("schemaCreate")) {
+            String schemaName = param.get("Ddl_sql").substring(14);
+            createSchemaSet.add(schemaName);
+        }
+        
         if (param.get("Validation_type").equals("csv_equals")) {
             String resultFile = param.get("Query_result").trim();
             List<List<String>> expectedResult = new ArrayList<>();
@@ -125,7 +145,7 @@ public class TestDDL extends BaseTestSuite{
                 expectedResult = ParseCsv.splitCsvString(resultFile,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            sqlHelper.execSql(ddlSql);
+            sqlHelper.execBatchSqlWithState(ddlSql);
             List<List<String>> actualResult = sqlHelper.statementQueryWithHead(querySql);
             System.out.println("Actual: " + actualResult);
             Assert.assertEquals(actualResult, expectedResult);
@@ -138,13 +158,26 @@ public class TestDDL extends BaseTestSuite{
                 expectedResult = ParseCsv.splitCsvString(resultFile,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            sqlHelper.execSql(ddlSql);
+            sqlHelper.execBatchSqlWithState(ddlSql);
             List<List<String>> actualResult = sqlHelper.statementQueryWithHead(querySql);
             System.out.println("Actual: " + actualResult);
             Assert.assertTrue(actualResult.containsAll(expectedResult));
             Assert.assertTrue(expectedResult.containsAll(actualResult));
+        } else if (param.get("Validation_type").equals("csv_contains")) {
+            String resultFile = param.get("Query_result").trim();
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+            }
+            System.out.println("Expected: " + expectedResult);
+            sqlHelper.execBatchSqlWithState(ddlSql);
+            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(querySql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertTrue(actualResult.containsAll(expectedResult));
         } else if (param.get("Validation_type").equals("table_assert")) {
-            sqlHelper.execSql(ddlSql);
+            sqlHelper.execBatchSqlWithState(ddlSql);
             String drop_table_name = "";
             if (ddlSql.contains("drop")) {
                 if (ddlSql.contains("if exists")) {
@@ -156,7 +189,7 @@ public class TestDDL extends BaseTestSuite{
             List<String> existTableList = JDBCUtils.getTableList();
             Assert.assertFalse(existTableList.contains(drop_table_name));
         } else if (param.get("Validation_type").equals("justExec")) {
-            sqlHelper.execSql(ddlSql);
+            sqlHelper.execBatchSqlWithState(ddlSql);
         }
 
 //        if (tableList.size() > 0) {

@@ -40,6 +40,7 @@ import java.util.List;
 public class TestDDLMySQL extends BaseTestSuiteMySQL{
     private static MySQLHelper mySQLHelper;
     private static HashSet<String> createTableSet = new HashSet<>();
+    private static HashSet<String> createSchemaSet = new HashSet<>();
 
     @BeforeClass (alwaysRun = true)
     public static void setupAll() {
@@ -53,6 +54,15 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
                     mySQLHelper.doDropTable(s);
+                }
+            }
+        }
+
+        if(createSchemaSet.size() > 0) {
+            List<String> finalSchemaList = MySQLUtils.getSchemaList();
+            for (String s : createSchemaSet) {
+                if (finalSchemaList.contains(s.toUpperCase())) {
+                    mySQLHelper.doDropSchema(s);
                 }
             }
         }
@@ -108,6 +118,16 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                 }
             }
         }
+
+        if (param.get("Sub_component").equalsIgnoreCase("databaseCreate")) {
+            String databaseName = param.get("Ddl_sql").substring(16);
+            createSchemaSet.add(databaseName);
+        }
+
+        if (param.get("Sub_component").equalsIgnoreCase("schemaCreate")) {
+            String schemaName = param.get("Ddl_sql").substring(14);
+            createSchemaSet.add(schemaName);
+        }
         
         if (param.get("Validation_type").equals("csv_equals")) {
             String resultFile = param.get("Query_result").trim();
@@ -118,7 +138,7 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                 expectedResult = ParseCsv.splitCsvString(resultFile,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            mySQLHelper.execSql(ddlSql);
+            mySQLHelper.execBatchSqlWithState(ddlSql);
             List<List<String>> actualResult = mySQLHelper.statementQueryWithHead(querySql);
             System.out.println("Actual: " + actualResult);
             Assert.assertEquals(actualResult, expectedResult);
@@ -131,11 +151,24 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                 expectedResult = ParseCsv.splitCsvString(resultFile,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            mySQLHelper.execSql(ddlSql);
+            mySQLHelper.execBatchSqlWithState(ddlSql);
             List<List<String>> actualResult = mySQLHelper.statementQueryWithHead(querySql);
             System.out.println("Actual: " + actualResult);
             Assert.assertTrue(actualResult.containsAll(expectedResult));
             Assert.assertTrue(expectedResult.containsAll(actualResult));
+        } else if (param.get("Validation_type").equals("csv_contains")) {
+            String resultFile = param.get("Query_result").trim();
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+            }
+            System.out.println("Expected: " + expectedResult);
+            mySQLHelper.execBatchSqlWithState(ddlSql);
+            List<List<String>> actualResult = mySQLHelper.statementQueryWithHead(querySql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertTrue(actualResult.containsAll(expectedResult));
         } else if (param.get("Validation_type").equals("table_assert")) {
             mySQLHelper.execSql(ddlSql);
             String drop_table_name = "";
@@ -149,7 +182,7 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
             List<String> existTableList = MySQLUtils.getTableList();
             Assert.assertFalse(existTableList.contains(drop_table_name));
         } else if (param.get("Validation_type").equals("justExec")) {
-            mySQLHelper.execSql(ddlSql);
+            mySQLHelper.execBatchSqlWithState(ddlSql);
         }
 
 //        if (tableList.size() > 0) {

@@ -274,6 +274,7 @@ public class TestDQL extends BaseTestSuite {
 
         List<String> tableList = new ArrayList<>();
         String sql = param.get("Sql_state").trim();
+        String explainSql = param.get("Explain_state").trim();
         if (param.get("Table_schema_ref").trim().length() > 0) {
             List<String> schemaList = CastUtils.construct1DListIncludeBlank(param.get("Table_schema_ref"),",");
             for (int i = 0; i < schemaList.size(); i++) {
@@ -282,22 +283,26 @@ public class TestDQL extends BaseTestSuite {
                     if (param.get("Case_table_dependency").trim().length() > 0) {
                         tableName = param.get("Case_table_dependency").trim() + "_0" + i + schemaList.get(i).trim();
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
+                        explainSql = explainSql.replace("$" + schemaList.get(i).trim(), tableName);
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                         sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                         tableList.add(tableName);
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
+                        explainSql = explainSql.replace("$" + schemaList.get(i).trim(), tableName);
                     }
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     if (param.get("Case_table_dependency").trim().length() > 0) {
                         tableName = param.get("Case_table_dependency").trim() + "_0" + i + schemaName;
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
+                        explainSql = explainSql.replace("$" + schemaList.get(i).trim(), tableName);
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaName;
                         sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
                         tableList.add(tableName);
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
+                        explainSql = explainSql.replace("$" + schemaList.get(i).trim(), tableName);
                     }
                 }
             }
@@ -327,27 +332,40 @@ public class TestDQL extends BaseTestSuite {
                 }
             }
         }
+        
+        if (param.get("Component").equalsIgnoreCase("Explain-key")) {
+            Thread.sleep(330000);
+        }
 
         if (param.get("Validation_type").equals("justExec")) {
-            if (param.get("Component").equalsIgnoreCase("Explain-key")) {
-                Thread.sleep(330000);
-                sqlHelper.execSql(sql);
-            } else {
-                sqlHelper.execSql(sql);
-            }
+            sqlHelper.execSql(sql);
+        } else if (param.get("Validation_type").equals("csv_equals")) {
+            String resultFile = param.get("Expected_result").trim();
+            List<List<String>> expectedResult = new ArrayList<>();
+            expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            System.out.println("Expected: " + expectedResult);
+            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertEquals(actualResult, expectedResult);
         } else if (param.get("Validation_type").equals("csv_containsAll")) {
-            if (param.get("Component").equalsIgnoreCase("Explain-key")) {
-                Thread.sleep(330000);
-                String resultFile = param.get("Expected_result").trim();
-                List<List<String>> expectedResult = new ArrayList<>();
-                expectedResult = ParseCsv.splitCsvString(resultFile,",");
-                System.out.println("Expected: " + expectedResult);
-                List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
-                System.out.println("Actual: " + actualResult);
-                Assert.assertTrue(actualResult.containsAll(expectedResult));
-                Assert.assertTrue(expectedResult.containsAll(actualResult));
+            String resultFile = param.get("Expected_result").trim();
+            List<List<String>> expectedResult = new ArrayList<>();
+            expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            System.out.println("Expected: " + expectedResult);
+            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertTrue(actualResult.containsAll(expectedResult));
+            Assert.assertTrue(expectedResult.containsAll(actualResult));
+        }
+
+        if (explainSql.trim().length() > 0) {
+            String explainFile = param.get("Explain_result").trim();
+            List<String> expectedExplainList = ParseCsv.splitCsvToList(explainFile);
+            System.out.println("Expected explain list: " + expectedExplainList);
+            String actualExplainStr = sqlHelper.queryWithStrReturn(explainSql);
+            for (int i = 0; i < expectedExplainList.size(); i++) {
+                Assert.assertTrue(actualExplainStr.contains(expectedExplainList.get(i)));
             }
         }
     }
-    
 }

@@ -81,6 +81,16 @@ public class SQLHelper {
         }
     }
 
+    public void execBatchSqlWithState(String sql) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            for (String s : sql.split(";")) {
+                if (!s.trim().isEmpty()) {
+                    statement.execute(s);
+                }
+            }
+        }
+    }
+
     public void execBatchSql(Statement statement, String sql) throws SQLException {
         for (String s : sql.split(";")) {
             if (!s.trim().isEmpty()) {
@@ -501,6 +511,13 @@ public class SQLHelper {
     public void doDropTable(String tableName) throws SQLException {
         try (Statement statement = connection.createStatement()) {
             String sql = "drop table " + tableName;
+            statement.execute(sql);
+        }
+    }
+
+    public void doDropSchema(String schemaName) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            String sql = "drop schema " + schemaName;
             statement.execute(sql);
         }
     }
