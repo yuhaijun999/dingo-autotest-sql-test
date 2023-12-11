@@ -37,6 +37,8 @@ import java.util.List;
 public class TestNegative extends BaseTestSuite {
     private static SQLHelper sqlHelper;
     private static HashSet<String> createTableSet = new HashSet<>();
+    private static HashSet<String> createSchemaSet = new HashSet<>();
+    private static HashSet<String> schemaTableSet = new HashSet<>();
 
 
     @BeforeClass (alwaysRun = true)
@@ -54,6 +56,14 @@ public class TestNegative extends BaseTestSuite {
                     sqlHelper.doDropTable(s);
                 }
             }
+        }
+        System.out.println(schemaTableSet);
+        for (String s : schemaTableSet) {
+            sqlHelper.doDropTable(s);
+        }
+        System.out.println(createSchemaSet);
+        for (String s : createSchemaSet) {
+            sqlHelper.doDropSchema(s);
         }
     }
 
@@ -125,6 +135,21 @@ public class TestNegative extends BaseTestSuite {
             }
         }
         System.out.println("sql: " + sql);
-        sqlHelper.execSql(sql);
+        if (param.get("Component").equalsIgnoreCase("Schema")) {
+            if (param.get("Sub_component").equalsIgnoreCase("Database")) {
+                int endNum = param.get("Sql_state").indexOf(";");
+                String schemaName = param.get("Sql_state").substring(16, endNum).trim();
+                if (param.get("Sql_state").contains("table")) {
+                    int tableStartNum = param.get("Sql_state").indexOf("table") + 6;
+                    int tableEndNum = param.get("Sql_state").indexOf("(");
+                    String tableName = param.get("Sql_state").substring(tableStartNum, tableEndNum).trim();
+                    schemaTableSet.add(tableName);
+                }
+                createSchemaSet.add(schemaName);
+            }
+            sqlHelper.execBatchSqlWithState(sql);
+        } else {
+            sqlHelper.execSql(sql);
+        }
     }
 }
