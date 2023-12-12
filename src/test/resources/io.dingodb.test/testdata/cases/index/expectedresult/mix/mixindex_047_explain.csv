@@ -2,4 +2,4 @@ DingoHashJoin
 DingoVector
 DingoAggregate
 DingoValues
-"type" : "scan"
+"type" : "partVector"

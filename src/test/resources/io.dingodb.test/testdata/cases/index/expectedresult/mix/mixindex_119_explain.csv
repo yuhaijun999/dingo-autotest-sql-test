@@ -1,4 +1,4 @@
 DingoHashJoin
 DingoVector
-"type" : "scan"
+"type" : "partVector"
 "type" : "hashJoin"
