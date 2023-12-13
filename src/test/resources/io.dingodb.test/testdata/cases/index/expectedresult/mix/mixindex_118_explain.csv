@@ -6,6 +6,6 @@ DingoGetVectorByDistance
 VectorStreamConvertor
 DingoGetByIndex
 "type" : "index"
-"type" : "scan"
+"type" : "partVector"
 "type" : "sort"
 "type" : "hashJoin"
