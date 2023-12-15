@@ -67,7 +67,7 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
     @Test(enabled = true, description = "测试创建表")
     public void test01TableCreate() throws SQLException, IOException, ClassNotFoundException {
         String sql = "create table " + tableName + "(id int, name varchar(20), age int, amount double, birthday date, create_time time, update_time timestamp, is_delete boolean, primary key(id))";
-        try(Statement statement = myConnection.createStatement();) {
+        try(Statement statement = myConnection.createStatement()) {
             statement.execute(sql);
             List<String> tableList = MySQLUtils.getTableList();
             System.out.println("TableList: " + tableList);

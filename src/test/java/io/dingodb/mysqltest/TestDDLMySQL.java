@@ -97,7 +97,7 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                     mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
                 }
                 ddlSql = ddlSql.replace("$" + schemaList.get(i).trim(), tableName);
-                querySql = querySql.replace("$" + schemaList.get(i).trim(), tableName);
+                querySql = querySql.replace("$" + schemaList.get(i).trim(), tableName.toUpperCase());
                 if (!ddlSql.contains("drop")) {
                     tableList.add(tableName);
                 }
