@@ -41,6 +41,7 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
     private static MySQLHelper mySQLHelper;
     private static HashSet<String> createTableSet = new HashSet<>();
     private static HashSet<String> createSchemaSet = new HashSet<>();
+    private static HashSet<String> schemaTableSet = new HashSet<>();
 
     @BeforeClass (alwaysRun = true)
     public static void setupAll() {
@@ -58,7 +59,13 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
             }
         }
 
+        System.out.println(schemaTableSet);
+        for (String s : schemaTableSet) {
+            mySQLHelper.doDropTable(s);
+        }
+
         if(createSchemaSet.size() > 0) {
+            System.out.println(createSchemaSet);
             List<String> finalSchemaList = MySQLUtils.getSchemaList();
             for (String s : createSchemaSet) {
                 if (finalSchemaList.contains(s.toUpperCase())) {
@@ -119,6 +126,9 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
             }
         }
 
+        System.out.println(ddlSql);
+        System.out.println(querySql);
+
         if (param.get("Sub_component").equalsIgnoreCase("databaseCreate")) {
             String databaseName = param.get("Ddl_sql").substring(16);
             createSchemaSet.add(databaseName);
@@ -127,6 +137,29 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
         if (param.get("Sub_component").equalsIgnoreCase("schemaCreate")) {
             String schemaName = param.get("Ddl_sql").substring(14);
             createSchemaSet.add(schemaName);
+        }
+
+        if (param.get("Component").equalsIgnoreCase("Schema")) {
+            if (param.get("Sub_component").equalsIgnoreCase("Information_Schema")) {
+                if (param.get("Ddl_sql").contains("create schema")) {
+                    int endNum = param.get("Ddl_sql").indexOf(";");
+                    String schemaName = param.get("Ddl_sql").substring(14, endNum).trim();
+                    createSchemaSet.add(schemaName);
+                }
+                if (param.get("Ddl_sql").contains("create database")) {
+                    int endNum = param.get("Ddl_sql").indexOf(";");
+                    String schemaName = param.get("Ddl_sql").substring(16, endNum).trim();
+                    createSchemaSet.add(schemaName);
+                }
+                if (param.get("Ddl_sql").contains("create table")) {
+                    int tableStartNum = param.get("Ddl_sql").indexOf("table") + 6;
+                    int tableEndNum = param.get("Ddl_sql").indexOf("(");
+                    String tableName = param.get("Ddl_sql").substring(tableStartNum, tableEndNum).trim();
+                    if (!param.get("Ddl_sql").contains("drop table")) {
+                        schemaTableSet.add(tableName);
+                    }
+                }
+            }
         }
         
         if (param.get("Validation_type").equals("csv_equals")) {

@@ -131,15 +131,33 @@ public class TestNegativeMySQL extends BaseTestSuiteMySQL {
         System.out.println("sql: " + sql);
         if (param.get("Component").equalsIgnoreCase("Schema")) {
             if (param.get("Sub_component").equalsIgnoreCase("Schema")) {
-                int endNum = param.get("Sql_state").indexOf(";");
-                String schemaName = param.get("Sql_state").substring(14, endNum).trim();
-                if (param.get("Sql_state").contains("table")) {
+                if (param.get("Sql_state").contains("create schema")) {
+                    int endNum = param.get("Sql_state").indexOf(";");
+                    String schemaName = param.get("Sql_state").substring(14, endNum).trim();
+                    createSchemaSet.add(schemaName);
+                }
+                if (param.get("Sql_state").contains("create table")) {
                     int tableStartNum = param.get("Sql_state").indexOf("table") + 6;
                     int tableEndNum = param.get("Sql_state").indexOf("(");
                     String tableName = param.get("Sql_state").substring(tableStartNum, tableEndNum).trim();
-                    schemaTableSet.add(tableName);
+                    if (!param.get("Sql_state").contains("drop table")) {
+                        schemaTableSet.add(tableName);
+                    }
                 }
-                createSchemaSet.add(schemaName);
+            } else if (param.get("Sub_component").equalsIgnoreCase("Database")) {
+                if (param.get("Sql_state").contains("create database")) {
+                    int endNum = param.get("Sql_state").indexOf(";");
+                    String schemaName = param.get("Sql_state").substring(16, endNum).trim();
+                    createSchemaSet.add(schemaName);
+                }
+                if (param.get("Sql_state").contains("create table")) {
+                    int tableStartNum = param.get("Sql_state").indexOf("table") + 6;
+                    int tableEndNum = param.get("Sql_state").indexOf("(");
+                    String tableName = param.get("Sql_state").substring(tableStartNum, tableEndNum).trim();
+                    if (!param.get("Sql_state").contains("drop table")) {
+                        schemaTableSet.add(tableName);
+                    }
+                }
             }
             mySQLHelper.execBatchSqlWithState(sql);
         } else {
