@@ -184,7 +184,7 @@ public class TestDML extends BaseTestSuite {
     }
 
     @Test(priority = 1, enabled = true, dataProvider = "dmlUpDelData", dataProviderClass = YamlDataHelper.class, description = "dml操作update&delete，正向用例")
-    public void test02DMLUpdateDelete(LinkedHashMap<String,String> param) throws SQLException, IOException {
+    public void test02DMLUpdateDelete(LinkedHashMap<String,String> param) throws SQLException, IOException, InterruptedException {
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
@@ -223,6 +223,10 @@ public class TestDML extends BaseTestSuite {
                     sqlHelper.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReader.getValue("DMLValues", value_List.get(j).trim())), tableName);
                 }
             }
+        }
+
+        if (param.get("Sub_component").equalsIgnoreCase("Explain")) {
+            Thread.sleep(330000);
         }
         
         if (param.get("Validation_type").equals("csv_equals")) {
