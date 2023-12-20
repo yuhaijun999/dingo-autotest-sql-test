@@ -102,6 +102,14 @@ public class CommonArgs {
         }
         return  "";
     }
+    
+    //获取触发的分支
+    public static String getMergeBranch() {
+        if (System.getenv().containsKey("MERGE_BRANCH")) {
+            return System.getenv("MERGE_BRANCH");
+        }
+        return  "";
+    }
 
     //获取构建触发原因
     public static String getBuildCause() {

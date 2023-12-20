@@ -61,6 +61,7 @@ public class DetailReporterListener implements IReporter{
     private String dingoCommitID = CommonArgs.getDingoCommitID();
     private String dingoCommitAuthor = CommonArgs.getDingoCommitAuthor();
     private String dingoMergeRepo = CommonArgs.getMergeRepo();
+    private String dingoMergeBranch = CommonArgs.getMergeBranch();
     private String dingoMergeTime = CommonArgs.getMergeTime();
     private String dingoBuildCause = CommonArgs.getBuildCause();
 
@@ -165,6 +166,7 @@ public class DetailReporterListener implements IReporter{
         writer.println("<h4>. 测试日期：" + dateNowStr + "</h4>");
         writer.println("<h4>. 测试节点IP：" + hostIP + "</h4>");
         writer.println("<h4>. 本次构建的触发仓库：" + dingoMergeRepo + "</h4>");
+        writer.println("<h4>. 本次构建的触发分支：" + dingoMergeBranch + "</h4>");
         writer.println("<h4>. 本次构建的提交合并时间：" + dingoMergeTime + "</h4>");
         writer.println("<h4>. 本次测试的store commit ID：" + storeCommitID + "</h4>");
         writer.println("<h4>. 本次测试的store仓库提交者 " + storeCommitAuthor + "</h4>");
