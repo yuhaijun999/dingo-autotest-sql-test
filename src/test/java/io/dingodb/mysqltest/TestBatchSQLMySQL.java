@@ -17,6 +17,7 @@
 package io.dingodb.mysqltest;
 
 import datahelper.MySQLYamlDataHelper;
+import io.dingodb.common.utils.JDBCUtils;
 import io.dingodb.common.utils.MySQLUtils;
 import io.dingodb.dailytest.MySQLHelper;
 import org.testng.Assert;
@@ -39,6 +40,7 @@ import java.util.List;
 public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
     private static MySQLHelper mySQLHelper;
     private static HashSet<String> createTableSet = new HashSet<>();
+    private static HashSet<String> createSchemaSet = new HashSet<>();
 
 
     @BeforeClass (alwaysRun = true)
@@ -46,7 +48,7 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
         mySQLHelper = new MySQLHelper();
     }
 
-    @AfterClass
+    @AfterClass (alwaysRun = true)
     public static void tearDownAll() throws SQLException, IOException, ClassNotFoundException {
         if(createTableSet.size() > 0) {
             List<String> finalTableList = MySQLUtils.getTableList();
@@ -56,13 +58,27 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
                 }
             }
         }
+
+        System.out.println(createSchemaSet);
+        if(createSchemaSet.size() > 0) {
+            for (String sc: createSchemaSet) {
+                List<String> finalSchemaTableList = JDBCUtils.getTableListWithSchema(sc);
+                System.out.println(finalSchemaTableList);
+                if (finalSchemaTableList.size() > 0) {
+                    for (String t : finalSchemaTableList) {
+                        mySQLHelper.doDropTable(sc.toUpperCase() + "." + t);
+                    }
+                }
+                mySQLHelper.doDropSchema(sc.toUpperCase());
+            }
+        }
     }
 
-    @BeforeMethod(enabled = true)
+    @BeforeMethod(alwaysRun = true, enabled = true)
     public void setup() throws Exception {
     }
 
-    @AfterMethod(enabled = true)
+    @AfterMethod(alwaysRun = true, enabled = true)
     public void cleanUp() throws Exception {
     }
 
@@ -72,6 +88,8 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
             throw new SkipException("skip this test case");
         }
 
+        List<String> schemaList = CastUtils.construct1DListIncludeBlank(param.get("Schema"),",");
+        createSchemaSet.addAll(schemaList);
         List<String> tableList = CastUtils.construct1DListIncludeBlank(param.get("Table_name"),",");
         createTableSet.addAll(tableList);
         String querySql1 = param.get("Query_sql1");
@@ -150,8 +168,13 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
         }
 
         if (tableList.size() > 0) {
-            for (String s : tableList) {
-                mySQLHelper.doDropTable("mysql_" + s);
+            for (String ts : tableList) {
+                if (param.get("Sub_component").trim().equalsIgnoreCase("Schema")) {
+                    mySQLHelper.doDropTable(ts);
+                } else {
+                    mySQLHelper.doDropTable("mysql_" + ts);
+                }
+                
             }
         }
     }

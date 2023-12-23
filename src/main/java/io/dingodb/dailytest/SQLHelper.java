@@ -522,6 +522,13 @@ public class SQLHelper {
         }
     }
 
+    public void doDropDatabase(String databaseName) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            String sql = "drop database " + databaseName;
+            statement.execute(sql);
+        }
+    }
+
     //获取查询结果集，包含表头
     public List<List<String>> getResultListWithLabel(ResultSet resultSet, List<List<String>> resultList) throws SQLException {
         ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
