@@ -39,14 +39,15 @@ import java.util.List;
 public class TestBatchSQL extends BaseTestSuite {
     private static SQLHelper sqlHelper;
     private static HashSet<String> createTableSet = new HashSet<>();
+    private static HashSet<String> createSchemaSet = new HashSet<>();
 
 
-    @BeforeClass
+    @BeforeClass (alwaysRun = true)
     public static void setupAll() {
         sqlHelper = new SQLHelper();
     }
 
-    @AfterClass
+    @AfterClass (alwaysRun = true)
     public static void tearDownAll() throws SQLException, IOException, ClassNotFoundException {
         System.out.println(createTableSet);
         if(createTableSet.size() > 0) {
@@ -55,6 +56,19 @@ public class TestBatchSQL extends BaseTestSuite {
                 if (finalTableList.contains(s.toUpperCase())) {
                     sqlHelper.doDropTable(s);
                 }
+            }
+        }
+
+        System.out.println(createSchemaSet);
+        if(createSchemaSet.size() > 0) {
+            for (String sc: createSchemaSet) {
+                List<String> finalSchemaTableList = JDBCUtils.getTableListWithSchema(sc);
+                if (finalSchemaTableList.size() > 0) {
+                    for (String t : finalSchemaTableList) {
+                        sqlHelper.doDropTable(sc.toUpperCase() + "." + t);
+                    }
+                }
+                sqlHelper.doDropSchema(sc.toUpperCase());
             }
         }
     }
@@ -79,6 +93,8 @@ public class TestBatchSQL extends BaseTestSuite {
             throw new SkipException("skip this test case");
         }
 
+        List<String> schemaList = CastUtils.construct1DListIncludeBlank(param.get("Schema"),",");
+        createSchemaSet.addAll(schemaList);
         List<String> tableList = CastUtils.construct1DListIncludeBlank(param.get("Table_name"),",");
         createTableSet.addAll(tableList);
         String querySql1 = param.get("Query_sql1");
