@@ -68,7 +68,9 @@ public class TestBatchSQL extends BaseTestSuite {
                         sqlHelper.doDropTable(sc.toUpperCase() + "." + t);
                     }
                 }
-                sqlHelper.doDropSchema(sc.toUpperCase());
+                if (sc.trim().length() > 0) {
+                    sqlHelper.doDropSchema(sc.toUpperCase());
+                }
             }
         }
     }
@@ -93,8 +95,10 @@ public class TestBatchSQL extends BaseTestSuite {
             throw new SkipException("skip this test case");
         }
 
-        List<String> schemaList = CastUtils.construct1DListIncludeBlank(param.get("Schema"),",");
-        createSchemaSet.addAll(schemaList);
+        if ((param.get("Schema").trim().length() > 0)) {
+            List<String> schemaList = CastUtils.construct1DListIncludeBlank(param.get("Schema"),",");
+            createSchemaSet.addAll(schemaList);
+        }
         List<String> tableList = CastUtils.construct1DListIncludeBlank(param.get("Table_name"),",");
         createTableSet.addAll(tableList);
         String querySql1 = param.get("Query_sql1");
