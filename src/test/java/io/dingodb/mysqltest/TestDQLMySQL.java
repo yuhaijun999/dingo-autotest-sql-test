@@ -163,7 +163,7 @@ public class TestDQLMySQL extends BaseTestSuiteMySQL{
                 }
             } else {
                 if (param.get("Sub_component").trim().equalsIgnoreCase("Json")) {
-                    expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+                    expectedResult = ParseCsv.splitCsvWithJsonToList(resultFile,"&");
                 } else {
                     expectedResult = ParseCsv.splitCsvString(resultFile,"&");
                 }
