@@ -142,9 +142,17 @@ public class TestDQL extends BaseTestSuite {
             String resultFile = param.get("Expected_result").trim();
             List<List<String>> expectedResult = new ArrayList<>();
             if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
-                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+                if (param.get("Sub_component").trim().equalsIgnoreCase("Json")) {
+                    expectedResult = ParseCsv.splitCsvWithJsonToList(resultFile, ",");
+                } else {
+                    expectedResult = ParseCsv.splitCsvString(resultFile,",");
+                }
             } else {
-                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+                if (param.get("Sub_component").trim().equalsIgnoreCase("Json")) {
+                    expectedResult = ParseCsv.splitCsvWithJsonToList(resultFile,"&");
+                } else {
+                    expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+                }
             }
             System.out.println("Expected: " + expectedResult);
             List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
@@ -154,9 +162,17 @@ public class TestDQL extends BaseTestSuite {
             String resultFile = param.get("Expected_result").trim();
             List<List<String>> expectedResult = new ArrayList<>();
             if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
-                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+                if (param.get("Sub_component").trim().equalsIgnoreCase("Json")) {
+                    expectedResult = ParseCsv.splitCsvWithJsonToList(resultFile,",");
+                } else {
+                    expectedResult = ParseCsv.splitCsvString(resultFile,",");
+                }
             } else {
-                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+                if (param.get("Sub_component").trim().equalsIgnoreCase("Json")) {
+                    expectedResult = ParseCsv.splitCsvWithJsonToList(resultFile,"&");
+                } else {
+                    expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+                }
             }
             System.out.println("Expected: " + expectedResult);
             List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
