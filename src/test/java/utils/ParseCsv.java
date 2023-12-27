@@ -22,6 +22,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ParseCsv {
     public static List<List<String>> splitCsvString(String csvPath, String splitCha) {
@@ -60,6 +62,41 @@ public class ParseCsv {
                 while ((line = bufferedReader.readLine()) != null) {
                     splitList.add(line);
                 }
+                bufferedReader.close();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return splitList;
+    }
+
+    public static List<List<String>> splitCsvWithJsonToList(String csvPath, String splitCha) {
+        List<List<String>> splitList = new ArrayList<>();
+
+        try {
+            File file = new File(csvPath);
+            if (!file.exists()) {
+                System.out.println("csv文件不存在！");
+            } else {
+                StringBuilder stringBuilder = new StringBuilder();
+                String line;
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(csvPath));
+                List<String> headStr = new ArrayList<>();
+                headStr.add(bufferedReader.readLine());
+                splitList.add(headStr);
+                List<String> jsonStr = new ArrayList<>();
+                while ((line = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(line);
+                    stringBuilder.append("\r\n");
+                }
+                String regex = "\\r\\n$";
+                Pattern pattern = Pattern.compile(regex);
+                Matcher matcher = pattern.matcher(stringBuilder);
+                if (matcher.find()) {
+                    stringBuilder.delete(matcher.start(), matcher.end());
+                }
+                jsonStr.add(stringBuilder.toString());
+                splitList.add(jsonStr);
                 bufferedReader.close();
             }
         } catch (IOException e) {
