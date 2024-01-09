@@ -39,6 +39,15 @@ public class CastUtils {
         return constructList;
     }
 
+    public static List construct1DListIncludeBlankChangeable(String constructStr, String splitCha){
+        List constructList = new ArrayList();
+        String[] originArray = constructStr.split(splitCha,-1);
+        for (int i = 0; i< originArray.length; i++) {
+            constructList.add(originArray[i]);
+        }
+        return constructList;
+    }
+
     public static List<List> construct2DListExcludeBlank(String constructStr, String listSplit, String strSplit){
         List<List> constructList = new ArrayList<List>();
         String[] originArray = constructStr.split(listSplit);

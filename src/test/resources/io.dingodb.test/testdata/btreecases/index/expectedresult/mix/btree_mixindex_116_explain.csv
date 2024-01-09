@@ -1,0 +1,10 @@
+DingoHashJoin
+DingoSort
+DingoGetVectorByDistance
+DingoGetByIndex
+DingoVector
+"type" : "index"
+"type" : "partVector"
+"type" : "coalesce"
+"type" : "sort"
+"type" : "hashJoin"

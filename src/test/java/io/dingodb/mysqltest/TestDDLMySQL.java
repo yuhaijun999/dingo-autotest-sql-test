@@ -19,7 +19,6 @@ package io.dingodb.mysqltest;
 import datahelper.MySQLYamlDataHelper;
 import io.dingodb.common.utils.MySQLUtils;
 import io.dingodb.dailytest.MySQLHelper;
-import io.dingodb.test.TestDQLbak;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
@@ -97,11 +96,19 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                 String tableName = "";
                 if (!schemaList.get(i).contains("_")) {
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    if (param.get("TestID").contains("btree")) {
+                        mySQLHelper.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    } else {
+                        mySQLHelper.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    }
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
+                    if (param.get("TestID").contains("btree")) {
+                        mySQLHelper.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                    } else {
+                        mySQLHelper.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
+                    }
                 }
                 ddlSql = ddlSql.replace("$" + schemaList.get(i).trim(), tableName);
                 querySql = querySql.replace("$" + schemaList.get(i).trim(), tableName.toUpperCase());
@@ -116,11 +123,19 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                     String tableName = "";
                     if (!schemaList.get(j).trim().contains("_")) {
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaList.get(j).trim();
-                        mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                        if (param.get("TestID").contains("btree")) {
+                            mySQLHelper.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                        } else {
+                            mySQLHelper.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                        }
                     } else {
                         String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaName;
-                        mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                        if (param.get("TestID").contains("btree")) {
+                            mySQLHelper.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                        } else {
+                            mySQLHelper.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                        }
                     }
                 }
             }

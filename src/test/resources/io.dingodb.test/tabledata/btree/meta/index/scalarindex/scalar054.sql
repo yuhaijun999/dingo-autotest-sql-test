@@ -1,0 +1,20 @@
+CREATE TABLE $table (
+    id bigint,
+    name varchar(32),
+    age int,
+    gmt bigint,
+    price FLOAT,
+    amount DOUBLE,
+    address varchar(255),
+    birthday DATE,
+    create_time TIME,
+    update_time TIMESTAMP,
+    zip_code varchar(20),
+    is_delete boolean,
+    feature float array not null,
+    user_info any,
+    feature_id bigint not null,
+    PRIMARY KEY (id),
+    index address_index(address),
+    index age_birthday_index(age,birthday) with (amount) partition by hash partitions=100
+) engine=BTREE

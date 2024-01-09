@@ -16,7 +16,7 @@
   -->
 
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite name="DingoDB-auto-tests">
+<suite name="DingoDB-SQL-AutoTests">
     <suite-files>
         <suite-file path="MySQLTest.xml"></suite-file>
         <suite-file path="DingoTest.xml"></suite-file>

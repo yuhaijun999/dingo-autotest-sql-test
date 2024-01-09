@@ -29,6 +29,7 @@ import java.util.List;
 
 public class BaseTestSuiteMySQL {
     public static IniReader mysqlIniReader;
+    public static IniReader mysqlIniReaderBTREE;
     public static MySQLHelper mySQLHelper;
     @BeforeSuite(alwaysRun = true, enabled = true, description = "所有测试开始前的准备工作")
     public static void beforeSuite() {
@@ -36,7 +37,8 @@ public class BaseTestSuiteMySQL {
         System.out.println("所有测试开始前，验证MySQL JDBC数据库连接正常");
         Assert.assertNotNull(MySQLHelper.connection);
         try {
-            mysqlIniReader = new IniReader("src/test/resources/io.dingodb.test/ini/mysql.ini");
+            mysqlIniReader = new IniReader("src/test/resources/io.dingodb.test/ini/mysql_lsm.ini");
+            mysqlIniReaderBTREE = new IniReader("src/test/resources/io.dingodb.test/ini/mysql_btree.ini");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

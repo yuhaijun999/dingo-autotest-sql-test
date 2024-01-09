@@ -87,7 +87,11 @@ public class TestDQLMySQL extends BaseTestSuiteMySQL{
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName.toUpperCase());
                     } else {
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                        mySQLHelper.execFile(TestDQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        if (param.get("TestID").contains("btree")) {
+                            mySQLHelper.execFile(TestDQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        } else {
+                            mySQLHelper.execFile(TestDQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        }
                         tableList.add(tableName);
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName.toUpperCase());
                     }
@@ -98,7 +102,11 @@ public class TestDQLMySQL extends BaseTestSuiteMySQL{
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName.toUpperCase());
                     } else {
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
-                        mySQLHelper.execFile(TestDQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
+                        if (param.get("TestID").contains("btree")) {
+                            mySQLHelper.execFile(TestDQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                        } else {
+                            mySQLHelper.execFile(TestDQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
+                        }
                         tableList.add(tableName);
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName.toUpperCase());
                     }
@@ -116,7 +124,11 @@ public class TestDQLMySQL extends BaseTestSuiteMySQL{
                             String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                             tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaName;
                         }
-                        mySQLHelper.execFile(TestDQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
+                        if (param.get("TestID").contains("btree")) {
+                            mySQLHelper.execFile(TestDQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
+                        } else {
+                            mySQLHelper.execFile(TestDQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
+                        }
                     }
                 }
             }
@@ -125,7 +137,11 @@ public class TestDQLMySQL extends BaseTestSuiteMySQL{
                     List<String> value_List = CastUtils.construct1DListIncludeBlank(param.get("Table_value_ref").trim(),",");
                     for (int j = 0; j < value_List.size(); j++) {
                         String tableName = "mysql" + param.get("Case_table_dependency").trim() + "_0" + j + schemaList.get(j).trim();
-                        mySQLHelper.execFile(TestDQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
+                        if (param.get("TestID").contains("btree")) {
+                            mySQLHelper.execFile(TestDQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
+                        } else {
+                            mySQLHelper.execFile(TestDQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
+                        }
                     }
                 }
             }

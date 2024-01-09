@@ -1,0 +1,6 @@
+ID&NAME&AGE&AMOUNT&SEND_TIME
+1&zhangsan&18&23.5&[true, false, false]
+2&lisi&25&895.89&[true]
+3&wangwu&55&123.123&[false, true]
+4&LiuJi&100&0.0&[true, true, false]
+5&LiuJi&100&0.0&[true, true, true]

@@ -1,0 +1,4 @@
+id&name&user_info
+1&zhangsan&{birthday=2022-01-10, address=beijing, sex=male}
+2&lisi&{birthday=2000-11-23, address=beijing, sex=female}
+3&wangwu&{birthday=1962-06-20, address=shanghai, sex=male}

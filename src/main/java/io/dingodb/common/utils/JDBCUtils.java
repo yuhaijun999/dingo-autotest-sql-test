@@ -41,8 +41,7 @@ public class JDBCUtils {
             e.printStackTrace();
         }
     }
-
-    //获取数据库连接
+    
     public static Connection getConnection() throws ClassNotFoundException, SQLException {
         String schemaName = properties.getProperty("SCHEMA");
         String timeout = properties.getProperty("timeout");
@@ -52,17 +51,11 @@ public class JDBCUtils {
         String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
 //        String defaultConnectIP = "172.20.61.101";
         String connectUrl = "jdbc:dingo:thin:url=" + defaultConnectIP + ":" + port + "/" + schemaName + "?timeout=" + timeout;
-
-        //加载驱动
         Class.forName(JDBC_DRIVER);
-
-        //获取连接
         Connection connection = DriverManager.getConnection(connectUrl, USER, PASS);
-
         return connection;
     }
-
-    //获取数据库连接,不指定schema
+    
     public static Connection getConnectionWithoutSchema() throws ClassNotFoundException, SQLException {
         String timeout = properties.getProperty("timeout");
         String JDBC_DRIVER = properties.getProperty("JDBC_Driver");
@@ -71,17 +64,11 @@ public class JDBCUtils {
         String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
 //        String defaultConnectIP = "172.20.61.101";
         String connectUrl = "jdbc:dingo:thin:url=" + defaultConnectIP + ":" + port + "?timeout=" + timeout;
-
-        //加载驱动
         Class.forName(JDBC_DRIVER);
-
-        //获取连接
         Connection connection = DriverManager.getConnection(connectUrl, USER, PASS);
-
         return connection;
     }
-
-    //获取指定schema数据库连接
+    
     public static Connection getConnectionWithSchema(String schemaName) throws ClassNotFoundException, SQLException {
         String timeout = properties.getProperty("timeout");
         String JDBC_DRIVER = properties.getProperty("JDBC_Driver");
@@ -89,17 +76,11 @@ public class JDBCUtils {
         String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
 //        String defaultConnectIP = "172.20.61.101";
         String connectUrl = "jdbc:dingo:thin:url=" + defaultConnectIP + ":" + port + "/" + schemaName + "?timeout=" + timeout;
-
-        //加载驱动
         Class.forName(JDBC_DRIVER);
-
-        //获取连接
         Connection connection = DriverManager.getConnection(connectUrl, USER, PASS);
-
         return connection;
     }
-
-    //使用非root用户连接数据库，获取connection对象
+    
     public static Connection getConnectionWithNotRoot(String userName, String passwd) throws ClassNotFoundException, SQLException {
         String schemaName = properties.getProperty("SCHEMA");
         String JDBC_DRIVER = properties.getProperty("JDBC_Driver");
@@ -108,17 +89,11 @@ public class JDBCUtils {
         String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
 //        String defaultConnectIP = "172.20.61.101";
         String connectUrl = "jdbc:dingo:thin:url=" + defaultConnectIP + ":" + port + "/" + schemaName;
-
-        //加载驱动
         Class.forName(JDBC_DRIVER);
-
-        //获取连接
         Connection connection = DriverManager.getConnection(connectUrl, userName, passwd);
-
         return connection;
     }
-
-    //获取数据库下的所有Schema
+    
     public static List<String> getSchemaList() throws SQLException, ClassNotFoundException, IOException {
         Connection connection = getConnectionWithoutSchema();
         DatabaseMetaData dmd = connection.getMetaData();
@@ -131,8 +106,7 @@ public class JDBCUtils {
         resultSetSchema.close();
         return schemaList;
     }
-
-    //获取Dingo数据库下的所有数据表
+    
     public static List<String> getTableList() throws SQLException, ClassNotFoundException, IOException {
         Connection connection = getConnection();
         DatabaseMetaData dmd = connection.getMetaData();
@@ -153,8 +127,7 @@ public class JDBCUtils {
         resultSetSchema.close();
         return tableList;
     }
-
-    //获取指定Schema下的所有数据表
+    
     public static List<String> getTableListWithSchema(String shemaName) throws SQLException, ClassNotFoundException, IOException {
         Connection connection = getConnection();
         DatabaseMetaData dmd = connection.getMetaData();
@@ -175,8 +148,7 @@ public class JDBCUtils {
         resultSetSchema.close();
         return tableList;
     }
-
-    //获取所有数据库下的所有数据表
+    
     public static List<String> getAllTableList() throws SQLException, ClassNotFoundException, IOException {
         Connection connection = getConnection();
         DatabaseMetaData dmd = connection.getMetaData();
@@ -196,8 +168,7 @@ public class JDBCUtils {
         resultSetSchema.close();
         return tableList;
     }
-
-    //关闭资源: 连接
+    
     public static void closeResource(Connection conn) {
         try{
             if(conn != null) {
@@ -207,8 +178,7 @@ public class JDBCUtils {
             e.printStackTrace();
         }
     }
-
-    //关闭资源: 连接和statement
+    
     public static void closeResource(Connection conn, Statement ps) {
         try{
             if(ps != null) {
@@ -226,8 +196,7 @@ public class JDBCUtils {
             e.printStackTrace();
         }
     }
-
-    //关闭资源: resultSet, 连接和statement
+    
     public static void closeResource(ResultSet rs, Connection conn, Statement ps) {
         try{
             if(rs != null) {
@@ -253,5 +222,4 @@ public class JDBCUtils {
             e.printStackTrace();
         }
     }
-
 }

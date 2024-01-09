@@ -40,8 +40,7 @@ public class MySQLUtils {
             e.printStackTrace();
         }
     }
-
-    //获取数据库连接
+    
     public static Connection getMySQLConnection() throws IOException, ClassNotFoundException, SQLException {
         String schemaName=properties.getProperty("SCHEMA");
         String MySQL_JDBC_DRIVER = properties.getProperty("MySQL_JDBC_Driver");
@@ -58,17 +57,11 @@ public class MySQLUtils {
         props.setProperty("password", PASS);
 //        String connectUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/dingo?max_execution_time=" + timeout+"&wait_timeout=60&connectTimeout=60000";
         String connectUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/" + schemaName + "?serverTimezone=" + timezone;
-
-        //加载驱动
         Class.forName(MySQL_JDBC_DRIVER);
-
-        //获取连接
         Connection myConnection = DriverManager.getConnection(connectUrl, props);
-
         return myConnection;
     }
-
-    //获取数据库连接，不指定DB
+    
     public static Connection getMySQLConnectionWithoutSchema() throws IOException, ClassNotFoundException, SQLException {
         String MySQL_JDBC_DRIVER = properties.getProperty("MySQL_JDBC_Driver");
         String mysql_port = CommonArgs.getDefaultMySQLPort();
@@ -82,17 +75,11 @@ public class MySQLUtils {
         props.setProperty("user", USER);
         props.setProperty("password", PASS);
         String connectUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "?serverTimezone=" + timezone;
-
-        //加载驱动
         Class.forName(MySQL_JDBC_DRIVER);
-
-        //获取连接
         Connection myConnection = DriverManager.getConnection(connectUrl, props);
-
         return myConnection;
     }
-
-    //获取指定Schema连接
+    
     public static Connection getMySQLConnectionWithSchema(String schemaName) throws IOException, ClassNotFoundException, SQLException {
         String MySQL_JDBC_DRIVER = properties.getProperty("MySQL_JDBC_Driver");
         String mysql_port = CommonArgs.getDefaultMySQLPort();
@@ -106,17 +93,11 @@ public class MySQLUtils {
         props.setProperty("user", USER);
         props.setProperty("password", PASS);
         String connectUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/" + schemaName + "?serverTimezone=" + timezone;
-
-        //加载驱动
         Class.forName(MySQL_JDBC_DRIVER);
-
-        //获取连接
         Connection myConnection = DriverManager.getConnection(connectUrl, props);
-
         return myConnection;
     }
-
-    //使用非root用户连接数据库，获取connection对象
+    
     public static Connection getConnectionWithNotRoot(String userName, String passwd) throws ClassNotFoundException, SQLException {
         String schemaName=properties.getProperty("SCHEMA");
         String MySQL_JDBC_DRIVER = properties.getProperty("MySQL_JDBC_Driver");
@@ -127,39 +108,28 @@ public class MySQLUtils {
         String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
 //        String defaultConnectIP = "172.20.61.101";
         String connectUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/" + schemaName + "?serverTimezone=" + timezone;
-
-        //加载驱动
         Class.forName(MySQL_JDBC_DRIVER);
-
-        //获取连接
         Connection myConnection = DriverManager.getConnection(connectUrl, userName, passwd);
-
         return myConnection;
     }
-
-    //获取所有Schemas
+    
     public static List<String> getSchemaList() throws SQLException, ClassNotFoundException, IOException {
         Connection connection = getMySQLConnectionWithoutSchema();
-        //检索元数据对象
         DatabaseMetaData dmd = connection.getMetaData();
         ResultSet resultSetSchema = dmd.getCatalogs();
         List<String> schemaList = new ArrayList<>();
-
         while (resultSetSchema.next()) {
             schemaList.add(resultSetSchema.getString(1).toUpperCase());
         }
         resultSetSchema.close();
         return schemaList;
     }
-
-    //获取所有数据表
+    
     public static List<String> getTableList() throws SQLException, ClassNotFoundException, IOException {
         Connection connection = getMySQLConnection();
-        //检索元数据对象
         DatabaseMetaData dmd = connection.getMetaData();
         ResultSet resultSetSchema = dmd.getSchemas();
         List<String> schemaList = new ArrayList<>();
-        
         while (resultSetSchema.next()) {
             schemaList.add(resultSetSchema.getString(1));
         }
@@ -174,8 +144,7 @@ public class MySQLUtils {
         resultSetSchema.close();
         return tableList;
     }
-
-    //关闭资源: 连接
+    
     public static void closeResource(Connection conn) {
         try{
             if(conn != null) {
@@ -185,8 +154,7 @@ public class MySQLUtils {
             e.printStackTrace();
         }
     }
-
-    //关闭资源: 连接和statement
+    
     public static void closeResource(Connection conn, Statement ps) {
         try{
             if(ps != null) {
@@ -204,8 +172,7 @@ public class MySQLUtils {
             e.printStackTrace();
         }
     }
-
-    //关闭资源: resultSet, 连接和statement
+    
     public static void closeResource(ResultSet rs, Connection conn, Statement ps) {
         try{
             if(rs != null) {
@@ -231,5 +198,4 @@ public class MySQLUtils {
             e.printStackTrace();
         }
     }
-
 }

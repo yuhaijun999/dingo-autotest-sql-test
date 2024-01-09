@@ -1,0 +1,5 @@
+Type&Value
+RANGE&[ Infinity, Key(1960-10-31) )
+RANGE&[ Key(1960-10-31), Key(1999-01-01) )
+RANGE&[ Key(1999-01-01), Key(2023-05-23) )
+RANGE&[ Key(2023-05-23), Infinity )

@@ -1,0 +1,7 @@
+CREATE TABLE $table (
+    w3cschool_id int NOT NULL,
+    w3cschool_title varchar(255) DEFAULT NULL,
+    w3cschool_author varchar(255) DEFAULT NULL,
+    submission_date date DEFAULT NULL,
+    PRIMARY KEY (w3cschool_id)
+) engine=BTREE
