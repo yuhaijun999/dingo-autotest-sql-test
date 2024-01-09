@@ -21,9 +21,12 @@ import io.dingodb.common.utils.MySQLUtils;
 import org.apache.commons.io.IOUtils;
 
 import javax.annotation.Nonnull;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -433,6 +436,78 @@ public class MySQLHelper {
             List<List<String>> resultList = getResultListWithLabel(resultSet, dml_result);
             resultSet.close();
             return resultList;
+        }
+    }
+
+    //插入Blob类型字段的数据
+    public int preparedStatementInsertBlobData(String insert_sql, String[] insert_value_type, List insert_values) throws SQLException {
+        try(PreparedStatement ps = connection.prepareStatement(insert_sql)) {
+            for (int i = 0; i < insert_values.size(); i++) {
+                switch (insert_value_type[i].trim()) {
+                    case "Varchar": {
+                        ps.setString(i + 1, (String) insert_values.get(i));
+                        break;
+                    }
+                    case "Integer": {
+                        ps.setInt(i + 1, Integer.parseInt((String) insert_values.get(i)));
+                        break;
+                    }
+                    case "Bigint": {
+                        ps.setLong(i + 1, Long.parseLong((String) insert_values.get(i)));
+                        break;
+                    }
+                    case "Blob": {
+                        ps.setBlob(i + 1, (FileInputStream) insert_values.get(i));
+                        break;
+                    }
+                }
+            }
+            int effect_rows = ps.executeUpdate();
+           return effect_rows;
+        }
+    }
+
+    //读取Blob类型字段的数据
+    public FileOutputStream preparedStatementGetBlobData(String query_sql, String[] query_value_type, int blobIndex, String fileOutPath, Object ... query_values) throws SQLException, IOException {
+        InputStream inputStream = null;
+        FileOutputStream fileOutputStream = null;
+        ResultSet resultSet = null;
+        try(PreparedStatement ps = connection.prepareStatement(query_sql)) {
+            for (int i = 0; i < query_values.length; i++) {
+                switch (query_value_type[i].trim()) {
+                    case "Varchar": {
+                        ps.setString(i + 1, (String) query_values[i]);
+                        break;
+                    }
+                    case "Integer": {
+                        ps.setInt(i + 1, Integer.parseInt((String) query_values[i]));
+                        break;
+                    }
+                    case "Bigint": {
+                        ps.setLong(i + 1, Long.parseLong((String) query_values[i]));
+                        break;
+                    }
+                    case "Blob": {
+                        ps.setBlob(i + 1, (FileInputStream) query_values[i]);
+                        break;
+                    }
+                }
+            }
+            resultSet = ps.executeQuery();
+            while (resultSet.next()) {
+                Blob blob = resultSet.getBlob(blobIndex);
+                inputStream = blob.getBinaryStream();
+                fileOutputStream = new FileOutputStream(fileOutPath);
+                byte[] buffer = new byte[1024];
+                int len;
+                while ((len = inputStream.read(buffer)) != -1) {
+                    fileOutputStream.write(buffer,0, len);
+                }
+            }
+            inputStream.close();
+            fileOutputStream.close();
+            resultSet.close();
+            return fileOutputStream;
         }
     }
 

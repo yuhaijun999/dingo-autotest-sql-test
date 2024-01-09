@@ -1,0 +1,5 @@
+Type&Value
+RANGE&[ Infinity, Key(08:30:00) )
+RANGE&[ Key(08:30:00), Key(12:00:00) )
+RANGE&[ Key(12:00:00), Key(19:30:30) )
+RANGE&[ Key(19:30:30), Infinity )

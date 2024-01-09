@@ -1,0 +1,23 @@
+4
+id,name,amount,address,birthday
+1,zhangsan,23.5,shanghai,1998-04-06
+2,lisi,895.0, shanghai haidian ,1988-02-05
+3,l3,123.123,wuhan NO.1 Street,2022-03-04
+4,HAHA,9.0762556,CHANGping,2020-11-11
+5,awJDs,1453.9999,pingYang1,2010-10-01
+6,123,0.0,543,1987-07-16
+7,yamaha,2.3,shanghai changyang,1949-01-01
+8,zhangsan,12.3,shanghai,2015-09-10
+9,op ,109.325,wuhan,1995-12-15
+10,lisi,1234.456,nanjing,2021-03-04
+11,  aB c  dE ,99.9999,shanghai chaoyang,1976-07-07
+12, abcdef,2345.0,123,2018-05-31
+13,HAHA,9.0762556,CHANGping,2014-10-13
+14,zhngsna,32.0,chong qing ,1949-10-01
+15,1.5,0.1235,http://WWW.baidu.com,2007-08-15
+16, ,1999.99,Huluodao,1960-11-11
+17,,0.01,null,2022-03-01
+18,tTATtt,18.18, aabcaa ,2020-11-11
+19,777,77.77,7788,2020-11-11
+20,null,null,null,1987-12-11
+21,Zala,2000.01,JiZhou,2022-07-07

@@ -94,7 +94,11 @@ public class TestNegativeMySQL extends BaseTestSuiteMySQL {
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
                     } else {
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                        mySQLHelper.execFile(TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        if (param.get("TestID").contains("btree")) {
+                            mySQLHelper.execFile(TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        } else {
+                            mySQLHelper.execFile(TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        }
                         tableList.add(tableName);
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
                     }
@@ -105,7 +109,11 @@ public class TestNegativeMySQL extends BaseTestSuiteMySQL {
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
                     } else {
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
-                        mySQLHelper.execFile(TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
+                        if (param.get("TestID").contains("btree")) {
+                            mySQLHelper.execFile(TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                        } else {
+                            mySQLHelper.execFile(TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
+                        }
                         tableList.add(tableName);
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
                     }
@@ -123,7 +131,11 @@ public class TestNegativeMySQL extends BaseTestSuiteMySQL {
                             String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                             tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaName;
                         }
-                        mySQLHelper.execFile(TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("NegativeValues", value_List.get(j).trim())), tableName);
+                        if (param.get("TestID").contains("btree")) {
+                            mySQLHelper.execFile(TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("NegativeValues", value_List.get(j).trim())), tableName);
+                        } else {
+                            mySQLHelper.execFile(TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("NegativeValues", value_List.get(j).trim())), tableName);
+                        }
                     }
                 }
             }

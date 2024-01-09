@@ -1,0 +1,6 @@
+DingoSort
+DingoHashJoin(condition=[=($18, $19)], joinType=[left])
+DingoHashJoin(condition=[true], joinType=[inner])
+DingoAggregate
+DingoValues
+"type" : "scan"

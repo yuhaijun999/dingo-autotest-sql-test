@@ -19,7 +19,6 @@ package io.dingodb.mysqltest;
 import datahelper.MySQLYamlDataHelper;
 import io.dingodb.common.utils.MySQLUtils;
 import io.dingodb.dailytest.MySQLHelper;
-import io.dingodb.test.TestDQLbak;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
@@ -30,6 +29,9 @@ import org.testng.annotations.Test;
 import utils.CastUtils;
 import utils.ParseCsv;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -87,11 +89,19 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                 String tableName = "";
                 if (!schemaList.get(i).trim().contains("_")) {
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    if (param.get("TestID").contains("btree")) {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    } else {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    }
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
+                    if (param.get("TestID").contains("btree")) {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                    } else {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
+                    }
                 }
                 tableList.add(tableName);
                 querySql = querySql.replace("$" + schemaList.get(i).trim(), tableName);
@@ -107,7 +117,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                         String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaName;
                     }
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
+                    if (param.get("TestID").contains("btree")) {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
+                    } else {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
+                    }
                 }
             }
         }
@@ -156,11 +170,19 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                 String tableName = "";
                 if (!schemaList.get(i).trim().contains("_")) {
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    if (param.get("TestID").contains("btree")) {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    } else {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    }
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
+                    if (param.get("TestID").contains("btree")) {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                    } else {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
+                    }
                 }
                 tableList.add(tableName);
                 dmlSql = dmlSql.replace("$" + schemaList.get(i).trim(), tableName);
@@ -177,7 +199,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                         String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaName;
                     }
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
+                    if (param.get("TestID").contains("btree")) {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
+                    } else {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
+                    }
                 }
             }
         }
@@ -243,11 +269,19 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                 String tableName = "";
                 if (!schemaList.get(i).trim().contains("_")) {
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    if (param.get("TestID").contains("btree")) {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    } else {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    }
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
+                    if (param.get("TestID").contains("btree")) {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                    } else {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
+                    }
                 }
                 tableList.add(tableName);
                 insertSql = insertSql.replace("$" + schemaList.get(i).trim(), tableName);
@@ -269,7 +303,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                         String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaName;
                     }
-                    mySQLHelper.execFile(TestDQLbak.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
+                    if (param.get("TestID").contains("btree")) {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
+                    } else {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
+                    }
                 }
             }
         }
@@ -325,4 +363,95 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
 //            }
 //        }
     }
+
+    @Test(priority = 3, enabled = true, dataProvider = "mysqlPSBlobData", dataProviderClass = MySQLYamlDataHelper.class, description = "验证Blob类型的输入与输出")
+    public void test04PrepareStatementBlobType(LinkedHashMap<String,String> param) throws SQLException, IOException {
+        if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
+            throw new SkipException("skip this test case");
+        }
+
+        List<String> tableList = new ArrayList<>();
+        String insertSql = param.get("Insert_sql").trim();
+        String querySql = param.get("Query_sql").trim();
+        List<Object> insert_ps_values_list = CastUtils.construct1DListIncludeBlankChangeable(param.get("Insert_ps_values"), ",");
+        String[] insert_value_type_tuple = param.get("Insert_value_type").split(",");
+        Object[] query_ps_values_tuple = param.get("Query_ps_values").split(",");
+        String[] query_value_type_tuple = param.get("Query_value_type").split(",");
+
+        if (param.get("Table_schema_ref").trim().length() > 0) {
+            List<String> schemaList = CastUtils.construct1DListIncludeBlank(param.get("Table_schema_ref"),",");
+            for (int i = 0; i < schemaList.size(); i++) {
+                String tableName = "";
+                if (!schemaList.get(i).trim().contains("_")) {
+                    if (param.get("Case_table_dependency").trim().length() > 0) {
+                        tableName = "mysql" + param.get("Case_table_dependency").trim() + "_0" + i + schemaList.get(i).trim();
+                    } else {
+                        tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
+                    }
+                    if (param.get("TestID").contains("btree")) {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    } else {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    }
+                } else {
+                    String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
+                    if (param.get("Case_table_dependency").trim().length() > 0) {
+                        tableName = "mysql" + param.get("Case_table_dependency").trim() + "_0" + i + schemaName;
+                    } else {
+                        tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
+                    }
+                    if (param.get("TestID").contains("btree")) {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                    } else {
+                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
+                    }
+                }
+                tableList.add(tableName);
+                insertSql = insertSql.replace("$" + schemaList.get(i).trim(), tableName);
+                querySql = querySql.replace("$" + schemaList.get(i).trim(), tableName);
+            }
+            createTableSet.addAll(tableList);
+        }
+        
+        if (param.get("Blob_resource").trim().length() > 0) {
+            String blobResource = null;
+            if (param.get("TestID").contains("btree")) {
+                blobResource = mysqlIniReaderBTREE.getValue("PSValues", param.get("Blob_resource"));
+            } else {
+                blobResource = mysqlIniReader.getValue("PSValues", param.get("Blob_resource"));
+            }
+            System.out.println("blob resource path: " + blobResource);
+            FileInputStream fileInputStream = new FileInputStream(blobResource);
+            File fileIn = new File(blobResource);
+            long fileInSize = fileIn.length();
+            System.out.println("输入文件大小：" + fileInSize);
+            insert_ps_values_list.set(insert_ps_values_list.size() - 1, fileInputStream);
+            int expectedInsertRows = Integer.parseInt(param.get("Effected_rows"));
+            System.out.println("Expected insert rows: " + expectedInsertRows);
+            int actualInsertRows = mySQLHelper.preparedStatementInsertBlobData(insertSql, insert_value_type_tuple, insert_ps_values_list);
+            System.out.println("Actual insert rows: " + actualInsertRows);
+            Assert.assertEquals(actualInsertRows, expectedInsertRows);
+            int blobIndex = 0;
+            for (int i = 0; i < insert_value_type_tuple.length; i++) {
+                if (insert_value_type_tuple[i].equalsIgnoreCase("Blob")) {
+                    blobIndex = i + 1;
+                }
+            }
+            
+            String fileOutPutPath = param.get("Blob_out") + "mysql" + param.get("TestID") + "." + param.get("Resource_type");
+            File oldFile = new File(fileOutPutPath);
+            if (oldFile.exists()) {
+                oldFile.delete();
+            }
+            
+            FileOutputStream actualFileOutputStream = mySQLHelper.preparedStatementGetBlobData(querySql, query_value_type_tuple, blobIndex, fileOutPutPath, query_ps_values_tuple);
+            Assert.assertNotNull(actualFileOutputStream);
+            File fileOut = new File(fileOutPutPath);
+            long fileOutSize = fileOut.length();
+            System.out.println("输出文件大小：" + fileOutSize);
+            
+            Assert.assertEquals(fileOutSize, fileInSize);
+        }
+    }
+    
 }

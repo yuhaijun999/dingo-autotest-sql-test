@@ -1,0 +1,5 @@
+DingoHashJoin
+DingoTableScan
+DingoAggregate
+DingoValues
+"type" : "scan"

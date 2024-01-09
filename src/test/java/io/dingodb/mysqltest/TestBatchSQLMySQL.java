@@ -53,7 +53,7 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
         if(createTableSet.size() > 0) {
             List<String> finalTableList = MySQLUtils.getTableList();
             for (String s : createTableSet) {
-                if (finalTableList.contains("MYSQL" + s.toUpperCase())) {
+                if (finalTableList.contains("MYSQL_" + s.toUpperCase())) {
                     mySQLHelper.doDropTable("mysql_" + s);
                 }
             }
@@ -99,8 +99,13 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
         String querySql1 = param.get("Query_sql1");
         String querySql2 = param.get("Query_sql2");
         for ( int i = 0; i < 1; i++) {
-            mySQLHelper.execFile(TestBatchSQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("BatchSQLOp", 
-                    param.get("Batch_sql"))), "mysql_" + tableList.get(i).trim());
+            if (param.get("TestID").contains("btree")) {
+                mySQLHelper.execFile(TestBatchSQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("BatchSQLOp",
+                        param.get("Batch_sql"))), "mysql_" + tableList.get(i).trim());
+            } else {
+                mySQLHelper.execFile(TestBatchSQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("BatchSQLOp",
+                        param.get("Batch_sql"))), "mysql_" + tableList.get(i).trim());
+            }
             if (querySql1.trim().length() > 0) {
                 querySql1 = querySql1.replace("$" + tableList.get(i).trim(), "mysql_" + tableList.get(i).trim());
             }

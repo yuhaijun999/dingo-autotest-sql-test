@@ -16,6 +16,7 @@
 
 package datahelper;
 
+import org.apache.commons.compress.utils.Lists;
 import org.testng.annotations.DataProvider;
 import org.yaml.snakeyaml.Yaml;
 import utils.GetYaml;
@@ -24,6 +25,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -55,14 +57,24 @@ public class MySQLYamlDataHelper {
 
     @DataProvider (name = "mysqlDQLData1", parallel = false)
     public Object[][] mysqlDQLCaseGroup1() throws IOException, InterruptedException {
-        String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/dql/casegroup1/mysql_dql_cases1.xlsx";
-        String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
-        List<Map<String, String>> yamlList = getYamlList(yamlPath);
-        Object[][] cases = new Object[yamlList.size()][];
-        for (int i = 0; i< yamlList.size(); i++) {
-            cases[i] = new Object[] {yamlList.get(i)};
+        String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/dql/casegroup1/mysql_dql_cases1.xlsx";
+        String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/dql/casegroup1/mysql_dql_cases1_btree.xlsx";
+        String yamlPathLSM = GetYaml.convertExcelToYaml(excelPathLSM,0,0);
+        String yamlPathBTREE = GetYaml.convertExcelToYaml(excelPathBTREE,0,0);
+        List<Map<String, String>> yamlListLSM = getYamlList(yamlPathLSM);
+        List<Map<String, String>> yamlListBTREE = getYamlList(yamlPathBTREE);
+        Object[][] cases_lsm = new Object[yamlListLSM.size()][];
+        for (int i = 0; i< yamlListLSM.size(); i++) {
+            cases_lsm[i] = new Object[] {yamlListLSM.get(i)};
         }
-        return cases;
+        Object[][] cases_btree = new Object[yamlListBTREE.size()][];
+        for (int i = 0; i< yamlListBTREE.size(); i++) {
+            cases_btree[i] = new Object[] {yamlListBTREE.get(i)};
+        }
+        List<Object[]> cases_merge = Lists.newArrayList();
+        cases_merge.addAll(Arrays.asList(cases_lsm));
+        cases_merge.addAll(Arrays.asList(cases_btree));
+        return cases_merge.toArray(new Object[cases_merge.size()][]);
     }
 
     @DataProvider (name = "mysqlDQLData2", parallel = false)
@@ -76,101 +88,71 @@ public class MySQLYamlDataHelper {
         }
         return cases;
     }
-
-    @DataProvider (name = "mysqlDDLData1", parallel = true)
-    public Object[][] mysqlDDLCases1() throws IOException, InterruptedException {
-        String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/ddl/mysql_ddl_cases.xlsx";
-        String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
-        List<Map<String, String>> yamlList = getYamlList(yamlPath);
-        Object[][] cases = new Object[yamlList.size()][];
-        for (int i = 0; i< yamlList.size(); i++) {
-            cases[i] = new Object[] {yamlList.get(i)};
-        }
-        return cases;
-    }
-
+    
     @DataProvider (name = "mysqlDMLInsertData", parallel = true)
     public Object[][] mysqlDMLInsertCases() throws IOException, InterruptedException {
-        String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/dml/insert/mysql_insert_cases.xlsx";
-        String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
-        List<Map<String, String>> yamlList = getYamlList(yamlPath);
-        Object[][] cases = new Object[yamlList.size()][];
-        for (int i = 0; i< yamlList.size(); i++) {
-            cases[i] = new Object[] {yamlList.get(i)};
+        String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/dml/insert/mysql_insert_cases.xlsx";
+        String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/dml/insert/mysql_insert_cases_btree.xlsx";
+        String yamlPathLSM = GetYaml.convertExcelToYaml(excelPathLSM,0,0);
+        String yamlPathBTREE = GetYaml.convertExcelToYaml(excelPathBTREE,0,0);
+        List<Map<String, String>> yamlListLSM = getYamlList(yamlPathLSM);
+        List<Map<String, String>> yamlListBTREE = getYamlList(yamlPathBTREE);
+        Object[][] cases_lsm = new Object[yamlListLSM.size()][];
+        for (int i = 0; i< yamlListLSM.size(); i++) {
+            cases_lsm[i] = new Object[] {yamlListLSM.get(i)};
         }
-        return cases;
+        Object[][] cases_btree = new Object[yamlListBTREE.size()][];
+        for (int i = 0; i< yamlListBTREE.size(); i++) {
+            cases_btree[i] = new Object[] {yamlListBTREE.get(i)};
+        }
+        List<Object[]> cases_merge = Lists.newArrayList();
+        cases_merge.addAll(Arrays.asList(cases_lsm));
+        cases_merge.addAll(Arrays.asList(cases_btree));
+        return cases_merge.toArray(new Object[cases_merge.size()][]);
     }
 
     @DataProvider (name = "mysqlDMLUpDelData", parallel = true)
     public Object[][] mysqlDMLUpDelCases() throws IOException, InterruptedException {
-        String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/dml/updatedelete/mysql_updatedelete_cases.xlsx";
-        String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
-        List<Map<String, String>> yamlList = getYamlList(yamlPath);
-        Object[][] cases = new Object[yamlList.size()][];
-        for (int i = 0; i< yamlList.size(); i++) {
-            cases[i] = new Object[] {yamlList.get(i)};
+        String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/dml/updatedelete/mysql_updatedelete_cases.xlsx";
+        String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/dml/updatedelete/mysql_updatedelete_cases_btree.xlsx";
+        String yamlPathLSM = GetYaml.convertExcelToYaml(excelPathLSM,0,0);
+        String yamlPathBTREE = GetYaml.convertExcelToYaml(excelPathBTREE,0,0);
+        List<Map<String, String>> yamlListLSM = getYamlList(yamlPathLSM);
+        List<Map<String, String>> yamlListBTREE = getYamlList(yamlPathBTREE);
+        Object[][] cases_lsm = new Object[yamlListLSM.size()][];
+        for (int i = 0; i< yamlListLSM.size(); i++) {
+            cases_lsm[i] = new Object[] {yamlListLSM.get(i)};
         }
-        return cases;
-    }
-    
-    @DataProvider (name = "mysqlPSDQLData", parallel = true)
-    public Object[][] mysqlPSDQLCases() throws IOException, InterruptedException {
-        String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/prepareStatement/mysql_ps_dql_cases.xlsx";
-        String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
-        List<Map<String, String>> yamlList = getYamlList(yamlPath);
-        Object[][] cases = new Object[yamlList.size()][];
-        for (int i = 0; i< yamlList.size(); i++) {
-            cases[i] = new Object[] {yamlList.get(i)};
+        Object[][] cases_btree = new Object[yamlListBTREE.size()][];
+        for (int i = 0; i< yamlListBTREE.size(); i++) {
+            cases_btree[i] = new Object[] {yamlListBTREE.get(i)};
         }
-        return cases;
+        List<Object[]> cases_merge = Lists.newArrayList();
+        cases_merge.addAll(Arrays.asList(cases_lsm));
+        cases_merge.addAll(Arrays.asList(cases_btree));
+        return cases_merge.toArray(new Object[cases_merge.size()][]);
     }
 
-    @DataProvider (name = "mysqlPSDMLData", parallel = true)
-    public Object[][] mysqlPSDMLCases() throws IOException, InterruptedException {
-        String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/prepareStatement/mysql_ps_dml_cases.xlsx";
-        String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
-        List<Map<String, String>> yamlList = getYamlList(yamlPath);
-        Object[][] cases = new Object[yamlList.size()][];
-        for (int i = 0; i< yamlList.size(); i++) {
-            cases[i] = new Object[] {yamlList.get(i)};
+    @DataProvider (name = "mysqlDDLData1", parallel = true)
+    public Object[][] mysqlDDLCases1() throws IOException, InterruptedException {
+        String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/ddl/mysql_ddl_cases.xlsx";
+        String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/ddl/mysql_ddl_cases_btree.xlsx";
+        String yamlPathLSM = GetYaml.convertExcelToYaml(excelPathLSM,0,0);
+        String yamlPathBTREE = GetYaml.convertExcelToYaml(excelPathBTREE,0,0);
+        List<Map<String, String>> yamlListLSM = getYamlList(yamlPathLSM);
+        List<Map<String, String>> yamlListBTREE = getYamlList(yamlPathBTREE);
+        Object[][] cases_lsm = new Object[yamlListLSM.size()][];
+        for (int i = 0; i< yamlListLSM.size(); i++) {
+            cases_lsm[i] = new Object[] {yamlListLSM.get(i)};
         }
-        return cases;
-    }
-
-    @DataProvider (name = "mysqlPSBatchData", parallel = false)
-    public Object[][] mysqlPSBatchCases() throws IOException, InterruptedException {
-        String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/prepareStatement/mysql_ps_batch_cases.xlsx";
-        String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
-        List<Map<String, String>> yamlList = getYamlList(yamlPath);
-        Object[][] cases = new Object[yamlList.size()][];
-        for (int i = 0; i< yamlList.size(); i++) {
-            cases[i] = new Object[] {yamlList.get(i)};
+        Object[][] cases_btree = new Object[yamlListBTREE.size()][];
+        for (int i = 0; i< yamlListBTREE.size(); i++) {
+            cases_btree[i] = new Object[] {yamlListBTREE.get(i)};
         }
-        return cases;
-    }
-
-    @DataProvider (name = "mysqlSQLBatchData", parallel = true)
-    public Object[][] mysqlSQLBatchCases() throws IOException, InterruptedException {
-        String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/batchsql/mysql_batchsql_cases.xlsx";
-        String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
-        List<Map<String, String>> yamlList = getYamlList(yamlPath);
-        Object[][] cases = new Object[yamlList.size()][];
-        for (int i = 0; i< yamlList.size(); i++) {
-            cases[i] = new Object[] {yamlList.get(i)};
-        }
-        return cases;
-    }
-    
-    @DataProvider (name = "mysqlNegativeData", parallel = false)
-    public Object[][] mysqlNegativeCases() throws IOException, InterruptedException {
-        String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/negative/mysql_negative_cases.xlsx";
-        String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
-        List<Map<String, String>> yamlList = getYamlList(yamlPath);
-        Object[][] cases = new Object[yamlList.size()][];
-        for (int i = 0; i< yamlList.size(); i++) {
-            cases[i] = new Object[] {yamlList.get(i)};
-        }
-        return cases;
+        List<Object[]> cases_merge = Lists.newArrayList();
+        cases_merge.addAll(Arrays.asList(cases_lsm));
+        cases_merge.addAll(Arrays.asList(cases_btree));
+        return cases_merge.toArray(new Object[cases_merge.size()][]);
     }
 
     @DataProvider (name = "mysqlDCLData", parallel = true)
@@ -185,15 +167,158 @@ public class MySQLYamlDataHelper {
         return cases;
     }
 
+    @DataProvider (name = "mysqlSQLBatchData", parallel = false)
+    public Object[][] mysqlSQLBatchCases() throws IOException, InterruptedException {
+        String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/batchsql/mysql_batchsql_cases.xlsx";
+        String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/batchsql/mysql_batchsql_cases_btree.xlsx";
+        String yamlPathLSM = GetYaml.convertExcelToYaml(excelPathLSM,0,0);
+        String yamlPathBTREE = GetYaml.convertExcelToYaml(excelPathBTREE,0,0);
+        List<Map<String, String>> yamlListLSM = getYamlList(yamlPathLSM);
+        List<Map<String, String>> yamlListBTREE = getYamlList(yamlPathBTREE);
+        Object[][] cases_lsm = new Object[yamlListLSM.size()][];
+        for (int i = 0; i< yamlListLSM.size(); i++) {
+            cases_lsm[i] = new Object[] {yamlListLSM.get(i)};
+        }
+        Object[][] cases_btree = new Object[yamlListBTREE.size()][];
+        for (int i = 0; i< yamlListBTREE.size(); i++) {
+            cases_btree[i] = new Object[] {yamlListBTREE.get(i)};
+        }
+        List<Object[]> cases_merge = Lists.newArrayList();
+        cases_merge.addAll(Arrays.asList(cases_lsm));
+        cases_merge.addAll(Arrays.asList(cases_btree));
+        return cases_merge.toArray(new Object[cases_merge.size()][]);
+    }
+
     @DataProvider (name = "mysqlProtocolData", parallel = false)
     public Object[][] mysqlProtocolCases() throws IOException, InterruptedException {
-        String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/protocol/mysql_protocol_cases.xlsx";
-        String yamlPath = GetYaml.convertExcelToYaml(excelPath,0,0);
-        List<Map<String, String>> yamlList = getYamlList(yamlPath);
-        Object[][] cases = new Object[yamlList.size()][];
-        for (int i = 0; i< yamlList.size(); i++) {
-            cases[i] = new Object[] {yamlList.get(i)};
+        String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/protocol/mysql_protocol_cases.xlsx";
+        String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/protocol/mysql_protocol_cases_btree.xlsx";
+        String yamlPathLSM = GetYaml.convertExcelToYaml(excelPathLSM,0,0);
+        String yamlPathBTREE = GetYaml.convertExcelToYaml(excelPathBTREE,0,0);
+        List<Map<String, String>> yamlListLSM = getYamlList(yamlPathLSM);
+        List<Map<String, String>> yamlListBTREE = getYamlList(yamlPathBTREE);
+        Object[][] cases_lsm = new Object[yamlListLSM.size()][];
+        for (int i = 0; i< yamlListLSM.size(); i++) {
+            cases_lsm[i] = new Object[] {yamlListLSM.get(i)};
         }
-        return cases;
+        Object[][] cases_btree = new Object[yamlListBTREE.size()][];
+        for (int i = 0; i< yamlListBTREE.size(); i++) {
+            cases_btree[i] = new Object[] {yamlListBTREE.get(i)};
+        }
+        List<Object[]> cases_merge = Lists.newArrayList();
+        cases_merge.addAll(Arrays.asList(cases_lsm));
+        cases_merge.addAll(Arrays.asList(cases_btree));
+        return cases_merge.toArray(new Object[cases_merge.size()][]);
     }
+    
+    @DataProvider (name = "mysqlNegativeData", parallel = false)
+    public Object[][] mysqlNegativeCases() throws IOException, InterruptedException {
+        String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/negative/mysql_negative_cases.xlsx";
+        String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/negative/mysql_negative_cases_btree.xlsx";
+        String yamlPathLSM = GetYaml.convertExcelToYaml(excelPathLSM,0,0);
+        String yamlPathBTREE = GetYaml.convertExcelToYaml(excelPathBTREE,0,0);
+        List<Map<String, String>> yamlListLSM = getYamlList(yamlPathLSM);
+        List<Map<String, String>> yamlListBTREE = getYamlList(yamlPathBTREE);
+        Object[][] cases_lsm = new Object[yamlListLSM.size()][];
+        for (int i = 0; i< yamlListLSM.size(); i++) {
+            cases_lsm[i] = new Object[] {yamlListLSM.get(i)};
+        }
+        Object[][] cases_btree = new Object[yamlListBTREE.size()][];
+        for (int i = 0; i< yamlListBTREE.size(); i++) {
+            cases_btree[i] = new Object[] {yamlListBTREE.get(i)};
+        }
+        List<Object[]> cases_merge = Lists.newArrayList();
+        cases_merge.addAll(Arrays.asList(cases_lsm));
+        cases_merge.addAll(Arrays.asList(cases_btree));
+        return cases_merge.toArray(new Object[cases_merge.size()][]);
+    }
+
+    @DataProvider (name = "mysqlPSDQLData", parallel = true)
+    public Object[][] mysqlPSDQLCases() throws IOException, InterruptedException {
+        String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/prepareStatement/mysql_ps_dql_cases.xlsx";
+        String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/prepareStatement/mysql_ps_dql_cases_btree.xlsx";
+        String yamlPathLSM = GetYaml.convertExcelToYaml(excelPathLSM,0,0);
+        String yamlPathBTREE = GetYaml.convertExcelToYaml(excelPathBTREE,0,0);
+        List<Map<String, String>> yamlListLSM = getYamlList(yamlPathLSM);
+        List<Map<String, String>> yamlListBTREE = getYamlList(yamlPathBTREE);
+        Object[][] cases_lsm = new Object[yamlListLSM.size()][];
+        for (int i = 0; i< yamlListLSM.size(); i++) {
+            cases_lsm[i] = new Object[] {yamlListLSM.get(i)};
+        }
+        Object[][] cases_btree = new Object[yamlListBTREE.size()][];
+        for (int i = 0; i< yamlListBTREE.size(); i++) {
+            cases_btree[i] = new Object[] {yamlListBTREE.get(i)};
+        }
+        List<Object[]> cases_merge = Lists.newArrayList();
+        cases_merge.addAll(Arrays.asList(cases_lsm));
+        cases_merge.addAll(Arrays.asList(cases_btree));
+        return cases_merge.toArray(new Object[cases_merge.size()][]);
+    }
+
+    @DataProvider (name = "mysqlPSDMLData", parallel = true)
+    public Object[][] mysqlPSDMLCases() throws IOException, InterruptedException {
+        String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/prepareStatement/mysql_ps_dml_cases.xlsx";
+        String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/prepareStatement/mysql_ps_dml_cases_btree.xlsx";
+        String yamlPathLSM = GetYaml.convertExcelToYaml(excelPathLSM,0,0);
+        String yamlPathBTREE = GetYaml.convertExcelToYaml(excelPathBTREE,0,0);
+        List<Map<String, String>> yamlListLSM = getYamlList(yamlPathLSM);
+        List<Map<String, String>> yamlListBTREE = getYamlList(yamlPathBTREE);
+        Object[][] cases_lsm = new Object[yamlListLSM.size()][];
+        for (int i = 0; i< yamlListLSM.size(); i++) {
+            cases_lsm[i] = new Object[] {yamlListLSM.get(i)};
+        }
+        Object[][] cases_btree = new Object[yamlListBTREE.size()][];
+        for (int i = 0; i< yamlListBTREE.size(); i++) {
+            cases_btree[i] = new Object[] {yamlListBTREE.get(i)};
+        }
+        List<Object[]> cases_merge = Lists.newArrayList();
+        cases_merge.addAll(Arrays.asList(cases_lsm));
+        cases_merge.addAll(Arrays.asList(cases_btree));
+        return cases_merge.toArray(new Object[cases_merge.size()][]);
+    }
+
+    @DataProvider (name = "mysqlPSBatchData", parallel = false)
+    public Object[][] mysqlPSBatchCases() throws IOException, InterruptedException {
+        String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/prepareStatement/mysql_ps_batch_cases.xlsx";
+        String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/prepareStatement/mysql_ps_batch_cases_btree.xlsx";
+        String yamlPathLSM = GetYaml.convertExcelToYaml(excelPathLSM,0,0);
+        String yamlPathBTREE = GetYaml.convertExcelToYaml(excelPathBTREE,0,0);
+        List<Map<String, String>> yamlListLSM = getYamlList(yamlPathLSM);
+        List<Map<String, String>> yamlListBTREE = getYamlList(yamlPathBTREE);
+        Object[][] cases_lsm = new Object[yamlListLSM.size()][];
+        for (int i = 0; i< yamlListLSM.size(); i++) {
+            cases_lsm[i] = new Object[] {yamlListLSM.get(i)};
+        }
+        Object[][] cases_btree = new Object[yamlListBTREE.size()][];
+        for (int i = 0; i< yamlListBTREE.size(); i++) {
+            cases_btree[i] = new Object[] {yamlListBTREE.get(i)};
+        }
+        List<Object[]> cases_merge = Lists.newArrayList();
+        cases_merge.addAll(Arrays.asList(cases_lsm));
+        cases_merge.addAll(Arrays.asList(cases_btree));
+        return cases_merge.toArray(new Object[cases_merge.size()][]);
+    }
+
+    @DataProvider (name = "mysqlPSBlobData", parallel = false)
+    public Object[][] mysqlPSBlobCases() throws IOException, InterruptedException {
+        String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/prepareStatement/mysql_ps_blob_cases.xlsx";
+        String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/prepareStatement/mysql_ps_blob_cases_btree.xlsx";
+        String yamlPathLSM = GetYaml.convertExcelToYaml(excelPathLSM,0,0);
+        String yamlPathBTREE = GetYaml.convertExcelToYaml(excelPathBTREE,0,0);
+        List<Map<String, String>> yamlListLSM = getYamlList(yamlPathLSM);
+        List<Map<String, String>> yamlListBTREE = getYamlList(yamlPathBTREE);
+        Object[][] cases_lsm = new Object[yamlListLSM.size()][];
+        for (int i = 0; i< yamlListLSM.size(); i++) {
+            cases_lsm[i] = new Object[] {yamlListLSM.get(i)};
+        }
+        Object[][] cases_btree = new Object[yamlListBTREE.size()][];
+        for (int i = 0; i< yamlListBTREE.size(); i++) {
+            cases_btree[i] = new Object[] {yamlListBTREE.get(i)};
+        }
+        List<Object[]> cases_merge = Lists.newArrayList();
+        cases_merge.addAll(Arrays.asList(cases_lsm));
+        cases_merge.addAll(Arrays.asList(cases_btree));
+        return cases_merge.toArray(new Object[cases_merge.size()][]);
+    }
+    
 }

@@ -1,0 +1,5 @@
+DingoHashJoin
+DingoVector
+DingoAggregate
+DingoValues
+"type" : "partVector"
