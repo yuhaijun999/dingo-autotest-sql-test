@@ -83,6 +83,7 @@ public class TestIndex extends BaseTestSuite {
                     if (param.get("Case_table_dependency").trim().length() > 0) {
                         tableName = param.get("Case_table_dependency").trim() + "_0" + i + schemaList.get(i).trim();
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
+                        tableList.add(tableName);
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                         if (param.get("TestID").contains("btree")) {
@@ -98,6 +99,7 @@ public class TestIndex extends BaseTestSuite {
                     if (param.get("Case_table_dependency").trim().length() > 0) {
                         tableName = param.get("Case_table_dependency").trim() + "_0" + i + schemaName;
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
+                        tableList.add(tableName);
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaName;
                         if (param.get("TestID").contains("btree")) {
