@@ -13,4 +13,4 @@ CREATE TABLE $table (
     is_delete boolean,
     PRIMARY KEY (id),
     index age_index (age)
-) engine BTREE
+) engine=BTREE
