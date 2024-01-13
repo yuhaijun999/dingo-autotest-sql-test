@@ -24,8 +24,6 @@ import org.testng.annotations.BeforeSuite;
 import utils.IniReader;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
 
 public class BaseTestSuite {
     public static IniReader iniReader;
@@ -50,10 +48,10 @@ public class BaseTestSuite {
         JDBCUtils.closeResource(SQLHelper.connection);
     }
     
-    public void dropTableAfterMethod(List<String> tableList) throws SQLException {
-        for (String s : tableList) {
-            sqlHelper.doDropTable(s);
-        }
-    }
+//    public void dropTableAfterMethod(List<String> tableList) throws SQLException {
+//        for (String s : tableList) {
+//            sqlHelper.doDropTable(SQLHelper.connection, s);
+//        }
+//    }
     
 }

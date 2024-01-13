@@ -30,6 +30,7 @@ import utils.CastUtils;
 import utils.ParseCsv;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -38,13 +39,17 @@ import java.util.List;
 
 public class TestDDL extends BaseTestSuite{
     private static SQLHelper sqlHelper;
+    public static Connection connection;
     private static HashSet<String> createTableSet = new HashSet<>();
     private static HashSet<String> createSchemaSet = new HashSet<>();
     private static HashSet<String> schemaTableSet = new HashSet<>();
 
     @BeforeClass (alwaysRun = true)
-    public static void setupAll() {
+    public static void setupAll() throws SQLException, ClassNotFoundException {
         sqlHelper = new SQLHelper();
+        JDBCUtils jdbcUtils = new JDBCUtils();
+        connection = jdbcUtils.getDingoConnectionInstance();
+        Assert.assertNotNull(connection);
     }
 
     @AfterClass (alwaysRun = true)
@@ -54,14 +59,14 @@ public class TestDDL extends BaseTestSuite{
             List<String> finalTableList = JDBCUtils.getTableList();
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
-                    sqlHelper.doDropTable(s);
+                    sqlHelper.doDropTable(connection, s);
                 }
             }
         }
         
         System.out.println(schemaTableSet);
         for (String s : schemaTableSet) {
-            sqlHelper.doDropTable(s);
+            sqlHelper.doDropTable(connection, s);
         }
 
         if(createSchemaSet.size() > 0) {
@@ -69,10 +74,11 @@ public class TestDDL extends BaseTestSuite{
             List<String> finalSchemaList = JDBCUtils.getSchemaList();
             for (String s : createSchemaSet) {
                 if (finalSchemaList.contains(s.toUpperCase())) {
-                    sqlHelper.doDropSchema(s);
+                    sqlHelper.doDropSchema(connection, s);
                 }
             }
         }
+        JDBCUtils.closeResource(connection);
     }
 
     @BeforeMethod (alwaysRun = true)
@@ -81,16 +87,13 @@ public class TestDDL extends BaseTestSuite{
 
     @AfterMethod (alwaysRun = true)
     public void cleanUp() throws Exception {
-//        if(createTableSet.size() > 0) {
-//            for (String s : createTableSet) {
-//                sqlHelper.doDropTable(s);
-//            }
-//        }
-//        createTableSet.clear();
     }
 
     @Test(priority = 0, enabled = true, dataProvider = "ddlData1", dataProviderClass = YamlDataHelper.class, description = "ddl操作1")
     public void testDDL1(LinkedHashMap<String,String> param) throws SQLException, IOException, ClassNotFoundException {
+//        JDBCUtils jdbcUtils = new JDBCUtils();
+//        Connection connection = jdbcUtils.getDingoConnectionInstance();
+        
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
@@ -105,17 +108,17 @@ public class TestDDL extends BaseTestSuite{
                 if (!schemaList.get(i).contains("_")) {
                     tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                     if (param.get("TestID").contains("btree")) {
-                        sqlHelper.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else {
-                        sqlHelper.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     }
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = param.get("TestID").trim() + "_0" + i + schemaName;
                     if (param.get("TestID").contains("btree")) {
-                        sqlHelper.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                        sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else {
-                        sqlHelper.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
+                        sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
                     }
                 }
                 ddlSql = ddlSql.replace("$" + schemaList.get(i).trim(), tableName);
@@ -132,17 +135,17 @@ public class TestDDL extends BaseTestSuite{
                     if (!schemaList.get(j).trim().contains("_")) {
                         tableName = param.get("TestID").trim() + "_0" + j + schemaList.get(j).trim();
                         if (param.get("TestID").contains("btree")) {
-                            sqlHelper.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                            sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
                         } else {
-                            sqlHelper.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                            sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
                         }
                     } else {
                         String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                         tableName = param.get("TestID").trim() + "_0" + j + schemaName;
                         if (param.get("TestID").contains("btree")) {
-                            sqlHelper.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                            sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
                         } else {
-                            sqlHelper.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                            sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
                         }
                     }
                 }
@@ -194,8 +197,8 @@ public class TestDDL extends BaseTestSuite{
                 expectedResult = ParseCsv.splitCsvString(resultFile,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            sqlHelper.execBatchSqlWithState(ddlSql);
-            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(querySql);
+            sqlHelper.execBatchSqlWithState(connection, ddlSql);
+            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(connection, querySql);
             System.out.println("Actual: " + actualResult);
             Assert.assertEquals(actualResult, expectedResult);
         } else if (param.get("Validation_type").equals("csv_containsAll")) {
@@ -207,8 +210,8 @@ public class TestDDL extends BaseTestSuite{
                 expectedResult = ParseCsv.splitCsvString(resultFile,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            sqlHelper.execBatchSqlWithState(ddlSql);
-            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(querySql);
+            sqlHelper.execBatchSqlWithState(connection, ddlSql);
+            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(connection, querySql);
             System.out.println("Actual: " + actualResult);
             Assert.assertTrue(actualResult.containsAll(expectedResult));
             Assert.assertTrue(expectedResult.containsAll(actualResult));
@@ -221,12 +224,12 @@ public class TestDDL extends BaseTestSuite{
                 expectedResult = ParseCsv.splitCsvString(resultFile,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            sqlHelper.execBatchSqlWithState(ddlSql);
-            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(querySql);
+            sqlHelper.execBatchSqlWithState(connection, ddlSql);
+            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(connection, querySql);
             System.out.println("Actual: " + actualResult);
             Assert.assertTrue(actualResult.containsAll(expectedResult));
         } else if (param.get("Validation_type").equals("table_assert")) {
-            sqlHelper.execBatchSqlWithState(ddlSql);
+            sqlHelper.execBatchSqlWithState(connection, ddlSql);
             String drop_table_name = "";
             if (ddlSql.contains("drop")) {
                 if (ddlSql.contains("if exists")) {
@@ -238,13 +241,9 @@ public class TestDDL extends BaseTestSuite{
             List<String> existTableList = JDBCUtils.getTableList();
             Assert.assertFalse(existTableList.contains(drop_table_name));
         } else if (param.get("Validation_type").equals("justExec")) {
-            sqlHelper.execBatchSqlWithState(ddlSql);
+            sqlHelper.execBatchSqlWithState(connection, ddlSql);
         }
-
-//        if (tableList.size() > 0) {
-//            for (String s : tableList) {
-//                sqlHelper.doDropTable(s);
-//            }
-//        }
+        
+//        JDBCUtils.closeResource(connection);
     }
 }

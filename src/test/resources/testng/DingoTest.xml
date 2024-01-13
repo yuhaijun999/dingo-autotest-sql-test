@@ -16,7 +16,7 @@
   -->
 
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite name="Dingo-Driver" parallel="tests" thread-count="1" data-provider-thread-count="10">
+<suite name="Dingo-Driver" parallel="tests" thread-count="8" data-provider-thread-count="10">
     <test name="Dingo_Base_Test_Suite" parallel="methods" thread-count="1">
         <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
         <classes>

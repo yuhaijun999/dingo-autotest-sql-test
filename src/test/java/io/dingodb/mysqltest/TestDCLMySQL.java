@@ -38,12 +38,16 @@ import java.util.List;
 
 public class TestDCLMySQL extends BaseTestSuiteMySQL {
     private static MySQLHelper mySQLHelper;
+    public static Connection myConnection;
     private static HashSet<String> createTableSet = new HashSet<>();
 
 
     @BeforeClass (alwaysRun = true)
-    public static void setupAll() {
+    public static void setupAll() throws SQLException, IOException, ClassNotFoundException {
         mySQLHelper = new MySQLHelper();
+        MySQLUtils mySQLUtils = new MySQLUtils();
+        myConnection = mySQLUtils.getMySQLConnectionInstance();
+        Assert.assertNotNull(myConnection);
     }
 
     @AfterClass (alwaysRun = true)
@@ -52,10 +56,11 @@ public class TestDCLMySQL extends BaseTestSuiteMySQL {
             List<String> finalTableList = MySQLUtils.getTableList();
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
-                    mySQLHelper.doDropTable(s);
+                    mySQLHelper.doDropTable(myConnection, s);
                 }
             }
         }
+        MySQLUtils.closeResource(myConnection);
     }
 
     @BeforeMethod (alwaysRun = true)
@@ -76,13 +81,13 @@ public class TestDCLMySQL extends BaseTestSuiteMySQL {
         String passStr = param.get("Pass_str");
         String hostStr = param.get("Host").trim();
         String createSql = param.get("Create_state");
-        mySQLHelper.execSql(createSql);
+        mySQLHelper.execSql(myConnection, createSql);
         String queryUser = param.get("Query_user");
         if (param.get("Validation_type").equals("csv_containsAll")) {
             String resultFile = param.get("Expected_user").trim();
             List<List<String>> expectedUser = ParseCsv.splitCsvString(resultFile,",");
             System.out.println("Expected: " + expectedUser);
-            List<List<String>> actualUser = mySQLHelper.statementQueryWithHead(queryUser);
+            List<List<String>> actualUser = mySQLHelper.statementQueryWithHead(myConnection, queryUser);
             System.out.println("Actual: " + actualUser);
             Assert.assertTrue(actualUser.containsAll(expectedUser));
             Assert.assertTrue(expectedUser.containsAll(actualUser));
@@ -95,9 +100,9 @@ public class TestDCLMySQL extends BaseTestSuiteMySQL {
         }
         
         if (hostStr.length() > 0) {
-            mySQLHelper.execSql("drop user '" + userName + "'@'" + hostStr + "'");
+            mySQLHelper.execSql(myConnection, "drop user '" + userName + "'@'" + hostStr + "'");
         } else {
-            mySQLHelper.execSql("drop user '" + userName + "'");
+            mySQLHelper.execSql(myConnection, "drop user '" + userName + "'");
         }
     }
 }

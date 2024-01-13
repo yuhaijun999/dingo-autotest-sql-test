@@ -19,6 +19,7 @@ package io.dingodb.dingotest;
 import datahelper.YamlDataHelper;
 import io.dingodb.common.utils.JDBCUtils;
 import io.dingodb.dailytest.SQLHelper;
+import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -28,6 +29,7 @@ import org.testng.annotations.Test;
 import utils.CastUtils;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,14 +38,18 @@ import java.util.List;
 
 public class TestNegative extends BaseTestSuite {
     private static SQLHelper sqlHelper;
+    public static Connection connection;
     private static HashSet<String> createTableSet = new HashSet<>();
     private static HashSet<String> createSchemaSet = new HashSet<>();
     private static HashSet<String> schemaTableSet = new HashSet<>();
 
 
     @BeforeClass (alwaysRun = true)
-    public static void setupAll() {
+    public static void setupAll() throws SQLException, ClassNotFoundException {
         sqlHelper = new SQLHelper();
+        JDBCUtils jdbcUtils = new JDBCUtils();
+        connection = jdbcUtils.getDingoConnectionInstance();
+        Assert.assertNotNull(connection);
     }
 
     @AfterClass (alwaysRun = true)
@@ -53,18 +59,20 @@ public class TestNegative extends BaseTestSuite {
             List<String> finalTableList = JDBCUtils.getTableList();
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
-                    sqlHelper.doDropTable(s);
+                    sqlHelper.doDropTable(connection, s);
                 }
             }
         }
         System.out.println(schemaTableSet);
         for (String s : schemaTableSet) {
-            sqlHelper.doDropTable(s);
+            sqlHelper.doDropTable(connection, s);
         }
         System.out.println(createSchemaSet);
         for (String s : createSchemaSet) {
-            sqlHelper.doDropSchema(s);
+            sqlHelper.doDropSchema(connection, s);
         }
+        
+        JDBCUtils.closeResource(connection);
     }
 
     @BeforeMethod (alwaysRun = true)
@@ -73,17 +81,14 @@ public class TestNegative extends BaseTestSuite {
 
     @AfterMethod (alwaysRun = true)
     public void cleanUp() throws Exception {
-//        if(createTableSet.size() > 0) {
-//            for (String s : createTableSet) {
-//                sqlHelper.doDropTable(s);
-//            }
-//        }
-//        createTableSet.clear();
     }
 
     @Test(priority = 0, enabled = true, dataProvider = "negativeData", dataProviderClass = YamlDataHelper.class, 
             expectedExceptions = SQLException.class, description = "预期失败用例测试")
-    public void testException(LinkedHashMap<String,String> param) throws SQLException, IOException {
+    public void testException(LinkedHashMap<String,String> param) throws SQLException, IOException, ClassNotFoundException {
+//        JDBCUtils jdbcUtils = new JDBCUtils();
+//        Connection connection = jdbcUtils.getDingoConnectionInstance();
+        
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
@@ -101,9 +106,9 @@ public class TestNegative extends BaseTestSuite {
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                         if (param.get("TestID").contains("btree")) {
-                            sqlHelper.execFile(TestNegative.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                            sqlHelper.execFile(connection, TestNegative.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                         } else {
-                            sqlHelper.execFile(TestNegative.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                            sqlHelper.execFile(connection, TestNegative.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                         }
                         tableList.add(tableName);
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
@@ -116,9 +121,9 @@ public class TestNegative extends BaseTestSuite {
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaName;
                         if (param.get("TestID").contains("btree")) {
-                            sqlHelper.execFile(TestNegative.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                            sqlHelper.execFile(connection, TestNegative.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                         } else {
-                            sqlHelper.execFile(TestNegative.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
+                            sqlHelper.execFile(connection, TestNegative.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
                         }
                         tableList.add(tableName);
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
@@ -138,9 +143,9 @@ public class TestNegative extends BaseTestSuite {
                             tableName = param.get("TestID").trim() + "_0" + j + schemaName;
                         }
                         if (param.get("TestID").contains("btree")) {
-                            sqlHelper.execFile(TestNegative.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("NegativeValues", value_List.get(j).trim())), tableName);
+                            sqlHelper.execFile(connection, TestNegative.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("NegativeValues", value_List.get(j).trim())), tableName);
                         } else {
-                            sqlHelper.execFile(TestNegative.class.getClassLoader().getResourceAsStream(iniReader.getValue("NegativeValues", value_List.get(j).trim())), tableName);
+                            sqlHelper.execFile(connection, TestNegative.class.getClassLoader().getResourceAsStream(iniReader.getValue("NegativeValues", value_List.get(j).trim())), tableName);
                         }
                     }
                 }
@@ -177,9 +182,11 @@ public class TestNegative extends BaseTestSuite {
                     }
                 }
             }
-            sqlHelper.execBatchSqlWithState(sql);
+            sqlHelper.execBatchSqlWithState(connection, sql);
         } else {
-            sqlHelper.execSql(sql);
+            sqlHelper.execSql(connection, sql);
         }
+        
+//        JDBCUtils.closeResource(connection);
     }
 }
