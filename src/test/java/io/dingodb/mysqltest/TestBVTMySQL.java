@@ -34,7 +34,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TestBVTMySQL extends BaseTestSuiteMySQL {
-//    private static MySQLHelper mySQLHelper;
     public static Connection myConnection;
     public static String tableName = "mysqlbvttest";
     public static String tableName2 = "autoIdStateTest1";
@@ -54,14 +53,14 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
     
     @BeforeClass(alwaysRun = true, description = "测试开始前验证数据库连接")
     public static void setUpAll() throws SQLException, IOException, ClassNotFoundException {
-//        mySQLHelper = new MySQLHelper();
-        myConnection = MySQLUtils.getMySQLConnection();
+        MySQLUtils mySQLUtils = new MySQLUtils();
+        myConnection = mySQLUtils.getMySQLConnectionInstance();
         Assert.assertNotNull(myConnection);
     }
 
     @AfterClass(alwaysRun = true, description = "测试结束后，关闭数据库连接资源")
     public static void tearDownAll() {
-
+        MySQLUtils.closeResource(myConnection);
     }
     
     @Test(enabled = true, description = "测试创建表")

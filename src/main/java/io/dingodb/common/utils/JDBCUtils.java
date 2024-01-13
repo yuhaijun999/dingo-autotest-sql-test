@@ -55,6 +55,20 @@ public class JDBCUtils {
         Connection connection = DriverManager.getConnection(connectUrl, USER, PASS);
         return connection;
     }
+
+    public Connection getDingoConnectionInstance() throws ClassNotFoundException, SQLException {
+        String schemaName = properties.getProperty("SCHEMA");
+        String timeout = properties.getProperty("timeout");
+        String JDBC_DRIVER = properties.getProperty("JDBC_Driver");
+//        String port = properties.getProperty("port");
+        String port = CommonArgs.getDefaultExecutorPort();
+        String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
+//        String defaultConnectIP = "172.20.61.101";
+        String connectUrl = "jdbc:dingo:thin:url=" + defaultConnectIP + ":" + port + "/" + schemaName + "?timeout=" + timeout;
+        Class.forName(JDBC_DRIVER);
+        Connection connection = DriverManager.getConnection(connectUrl, USER, PASS);
+        return connection;
+    }
     
     public static Connection getConnectionWithoutSchema() throws ClassNotFoundException, SQLException {
         String timeout = properties.getProperty("timeout");

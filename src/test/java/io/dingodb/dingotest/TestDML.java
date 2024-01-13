@@ -33,6 +33,7 @@ import utils.ParseCsv;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,12 +42,16 @@ import java.util.List;
 
 public class TestDML extends BaseTestSuite {
     private static SQLHelper sqlHelper;
+    public static Connection connection;
     private static HashSet<String> createTableSet = new HashSet<>();
 
 
     @BeforeClass (alwaysRun = true)
-    public static void setupAll() {
+    public static void setupAll() throws SQLException, ClassNotFoundException {
         sqlHelper = new SQLHelper();
+        JDBCUtils jdbcUtils = new JDBCUtils();
+        connection = jdbcUtils.getDingoConnectionInstance();
+        Assert.assertNotNull(connection);
     }
 
     @AfterClass (alwaysRun = true)
@@ -56,10 +61,12 @@ public class TestDML extends BaseTestSuite {
             List<String> finalTableList = JDBCUtils.getTableList();
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
-                    sqlHelper.doDropTable(s);
+                    sqlHelper.doDropTable(connection, s);
                 }
             }
         }
+        
+        JDBCUtils.closeResource(connection);
     }
 
     @BeforeMethod (alwaysRun = true)
@@ -68,16 +75,12 @@ public class TestDML extends BaseTestSuite {
 
     @AfterMethod (alwaysRun = true)
     public void cleanUp() throws Exception {
-//        if(createTableSet.size() > 0) {
-//            for (String s : createTableSet) {
-//                sqlHelper.doDropTable(s);
-//            }
-//        }
-//        createTableSet.clear();
     }
 
     @Test(priority = 0, enabled = true, dataProvider = "dmlInsertData", dataProviderClass = YamlDataHelper.class, description = "dml操作insert，正向用例")
-    public void test01DMLInsert(LinkedHashMap<String,String> param) throws SQLException, IOException {
+    public void test01DMLInsert(LinkedHashMap<String,String> param) throws SQLException, IOException, ClassNotFoundException {
+//        JDBCUtils jdbcUtils = new JDBCUtils();
+//        Connection connection = jdbcUtils.getDingoConnectionInstance();
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
@@ -94,17 +97,17 @@ public class TestDML extends BaseTestSuite {
                 if (!schemaList.get(i).trim().contains("_")) {
                     tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                     if (param.get("TestID").contains("btree")) {
-                        sqlHelper.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        sqlHelper.execFile(connection, TestDML.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else {
-                        sqlHelper.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        sqlHelper.execFile(connection, TestDML.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     }
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = param.get("TestID").trim() + "_0" + i + schemaName;
                     if (param.get("TestID").contains("btree")) {
-                        sqlHelper.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                        sqlHelper.execFile(connection, TestDML.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else {
-                        sqlHelper.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
+                        sqlHelper.execFile(connection, TestDML.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
                     }
                 }
                 tableList.add(tableName);
@@ -145,7 +148,7 @@ public class TestDML extends BaseTestSuite {
                 expectedResult = ParseCsv.splitCsvString(resultFile1,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            List<List<String>> actualResult = sqlHelper.doDMLAndQueryWithHead(insertSql, querySql1);
+            List<List<String>> actualResult = sqlHelper.doDMLAndQueryWithHead(connection, insertSql, querySql1);
             System.out.println("Actual: " + actualResult);
             Assert.assertEquals(actualResult, expectedResult);
             if (dmlSql.length() > 0) {
@@ -157,7 +160,7 @@ public class TestDML extends BaseTestSuite {
                     expectedResultAfterDML = ParseCsv.splitCsvString(resultFile2,"&");
                 }
                 System.out.println("Expected after dml: " + expectedResultAfterDML);
-                List<List<String>> actualResultAfterDML = sqlHelper.doDMLAndQueryWithHead(dmlSql, querySql2);
+                List<List<String>> actualResultAfterDML = sqlHelper.doDMLAndQueryWithHead(connection, dmlSql, querySql2);
                 System.out.println("Actual after dml: " + actualResultAfterDML);
                 Assert.assertEquals(actualResultAfterDML, expectedResultAfterDML);
             }
@@ -170,7 +173,7 @@ public class TestDML extends BaseTestSuite {
                 expectedResult = ParseCsv.splitCsvString(resultFile1,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            List<List<String>> actualResult = sqlHelper.doDMLAndQueryWithHead(insertSql, querySql1);
+            List<List<String>> actualResult = sqlHelper.doDMLAndQueryWithHead(connection, insertSql, querySql1);
             System.out.println("Actual: " + actualResult);
             Assert.assertTrue(actualResult.containsAll(expectedResult));
             Assert.assertTrue(expectedResult.containsAll(actualResult));
@@ -183,7 +186,7 @@ public class TestDML extends BaseTestSuite {
                     expectedResultAfterDML = ParseCsv.splitCsvString(resultFile2,"&");
                 }
                 System.out.println("Expected after dml: " + expectedResultAfterDML);
-                List<List<String>> actualResultAfterDML = sqlHelper.doDMLAndQueryWithHead(dmlSql, querySql2);
+                List<List<String>> actualResultAfterDML = sqlHelper.doDMLAndQueryWithHead(connection, dmlSql, querySql2);
                 System.out.println("Actual after dml: " + actualResultAfterDML);
                 Assert.assertTrue(actualResultAfterDML.containsAll(expectedResultAfterDML));
                 Assert.assertTrue(expectedResultAfterDML.containsAll(actualResultAfterDML));
@@ -194,10 +197,13 @@ public class TestDML extends BaseTestSuite {
 //                sqlHelper.doDropTable(s);
 //            }
 //        }
+//        JDBCUtils.closeResource(connection);
     }
 
     @Test(priority = 1, enabled = true, dataProvider = "dmlUpDelData", dataProviderClass = YamlDataHelper.class, description = "dml操作update&delete，正向用例")
-    public void test02DMLUpdateDelete(LinkedHashMap<String,String> param) throws SQLException, IOException, InterruptedException {
+    public void test02DMLUpdateDelete(LinkedHashMap<String,String> param) throws SQLException, IOException, InterruptedException, ClassNotFoundException {
+//        JDBCUtils jdbcUtils = new JDBCUtils();
+//        Connection connection = jdbcUtils.getDingoConnectionInstance();
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
@@ -212,17 +218,17 @@ public class TestDML extends BaseTestSuite {
                 if (!schemaList.get(i).contains("_")) {
                     tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                     if (param.get("TestID").contains("btree")) {
-                        sqlHelper.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        sqlHelper.execFile(connection, TestDML.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else {
-                        sqlHelper.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        sqlHelper.execFile(connection, TestDML.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     }
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = param.get("TestID").trim() + "_0" + i + schemaName;
                     if (param.get("TestID").contains("btree")) {
-                        sqlHelper.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                        sqlHelper.execFile(connection, TestDML.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else {
-                        sqlHelper.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
+                        sqlHelper.execFile(connection, TestDML.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
                     }
                 }
                 tableList.add(tableName);
@@ -241,9 +247,9 @@ public class TestDML extends BaseTestSuite {
                         tableName = param.get("TestID").trim() + "_0" + j + schemaName;
                     }
                     if (param.get("TestID").contains("btree")) {
-                        sqlHelper.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DMLValues", value_List.get(j).trim())), tableName);
+                        sqlHelper.execFile(connection, TestDML.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DMLValues", value_List.get(j).trim())), tableName);
                     } else {
-                        sqlHelper.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReader.getValue("DMLValues", value_List.get(j).trim())), tableName);
+                        sqlHelper.execFile(connection, TestDML.class.getClassLoader().getResourceAsStream(iniReader.getValue("DMLValues", value_List.get(j).trim())), tableName);
                     }
                 }
             }
@@ -262,7 +268,7 @@ public class TestDML extends BaseTestSuite {
                 expectedResult = ParseCsv.splitCsvString(resultFile,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            List<List<String>> actualResult = sqlHelper.doDMLAndQueryWithHead(dmlSql, querySql);
+            List<List<String>> actualResult = sqlHelper.doDMLAndQueryWithHead(connection, dmlSql, querySql);
             System.out.println("Actual: " + actualResult);
             Assert.assertEquals(actualResult, expectedResult);
         } else if (param.get("Validation_type").equals("csv_containsAll")) {
@@ -274,14 +280,14 @@ public class TestDML extends BaseTestSuite {
                 expectedResult = ParseCsv.splitCsvString(resultFile,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            List<List<String>> actualResult = sqlHelper.doDMLAndQueryWithHead(dmlSql, querySql);
+            List<List<String>> actualResult = sqlHelper.doDMLAndQueryWithHead(connection, dmlSql, querySql);
             System.out.println("Actual: " + actualResult);
             Assert.assertTrue(actualResult.containsAll(expectedResult));
             Assert.assertTrue(expectedResult.containsAll(actualResult));
         } else if (param.get("Validation_type").equals("effected_rows_assert")) {
             int expectedEffectedRows = Integer.parseInt(param.get("Effected_rows"));
             System.out.println("Expected effected rows: " + expectedEffectedRows);
-            int actualEffectedRows = sqlHelper.doDMLReturnRows(dmlSql);
+            int actualEffectedRows = sqlHelper.doDMLReturnRows(connection, dmlSql);
             System.out.println("Actual effected rows: " + actualEffectedRows);
             Assert.assertEquals(actualEffectedRows, expectedEffectedRows);
         }
@@ -291,5 +297,6 @@ public class TestDML extends BaseTestSuite {
 //                sqlHelper.doDropTable(s);
 //            }
 //        }
+//        JDBCUtils.closeResource(connection);
     }
 }

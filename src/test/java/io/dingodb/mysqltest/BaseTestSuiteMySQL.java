@@ -24,8 +24,6 @@ import org.testng.annotations.BeforeSuite;
 import utils.IniReader;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
 
 public class BaseTestSuiteMySQL {
     public static IniReader mysqlIniReader;
@@ -50,10 +48,10 @@ public class BaseTestSuiteMySQL {
         MySQLUtils.closeResource(MySQLHelper.connection);
     }
     
-    public void dropTableAfterMethod(List<String> tableList) throws SQLException {
-        for (String s : tableList) {
-            mySQLHelper.doDropTable(s);
-        }
-    }
+//    public void dropTableAfterMethod(List<String> tableList) throws SQLException {
+//        for (String s : tableList) {
+//            mySQLHelper.doDropTable(s);
+//        }
+//    }
     
 }

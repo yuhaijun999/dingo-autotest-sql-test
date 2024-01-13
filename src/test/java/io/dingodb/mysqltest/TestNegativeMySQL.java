@@ -19,6 +19,7 @@ package io.dingodb.mysqltest;
 import datahelper.MySQLYamlDataHelper;
 import io.dingodb.common.utils.MySQLUtils;
 import io.dingodb.dailytest.MySQLHelper;
+import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -28,6 +29,7 @@ import org.testng.annotations.Test;
 import utils.CastUtils;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,14 +38,18 @@ import java.util.List;
 
 public class TestNegativeMySQL extends BaseTestSuiteMySQL {
     private static MySQLHelper mySQLHelper;
+    public static Connection myConnection;
     private static HashSet<String> createTableSet = new HashSet<>();
     private static HashSet<String> createSchemaSet = new HashSet<>();
     private static HashSet<String> schemaTableSet = new HashSet<>();
 
 
     @BeforeClass (alwaysRun = true)
-    public static void setupAll() {
+    public static void setupAll() throws SQLException, IOException, ClassNotFoundException {
         mySQLHelper = new MySQLHelper();
+        MySQLUtils mySQLUtils = new MySQLUtils();
+        myConnection = mySQLUtils.getMySQLConnectionInstance();
+        Assert.assertNotNull(myConnection);
     }
 
     @AfterClass (alwaysRun = true)
@@ -53,18 +59,20 @@ public class TestNegativeMySQL extends BaseTestSuiteMySQL {
             List<String> finalTableList = MySQLUtils.getTableList();
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
-                    mySQLHelper.doDropTable(s);
+                    mySQLHelper.doDropTable(myConnection, s);
                 }
             }
         }
         System.out.println(schemaTableSet);
         for (String s : schemaTableSet) {
-            mySQLHelper.doDropTable(s);
+            mySQLHelper.doDropTable(myConnection, s);
         }
         System.out.println(createSchemaSet);
         for (String s : createSchemaSet) {
-            mySQLHelper.doDropSchema(s);
+            mySQLHelper.doDropSchema(myConnection, s);
         }
+        
+        MySQLUtils.closeResource(myConnection);
     }
 
     @BeforeMethod (alwaysRun = true)
@@ -95,9 +103,9 @@ public class TestNegativeMySQL extends BaseTestSuiteMySQL {
                     } else {
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                         if (param.get("TestID").contains("btree")) {
-                            mySQLHelper.execFile(TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                            mySQLHelper.execFile(myConnection, TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                         } else {
-                            mySQLHelper.execFile(TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                            mySQLHelper.execFile(myConnection, TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                         }
                         tableList.add(tableName);
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
@@ -110,9 +118,9 @@ public class TestNegativeMySQL extends BaseTestSuiteMySQL {
                     } else {
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
                         if (param.get("TestID").contains("btree")) {
-                            mySQLHelper.execFile(TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                            mySQLHelper.execFile(myConnection, TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                         } else {
-                            mySQLHelper.execFile(TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
+                            mySQLHelper.execFile(myConnection, TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
                         }
                         tableList.add(tableName);
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
@@ -132,9 +140,9 @@ public class TestNegativeMySQL extends BaseTestSuiteMySQL {
                             tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaName;
                         }
                         if (param.get("TestID").contains("btree")) {
-                            mySQLHelper.execFile(TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("NegativeValues", value_List.get(j).trim())), tableName);
+                            mySQLHelper.execFile(myConnection, TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("NegativeValues", value_List.get(j).trim())), tableName);
                         } else {
-                            mySQLHelper.execFile(TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("NegativeValues", value_List.get(j).trim())), tableName);
+                            mySQLHelper.execFile(myConnection, TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("NegativeValues", value_List.get(j).trim())), tableName);
                         }
                     }
                 }
@@ -171,9 +179,9 @@ public class TestNegativeMySQL extends BaseTestSuiteMySQL {
                     }
                 }
             }
-            mySQLHelper.execBatchSqlWithState(sql);
+            mySQLHelper.execBatchSqlWithState(myConnection, sql);
         } else {
-            mySQLHelper.execSql(sql);
+            mySQLHelper.execSql(myConnection, sql);
         }
     }
 }

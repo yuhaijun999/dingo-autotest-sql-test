@@ -61,6 +61,27 @@ public class MySQLUtils {
         Connection myConnection = DriverManager.getConnection(connectUrl, props);
         return myConnection;
     }
+
+    public Connection getMySQLConnectionInstance() throws IOException, ClassNotFoundException, SQLException {
+        String schemaName=properties.getProperty("SCHEMA");
+        String MySQL_JDBC_DRIVER = properties.getProperty("MySQL_JDBC_Driver");
+//        String mysql_port = properties.getProperty("MySQL_Port");
+        String mysql_port = CommonArgs.getDefaultMySQLPort();
+        String timeout = properties.getProperty("MAX_EXECUTION_TIME");
+        String timezone = properties.getProperty("SERVER_TIMEZONE");
+        String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
+//        String defaultConnectIP = "172.20.61.101";
+        Properties props = new Properties();
+        props.setProperty("useServerPrepStmts", "true");
+        props.setProperty("cachePrepStmts", "true");
+        props.setProperty("user", USER);
+        props.setProperty("password", PASS);
+//        String connectUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/dingo?max_execution_time=" + timeout+"&wait_timeout=60&connectTimeout=60000";
+        String connectUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/" + schemaName + "?serverTimezone=" + timezone;
+        Class.forName(MySQL_JDBC_DRIVER);
+        Connection myConnection = DriverManager.getConnection(connectUrl, props);
+        return myConnection;
+    }
     
     public static Connection getMySQLConnectionWithoutSchema() throws IOException, ClassNotFoundException, SQLException {
         String MySQL_JDBC_DRIVER = properties.getProperty("MySQL_JDBC_Driver");

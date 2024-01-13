@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -42,11 +43,15 @@ import java.util.List;
 
 public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
     private static MySQLHelper mySQLHelper;
+    public static Connection myConnection;
     private static HashSet<String> createTableSet = new HashSet<>();
 
     @BeforeClass (alwaysRun = true)
-    public static void setupAll() {
+    public static void setupAll() throws SQLException, IOException, ClassNotFoundException {
         mySQLHelper = new MySQLHelper();
+        MySQLUtils mySQLUtils = new MySQLUtils();
+        myConnection = mySQLUtils.getMySQLConnectionInstance();
+        Assert.assertNotNull(myConnection);
     }
 
     @AfterClass (alwaysRun = true)
@@ -56,11 +61,12 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
             List<String> finalTableList = MySQLUtils.getTableList();
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
-                    mySQLHelper.doDropTable(s);
+                    mySQLHelper.doDropTable(myConnection, s);
                 }
             }
         }
         createTableSet.clear();
+        MySQLUtils.closeResource(myConnection);
     }
 
     @BeforeMethod (alwaysRun = true)
@@ -90,17 +96,17 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                 if (!schemaList.get(i).trim().contains("_")) {
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                     if (param.get("TestID").contains("btree")) {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     }
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
                     if (param.get("TestID").contains("btree")) {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
                     }
                 }
                 tableList.add(tableName);
@@ -118,9 +124,9 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaName;
                     }
                     if (param.get("TestID").contains("btree")) {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
                     } else {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
                     }
                 }
             }
@@ -134,11 +140,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
         }
         System.out.println("Expected: " + expectedResult);
         if (param.get("Validation_type").equals("csv_equals")) {
-            List<List<String>> actualResult = mySQLHelper.preparedStatementQuery(querySql, value_type_tuple, ps_values_tuple);
+            List<List<String>> actualResult = mySQLHelper.preparedStatementQuery(myConnection, querySql, value_type_tuple, ps_values_tuple);
             System.out.println("Actual: " + actualResult);
             Assert.assertEquals(actualResult, expectedResult);
         } else if (param.get("Validation_type").equals("csv_containsAll")) {
-            List<List<String>> actualResult = mySQLHelper.preparedStatementQuery(querySql, value_type_tuple, ps_values_tuple);
+            List<List<String>> actualResult = mySQLHelper.preparedStatementQuery(myConnection, querySql, value_type_tuple, ps_values_tuple);
             System.out.println("Actual: " + actualResult);
             Assert.assertTrue(actualResult.containsAll(expectedResult));
             Assert.assertTrue(expectedResult.containsAll(actualResult));
@@ -171,17 +177,17 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                 if (!schemaList.get(i).trim().contains("_")) {
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                     if (param.get("TestID").contains("btree")) {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     }
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
                     if (param.get("TestID").contains("btree")) {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
                     }
                 }
                 tableList.add(tableName);
@@ -200,9 +206,9 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaName;
                     }
                     if (param.get("TestID").contains("btree")) {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
                     } else {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
                     }
                 }
             }
@@ -216,7 +222,7 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                 expectedResult = ParseCsv.splitCsvString(resultFile,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            List<List<String>> actualResult = mySQLHelper.preparedStatementDMLGetData(dmlSql, querySql, value_type_tuple, ps_values_tuple);
+            List<List<String>> actualResult = mySQLHelper.preparedStatementDMLGetData(myConnection, dmlSql, querySql, value_type_tuple, ps_values_tuple);
             System.out.println("Actual: " + actualResult);
             Assert.assertEquals(actualResult, expectedResult);
         } else if (param.get("Validation_type").equals("csv_containsAll")) {
@@ -228,14 +234,14 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                 expectedResult = ParseCsv.splitCsvString(resultFile,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            List<List<String>> actualResult = mySQLHelper.preparedStatementDMLGetData(dmlSql, querySql, value_type_tuple, ps_values_tuple);
+            List<List<String>> actualResult = mySQLHelper.preparedStatementDMLGetData(myConnection, dmlSql, querySql, value_type_tuple, ps_values_tuple);
             System.out.println("Actual: " + actualResult);
             Assert.assertTrue(actualResult.containsAll(expectedResult));
             Assert.assertTrue(expectedResult.containsAll(actualResult));
         } else if (param.get("Validation_type").equals("effected_rows_assert")) {
             int expectedEffectedRows = Integer.parseInt(param.get("Effected_rows"));
             System.out.println("Expected effected rows: " + expectedEffectedRows);
-            int actualEffectedRows = mySQLHelper.preparedStatementDMLGetRows(dmlSql, value_type_tuple, ps_values_tuple);
+            int actualEffectedRows = mySQLHelper.preparedStatementDMLGetRows(myConnection, dmlSql, value_type_tuple, ps_values_tuple);
             System.out.println("Actual effected rows: " + actualEffectedRows);
             Assert.assertEquals(actualEffectedRows, expectedEffectedRows);
         }
@@ -270,17 +276,17 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                 if (!schemaList.get(i).trim().contains("_")) {
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                     if (param.get("TestID").contains("btree")) {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     }
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
                     if (param.get("TestID").contains("btree")) {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
                     }
                 }
                 tableList.add(tableName);
@@ -304,14 +310,14 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaName;
                     }
                     if (param.get("TestID").contains("btree")) {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
                     } else {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
                     }
                 }
             }
         }
-        mySQLHelper.preparedStatementBatchInsert(
+        mySQLHelper.preparedStatementBatchInsert(myConnection, 
                 insertSql,Integer.parseInt(param.get("Insert_count")), value_type_tuple,6,
                 100,0,10000,2, -1000000,1000000,2, 
                 "yyyy-MM-dd","1970-10-01","2022-03-31","HH:mm:ss",
@@ -322,37 +328,37 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
        if (param.get("Validation_type").equals("effected_rows_assert")) {
            int expectedQuery1Rows = Integer.parseInt(param.get("Query_result1"));
            System.out.println("Expected query1 rows: " + expectedQuery1Rows);
-           int actualQuery1Rows = Integer.parseInt(mySQLHelper.queryWithStrReturn(querySql1));
+           int actualQuery1Rows = Integer.parseInt(mySQLHelper.queryWithStrReturn(myConnection, querySql1));
            System.out.println("Actual query1 rows: " + actualQuery1Rows);
            Assert.assertEquals(actualQuery1Rows, expectedQuery1Rows);
 
            int expectedQuery2Rows = Integer.parseInt(param.get("Query_result2"));
            System.out.println("Expected query2 rows: " + expectedQuery2Rows);
-           int actualQuery2Rows = Integer.parseInt(mySQLHelper.queryWithStrReturn(querySql2));
+           int actualQuery2Rows = Integer.parseInt(mySQLHelper.queryWithStrReturn(myConnection, querySql2));
            System.out.println("Actual query2 rows: " + actualQuery2Rows);
            Assert.assertEquals(actualQuery2Rows, expectedQuery2Rows);
 
            int expectedDml1Rows = Integer.parseInt(param.get("Dml_result1"));
            System.out.println("Expected dml1 rows: " + expectedDml1Rows);
-           int actualDml1Rows = mySQLHelper.doDMLReturnRows(dmlSql1);
+           int actualDml1Rows = mySQLHelper.doDMLReturnRows(myConnection, dmlSql1);
            System.out.println("Actual dml1 rows: " + actualDml1Rows);
            Assert.assertEquals(actualDml1Rows, expectedDml1Rows);
 
            int expectedQuery3Rows = Integer.parseInt(param.get("Query_result3"));
            System.out.println("Expected query3 rows: " + expectedQuery3Rows);
-           int actualQuery3Rows = Integer.parseInt(mySQLHelper.queryWithStrReturn(querySql3));
+           int actualQuery3Rows = Integer.parseInt(mySQLHelper.queryWithStrReturn(myConnection, querySql3));
            System.out.println("Actual query3 rows: " + actualQuery3Rows);
            Assert.assertEquals(actualQuery3Rows, expectedQuery3Rows);
 
            int expectedDml2Rows = Integer.parseInt(param.get("Dml_result2"));
            System.out.println("Expected dml2 rows: " + expectedDml2Rows);
-           int actualDml2Rows = mySQLHelper.doDMLReturnRows(dmlSql2);
+           int actualDml2Rows = mySQLHelper.doDMLReturnRows(myConnection, dmlSql2);
            System.out.println("Actual dml2 rows: " + actualDml2Rows);
            Assert.assertEquals(actualDml2Rows, expectedDml2Rows);
            
            int expectedQuery4Rows = Integer.parseInt(param.get("Query_result4"));
            System.out.println("Expected query4 rows: " + expectedQuery4Rows);
-           int actualQuery4Rows = Integer.parseInt(mySQLHelper.queryWithStrReturn(querySql4));
+           int actualQuery4Rows = Integer.parseInt(mySQLHelper.queryWithStrReturn(myConnection, querySql4));
            System.out.println("Actual query4 rows: " + actualQuery4Rows);
            Assert.assertEquals(actualQuery4Rows, expectedQuery4Rows);
         }
@@ -389,9 +395,9 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                     }
                     if (param.get("TestID").contains("btree")) {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     }
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
@@ -401,9 +407,9 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
                     }
                     if (param.get("TestID").contains("btree")) {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else {
-                        mySQLHelper.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
+                        mySQLHelper.execFile(myConnection, TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
                     }
                 }
                 tableList.add(tableName);
@@ -428,7 +434,7 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
             insert_ps_values_list.set(insert_ps_values_list.size() - 1, fileInputStream);
             int expectedInsertRows = Integer.parseInt(param.get("Effected_rows"));
             System.out.println("Expected insert rows: " + expectedInsertRows);
-            int actualInsertRows = mySQLHelper.preparedStatementInsertBlobData(insertSql, insert_value_type_tuple, insert_ps_values_list);
+            int actualInsertRows = mySQLHelper.preparedStatementInsertBlobData(myConnection, insertSql, insert_value_type_tuple, insert_ps_values_list);
             System.out.println("Actual insert rows: " + actualInsertRows);
             Assert.assertEquals(actualInsertRows, expectedInsertRows);
             int blobIndex = 0;
@@ -444,7 +450,7 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                 oldFile.delete();
             }
             
-            FileOutputStream actualFileOutputStream = mySQLHelper.preparedStatementGetBlobData(querySql, query_value_type_tuple, blobIndex, fileOutPutPath, query_ps_values_tuple);
+            FileOutputStream actualFileOutputStream = mySQLHelper.preparedStatementGetBlobData(myConnection, querySql, query_value_type_tuple, blobIndex, fileOutPutPath, query_ps_values_tuple);
             Assert.assertNotNull(actualFileOutputStream);
             File fileOut = new File(fileOutPutPath);
             long fileOutSize = fileOut.length();

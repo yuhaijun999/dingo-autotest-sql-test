@@ -32,6 +32,7 @@ import utils.ParseCsv;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,11 +41,15 @@ import java.util.List;
 
 public class TestDQL extends BaseTestSuite {
     private static SQLHelper sqlHelper;
+    public static Connection connection;
     private static HashSet<String> createTableSet = new HashSet<>();
     
     @BeforeClass (alwaysRun = true)
-    public void setupAll() {
+    public void setupAll() throws SQLException, ClassNotFoundException {
         sqlHelper = new SQLHelper();
+        JDBCUtils jdbcUtils = new JDBCUtils();
+        connection = jdbcUtils.getDingoConnectionInstance();
+        Assert.assertNotNull(connection);
     }
 
     @AfterClass (alwaysRun = true)
@@ -55,10 +60,12 @@ public class TestDQL extends BaseTestSuite {
             System.out.println("Get table list: " + finalTableList);
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
-                    sqlHelper.doDropTable(s);
+                    sqlHelper.doDropTable(connection, s);
                 }
             }
         }
+        
+        JDBCUtils.closeResource(connection);
     }
 
     @BeforeMethod (alwaysRun = true)
@@ -67,16 +74,12 @@ public class TestDQL extends BaseTestSuite {
 
     @AfterMethod (alwaysRun = true)
     public void cleanUp() throws Exception {
-//        if(createTableSet.size() > 0) {
-//            for (String s : createTableSet) {
-//                sqlHelper.doDropTable(s);
-//            }
-//        }
-//        createTableSet.clear();
     }
 
     @Test(priority = 0, enabled = true, dataProvider = "dqlData1", dataProviderClass = YamlDataHelper.class, description = "查询测试，正向用例")
-    public void testDQL1(LinkedHashMap<String,String> param) throws SQLException, IOException, InterruptedException {
+    public void testDQL1(LinkedHashMap<String,String> param) throws SQLException, IOException, InterruptedException, ClassNotFoundException {
+//        JDBCUtils jdbcUtils = new JDBCUtils();
+//        Connection connection = jdbcUtils.getDingoConnectionInstance();
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
@@ -95,9 +98,9 @@ public class TestDQL extends BaseTestSuite {
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                         if (param.get("TestID").contains("btree")) {
-                            sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                            sqlHelper.execFile(connection, TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                         } else {
-                            sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                            sqlHelper.execFile(connection, TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                         }
                         tableList.add(tableName);
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName.toUpperCase());
@@ -110,9 +113,9 @@ public class TestDQL extends BaseTestSuite {
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaName;
                         if (param.get("TestID").contains("btree")) {
-                            sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                            sqlHelper.execFile(connection, TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                         } else {
-                            sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
+                            sqlHelper.execFile(connection, TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
                         }
                         tableList.add(tableName);
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName.toUpperCase());
@@ -132,9 +135,9 @@ public class TestDQL extends BaseTestSuite {
                             tableName = param.get("TestID").trim() + "_0" + j + schemaName;
                         }
                         if (param.get("TestID").contains("btree")) {
-                            sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
+                            sqlHelper.execFile(connection, TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
                         } else {
-                            sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
+                            sqlHelper.execFile(connection, TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
                         }
                     }
                 }
@@ -145,9 +148,9 @@ public class TestDQL extends BaseTestSuite {
                     for (int j = 0; j < value_List.size(); j++) {
                         String tableName = param.get("Case_table_dependency").trim() + "_0" + j + schemaList.get(j).trim();
                         if (param.get("TestID").contains("btree")) {
-                            sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
+                            sqlHelper.execFile(connection, TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
                         } else {
-                            sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
+                            sqlHelper.execFile(connection, TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
                         }
                     }
                 }
@@ -171,7 +174,7 @@ public class TestDQL extends BaseTestSuite {
                 }
             }
             System.out.println("Expected: " + expectedResult);
-            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
+            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(connection, sql);
             System.out.println("Actual: " + actualResult);
             Assert.assertEquals(actualResult, expectedResult);
         } else if (param.get("Validation_type").equals("csv_containsAll")) {
@@ -191,41 +194,46 @@ public class TestDQL extends BaseTestSuite {
                 }
             }
             System.out.println("Expected: " + expectedResult);
-            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
+            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(connection, sql);
             System.out.println("Actual: " + actualResult);
             Assert.assertTrue(actualResult.containsAll(expectedResult));
             Assert.assertTrue(expectedResult.containsAll(actualResult));
         } else if (param.get("Validation_type").equals("string_equals")) {
             String expectedResult = param.get("Expected_result");
             System.out.println("Expected: " + expectedResult);
-            String actualResult = sqlHelper.queryWithStrReturn(sql);
+            String actualResult = sqlHelper.queryWithStrReturn(connection, sql);
             System.out.println("Actual: " + actualResult);
             Assert.assertEquals(actualResult, expectedResult);
         } else if (param.get("Validation_type").equals("double_equals")) {
             Double expectedResult = Double.parseDouble(param.get("Expected_result"));
             System.out.println("Expected: " + expectedResult);
-            Double actualResult = sqlHelper.queryWithDoubleReturn(sql);
+            Double actualResult = sqlHelper.queryWithDoubleReturn(connection, sql);
             System.out.println("Actual: " + actualResult);
             Assert.assertEquals(actualResult, expectedResult);
         } else if (param.get("Validation_type").equals("assertNull")) {
-            Assert.assertNull(sqlHelper.queryWithObjReturn(sql));
+            Assert.assertNull(sqlHelper.queryWithObjReturn(connection, sql));
         } else if (param.get("Validation_type").equals("justExec")) {
             if (param.get("Component").equalsIgnoreCase("Explain")) {
                 Thread.sleep(330000);
-                sqlHelper.execSql(sql);
+                sqlHelper.execSql(connection, sql);
             } else {
-                sqlHelper.execSql(sql);
+                sqlHelper.execSql(connection, sql);
             }
         }
+        
+//        JDBCUtils.closeResource(connection);
     }
 
     @Test(priority = 1, enabled = true, dataProvider = "dqlData2", dataProviderClass = YamlDataHelper.class, description = "当前时间日期函数的查询测试")
     public void testDQL2(LinkedHashMap<String,String> param) throws SQLException, IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+//        JDBCUtils jdbcUtils = new JDBCUtils();
+//        Connection connection = jdbcUtils.getDingoConnectionInstance();
+        
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
         String sql = param.get("Sql_state").trim();
-        String actualResult = sqlHelper.queryWithStrReturn(sql);
+        String actualResult = sqlHelper.queryWithStrReturn(connection, sql);
         System.out.println("Actual: " + actualResult);
         if (param.get("Validation_type").equals("string_equals")) {
             String expectedResult = param.get("Expected_result");
@@ -289,10 +297,14 @@ public class TestDQL extends BaseTestSuite {
                 }
             }
         }
+//        JDBCUtils.closeResource(connection);
     }
 
     @Test(priority = 2, enabled = true, dataProvider = "dqlData3", dataProviderClass = YamlDataHelper.class, description = "explain查看任务执行计划")
-    public void testDQL3(LinkedHashMap<String,String> param) throws SQLException, IOException, InterruptedException {
+    public void testDQL3(LinkedHashMap<String,String> param) throws SQLException, IOException, InterruptedException, ClassNotFoundException {
+//        JDBCUtils jdbcUtils = new JDBCUtils();
+//        Connection connection = jdbcUtils.getDingoConnectionInstance();
+        
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
@@ -312,9 +324,9 @@ public class TestDQL extends BaseTestSuite {
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                         if (param.get("TestID").contains("btree")) {
-                            sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                            sqlHelper.execFile(connection, TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                         } else {
-                            sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                            sqlHelper.execFile(connection, TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                         }
                         tableList.add(tableName);
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
@@ -329,9 +341,9 @@ public class TestDQL extends BaseTestSuite {
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaName;
                         if (param.get("TestID").contains("btree")) {
-                            sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                            sqlHelper.execFile(connection, TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                         } else {
-                            sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
+                            sqlHelper.execFile(connection, TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
                         }
                         tableList.add(tableName);
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
@@ -352,9 +364,9 @@ public class TestDQL extends BaseTestSuite {
                             tableName = param.get("TestID").trim() + "_0" + j + schemaName;
                         }
                         if (param.get("TestID").contains("btree")) {
-                            sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DQLGroup3Values", value_List.get(j).trim())), tableName);
+                            sqlHelper.execFile(connection, TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DQLGroup3Values", value_List.get(j).trim())), tableName);
                         } else {
-                            sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DQLGroup3Values", value_List.get(j).trim())), tableName);
+                            sqlHelper.execFile(connection, TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DQLGroup3Values", value_List.get(j).trim())), tableName);
                         }
                     }
                 }
@@ -365,9 +377,9 @@ public class TestDQL extends BaseTestSuite {
                     for (int j = 0; j < value_List.size(); j++) {
                         String tableName = param.get("Case_table_dependency").trim() + "_0" + j + schemaList.get(j).trim();
                         if (param.get("TestID").contains("btree")) {
-                            sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DQLGroup3Values", value_List.get(j).trim())), tableName);
+                            sqlHelper.execFile(connection, TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DQLGroup3Values", value_List.get(j).trim())), tableName);
                         } else {
-                            sqlHelper.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DQLGroup3Values", value_List.get(j).trim())), tableName);
+                            sqlHelper.execFile(connection, TestDQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DQLGroup3Values", value_List.get(j).trim())), tableName);
                         }
                     }
                 }
@@ -379,13 +391,13 @@ public class TestDQL extends BaseTestSuite {
         }
 
         if (param.get("Validation_type").equals("justExec")) {
-            sqlHelper.execSql(sql);
+            sqlHelper.execSql(connection, sql);
         } else if (param.get("Validation_type").equals("csv_equals")) {
             String resultFile = param.get("Expected_result").trim();
             List<List<String>> expectedResult = new ArrayList<>();
             expectedResult = ParseCsv.splitCsvString(resultFile,",");
             System.out.println("Expected: " + expectedResult);
-            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
+            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(connection, sql);
             System.out.println("Actual: " + actualResult);
             Assert.assertEquals(actualResult, expectedResult);
         } else if (param.get("Validation_type").equals("csv_containsAll")) {
@@ -393,7 +405,7 @@ public class TestDQL extends BaseTestSuite {
             List<List<String>> expectedResult = new ArrayList<>();
             expectedResult = ParseCsv.splitCsvString(resultFile,",");
             System.out.println("Expected: " + expectedResult);
-            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(sql);
+            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(connection, sql);
             System.out.println("Actual: " + actualResult);
             Assert.assertTrue(actualResult.containsAll(expectedResult));
             Assert.assertTrue(expectedResult.containsAll(actualResult));
@@ -403,10 +415,12 @@ public class TestDQL extends BaseTestSuite {
             String explainFile = param.get("Explain_result").trim();
             List<String> expectedExplainList = ParseCsv.splitCsvToList(explainFile);
             System.out.println("Expected explain list: " + expectedExplainList);
-            String actualExplainStr = sqlHelper.queryWithStrReturn(explainSql);
+            String actualExplainStr = sqlHelper.queryWithStrReturn(connection, explainSql);
             for (int i = 0; i < expectedExplainList.size(); i++) {
                 Assert.assertTrue(actualExplainStr.contains(expectedExplainList.get(i)));
             }
         }
+        
+//        JDBCUtils.closeResource(connection);
     }
 }
