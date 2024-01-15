@@ -15,5 +15,5 @@ CREATE TABLE $table (
     user_info any,
     feature_id bigint not null,
     PRIMARY KEY (id),
-    index feature_index vector(feature_id, feature) parameters(type=hnsw, metricType=L2, dimension=8, efConstruction=40, nlinks=32)
+    index feature_index vector(feature_id, feature) engine=BTREE parameters(type=hnsw, metricType=L2, dimension=8, efConstruction=40, nlinks=32)
 ) engine=BTREE

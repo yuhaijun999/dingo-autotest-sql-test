@@ -12,5 +12,5 @@ CREATE TABLE $table (
     zip_code varchar(20),
     is_delete boolean,
     PRIMARY KEY (id),
-    index id_name_birthday_index (id,name,birthday)
+    index id_name_birthday_index (id,name,birthday) engine=BTREE
 ) engine=BTREE

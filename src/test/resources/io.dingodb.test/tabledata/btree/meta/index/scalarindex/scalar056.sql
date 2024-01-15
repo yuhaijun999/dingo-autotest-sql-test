@@ -11,6 +11,6 @@ CREATE TABLE $table(
     update_time TIMESTAMP,
     zip_code varchar(20),
     is_delete BOOLEAN,
-    INDEX age_index (age),
+    INDEX age_index (age) engine=BTREE,
     PRIMARY KEY (id)
 ) engine=BTREE partition by hash partitions=5

@@ -12,5 +12,5 @@ CREATE TABLE $table (
     zip_code varchar(20),
     is_delete boolean,
     PRIMARY KEY (name,id),
-    index birthday_amount_index (birthday,amount) partition by range values ('1995-10-01',-100,'Z',15),('2005-08-08',100,'z',30)
+    index birthday_amount_index (birthday,amount) engine=BTREE partition by range values ('1995-10-01',-100,'Z',15),('2005-08-08',100,'z',30)
 ) engine=BTREE

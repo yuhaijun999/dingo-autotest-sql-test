@@ -12,7 +12,7 @@ CREATE TABLE $table (
     zip_code varchar(20),
     is_delete boolean,
     PRIMARY KEY (id),
-    index name_index (name) with (price,birthday),
-    index age_index (age) with (amount),
-    index address_ut_index (address, update_time) with (zip_code)
+    index name_index (name) with (price,birthday) engine=BTREE,
+    index age_index (age) with (amount) engine=BTREE,
+    index address_ut_index (address, update_time) with (zip_code) engine=BTREE
 ) engine=BTREE

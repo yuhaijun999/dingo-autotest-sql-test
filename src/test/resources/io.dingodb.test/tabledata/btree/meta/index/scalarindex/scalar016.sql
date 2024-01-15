@@ -12,5 +12,5 @@ CREATE TABLE $table (
     zip_code varchar(20),
     is_delete boolean,
     PRIMARY KEY (id),
-    index age_index (age) partition by range values(20),(50)
+    index age_index (age) engine=BTREE partition by range values(20),(50)
 ) engine=BTREE

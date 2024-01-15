@@ -12,5 +12,5 @@ CREATE TABLE $table (
     zip_code varchar(20),
     is_delete boolean,
     PRIMARY KEY (id,name,update_time),
-    index id_name_ut_index (id,name,update_time) with (age,gmt,price,amount,address,birthday,create_time,zip_code,is_delete)
+    index id_name_ut_index (id,name,update_time) with (age,gmt,price,amount,address,birthday,create_time,zip_code,is_delete) engine=BTREE
 ) engine=BTREE

@@ -5,6 +5,6 @@ CREATE TABLE $table (
     amount double,
     feature float array not null,
     feature_id bigint not null,
-    index feature_index vector(feature_id, feature) parameters(type=ivfpq, metricType=INNER_PRODUCT, dimension=128, ncentroids=3, nsubvector=8, nbitsPerIdx=2),
+    index feature_index vector(feature_id, feature) engine=BTREE parameters(type=ivfpq, metricType=INNER_PRODUCT, dimension=128, ncentroids=3, nsubvector=8, nbitsPerIdx=2),
     primary key(id)
 ) engine=BTREE
