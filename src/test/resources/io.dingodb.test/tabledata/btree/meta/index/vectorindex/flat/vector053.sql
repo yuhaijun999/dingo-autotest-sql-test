@@ -6,5 +6,5 @@ CREATE TABLE $table (
     feature float array not null,
     feature_id bigint not null,
     primary key(id),
-    index feature_index vector(feature_id, feature) partition by hash partitions=20 parameters(type=flat, metricType=INNER_PRODUCT, dimension=64)
+    index feature_index vector(feature_id, feature) engine=BTREE partition by hash partitions=20 parameters(type=flat, metricType=INNER_PRODUCT, dimension=64)
 ) engine=BTREE

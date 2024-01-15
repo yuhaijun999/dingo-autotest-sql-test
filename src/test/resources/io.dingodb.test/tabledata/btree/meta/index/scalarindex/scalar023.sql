@@ -12,8 +12,8 @@ CREATE TABLE $table (
     zip_code varchar(20),
     is_delete boolean,
     PRIMARY KEY (id),
-    index name_index (name),
-    index age_index (age),
-    index price_index (price) partition by range values (0.0),
-    index ct_index (create_time)
+    index name_index (name) engine=BTREE,
+    index age_index (age) engine=BTREE,
+    index price_index (price) engine=BTREE partition by range values (0.0),
+    index ct_index (create_time) engine=BTREE
 ) engine=BTREE

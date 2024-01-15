@@ -12,5 +12,5 @@ CREATE TABLE $table (
     zip_code varchar(20),
     is_delete boolean,
     PRIMARY KEY (id,birthday),
-    index name_index (name) with (price,gmt) partition by range values ('Z'),('z') replica=3
+    index name_index (name) with (price,gmt) engine=BTREE partition by range values ('Z'),('z') replica=3
 ) engine=BTREE partition by range values (10,'2000-01-01'),(20,'2020-12-31') replica=2

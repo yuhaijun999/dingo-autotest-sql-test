@@ -11,8 +11,8 @@ CREATE TABLE $table (
     update_time TIMESTAMP,
     zip_code varchar(20),
     is_delete boolean,
+    index name_index (name) engine=BTREE,
     PRIMARY KEY (id),
-    index name_index (name),
-    index age_index (age) partition by range values (10),
-    index price_index (price) partition by range values (0.0),(100.0)
+    index age_index (age) engine=BTREE partition by range values (10),
+    index price_index (price) engine=BTREE partition by range values (0.0),(100.0)
 ) engine=BTREE

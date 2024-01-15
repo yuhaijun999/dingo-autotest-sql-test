@@ -12,6 +12,6 @@ CREATE TABLE $table (
     zip_code varchar(20),
     is_delete boolean,
     PRIMARY KEY (id),
-    index name_index (name),
-    index age_index (age) with (gmt)
+    index name_index (name) engine=BTREE,
+    index age_index (age) with (gmt) engine=BTREE
 ) engine=BTREE

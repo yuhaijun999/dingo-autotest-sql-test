@@ -12,5 +12,5 @@ CREATE TABLE $table (
     zip_code varchar(20),
     is_delete boolean,
     PRIMARY KEY (id),
-    index name_amount_ct_index (name,amount,create_time) with (address)
+    index name_amount_ct_index (name,amount,create_time) with (address) engine=BTREE
 ) engine=BTREE

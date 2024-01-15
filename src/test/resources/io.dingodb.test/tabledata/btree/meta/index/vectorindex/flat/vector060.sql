@@ -6,6 +6,6 @@ CREATE TABLE $table (
     birthday date,
     feature float array not null,
     feature_id bigint not null,
-    index feature_index vector(feature_id, feature) parameters(type=flat, metricType=L2, dimension=1),
+    index feature_index vector(feature_id, feature) engine=BTREE parameters(type=flat, metricType=L2, dimension=1),
     primary key(id)
 ) engine=BTREE

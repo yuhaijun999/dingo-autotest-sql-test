@@ -11,6 +11,6 @@ CREATE TABLE $table (
     update_time TIMESTAMP,
     zip_code varchar(20),
     is_delete boolean,
-    index name_index (name),
+    index name_index (name) engine=BTREE,
     PRIMARY KEY (id)
 ) engine=BTREE

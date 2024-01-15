@@ -6,5 +6,5 @@ CREATE TABLE $table (
     feature float array not null,
     feature_id bigint not null,
     primary key(id,name),
-    index feature_index vector(feature_id, feature) with (id,name) parameters(type=hnsw, metricType=L2, dimension=32, efConstruction=40, nlinks=32)
+    index feature_index vector(feature_id, feature) with (id,name) engine=BTREE parameters(type=hnsw, metricType=L2, dimension=32, efConstruction=40, nlinks=32)
 ) engine=BTREE
