@@ -62,14 +62,14 @@ public class MySQLYamlDataHelper extends BaseDataHelper{
         return getSingleEngineCasesData(excelPath);
     }
 
-    @DataProvider (name = "mysqlSQLBatchData", parallel = false)
+    @DataProvider (name = "mysqlSQLBatchData", parallel = true)
     public Object[][] mysqlSQLBatchCases() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/batchsql/mysql_batchsql_cases.xlsx";
         String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/batchsql/mysql_batchsql_cases_btree.xlsx";
         return getMultiEngineCasesData(excelPathLSM, excelPathBTREE, excelPathBTREE);
     }
 
-    @DataProvider (name = "mysqlProtocolData", parallel = false)
+    @DataProvider (name = "mysqlProtocolData", parallel = true)
     public Object[][] mysqlProtocolCases() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/protocol/mysql_protocol_cases.xlsx";
         String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/protocol/mysql_protocol_cases_btree.xlsx";

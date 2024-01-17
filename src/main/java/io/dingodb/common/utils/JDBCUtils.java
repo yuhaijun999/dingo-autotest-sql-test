@@ -64,7 +64,7 @@ public class JDBCUtils {
         String port = CommonArgs.getDefaultExecutorPort();
         String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
 //        String defaultConnectIP = "172.20.61.101";
-        String connectUrl = "jdbc:dingo:thin:url=" + defaultConnectIP + ":" + port + "/" + schemaName + "?timeout=" + timeout;
+        String connectUrl = "jdbc:dingo:thin:url=" + defaultConnectIP + ":" + port + "/" + schemaName + "?timeout=420";
         Class.forName(JDBC_DRIVER);
         Connection connection = DriverManager.getConnection(connectUrl, USER, PASS);
         return connection;

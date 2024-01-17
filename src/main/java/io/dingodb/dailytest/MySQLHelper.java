@@ -39,6 +39,7 @@ public class MySQLHelper extends BaseSQLHelper {
     static {
         try {
             connection = MySQLUtils.getMySQLConnection();
+//            connection = DruidUtils.getDruidMySQLConnection();
         } catch (Exception e) {
             e.printStackTrace();
         }

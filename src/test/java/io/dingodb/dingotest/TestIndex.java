@@ -262,9 +262,6 @@ public class TestIndex extends BaseTestSuite {
 
     @Test(priority = 1, enabled = true, dataProvider = "indexData2", dataProviderClass = YamlDataHelper.class, description = "标量和向量混合索引测试")
     public void testIndex2(LinkedHashMap<String,String> param) throws SQLException, IOException, InterruptedException, ClassNotFoundException {
-        JDBCUtils jdbcUtils = new JDBCUtils();
-        Connection connection = jdbcUtils.getDingoConnectionInstance();
-        
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
@@ -444,6 +441,8 @@ public class TestIndex extends BaseTestSuite {
             if (param.get("Sub_component").equalsIgnoreCase("scalar_explain")) {
                 Thread.sleep(330000);
             }
+            JDBCUtils jdbcUtils = new JDBCUtils();
+            Connection connection = jdbcUtils.getDingoConnectionInstance();
             String explainFile = param.get("Explain_result").trim();
             List<String> expectedExplainList = ParseCsv.splitCsvToList(explainFile);
             System.out.println("Expected explain list: " + expectedExplainList);
@@ -451,6 +450,7 @@ public class TestIndex extends BaseTestSuite {
             for (int i = 0; i < expectedExplainList.size(); i++) {
                 Assert.assertTrue(actualExplainStr.contains(expectedExplainList.get(i)));
             }
+            JDBCUtils.closeResource(connection);
         }
 
         if (tableList.size() > 0) {
@@ -458,8 +458,6 @@ public class TestIndex extends BaseTestSuite {
                 sqlHelper.doDropTable(connection, s);
             }
         }
-        
-        JDBCUtils.closeResource(connection);
     }
 
     private Boolean assertSimilarityID(List<List<String>> actualList, List<List<String>> expectedList, String algorithm) {
