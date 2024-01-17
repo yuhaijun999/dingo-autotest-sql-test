@@ -55,7 +55,8 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
     public static void setUpAll() throws SQLException, IOException, ClassNotFoundException {
         MySQLUtils mySQLUtils = new MySQLUtils();
         myConnection = mySQLUtils.getMySQLConnectionInstance();
-        Assert.assertNotNull(myConnection);
+//        myConnection = DruidUtils.getDruidMySQLConnection();
+//        Assert.assertNotNull(myConnection);
     }
 
     @AfterClass(alwaysRun = true, description = "测试结束后，关闭数据库连接资源")

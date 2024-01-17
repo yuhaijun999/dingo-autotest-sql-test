@@ -571,6 +571,9 @@ public class DetailReporterListener implements IReporter{
         for (int i = 1; i <= parameterCount; i++) {
             writer.print(String.format("<th>%s #", prefix));
             writer.print(i);
+            // Write test time
+            String timeStr = CommonArgs.getCurDateStr("yyyy-MM-dd HH:mm:ss:SSS");
+            writer.print(" (Execute time: " + timeStr + ")");
             writer.print("</th>");
         }
         writer.print("</tr><tr class=\"param stripe\">");

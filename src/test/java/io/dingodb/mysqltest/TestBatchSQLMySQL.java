@@ -17,6 +17,7 @@
 package io.dingodb.mysqltest;
 
 import datahelper.MySQLYamlDataHelper;
+import io.dingodb.common.utils.DruidUtils;
 import io.dingodb.common.utils.JDBCUtils;
 import io.dingodb.common.utils.MySQLUtils;
 import io.dingodb.dailytest.MySQLHelper;
@@ -47,10 +48,14 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
 
     @BeforeClass (alwaysRun = true)
     public static void setupAll() throws SQLException, IOException, ClassNotFoundException {
+//        mySQLHelper = new MySQLHelper();
+//        MySQLUtils mySQLUtils = new MySQLUtils();
+//        myConnection = mySQLUtils.getMySQLConnectionInstance();
+//        Assert.assertNotNull(myConnection);
         mySQLHelper = new MySQLHelper();
-        MySQLUtils mySQLUtils = new MySQLUtils();
-        myConnection = mySQLUtils.getMySQLConnectionInstance();
+        myConnection = DruidUtils.getDruidMySQLConnection();
         Assert.assertNotNull(myConnection);
+        
     }
 
     @AfterClass (alwaysRun = true)

@@ -50,6 +50,9 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
         MySQLUtils mySQLUtils = new MySQLUtils();
         myConnection = mySQLUtils.getMySQLConnectionInstance();
         Assert.assertNotNull(myConnection);
+//        mySQLHelper = new MySQLHelper();
+//        myConnection = DruidUtils.getDruidMySQLConnection();
+//        Assert.assertNotNull(myConnection);
     }
 
     @AfterClass (alwaysRun = true)
