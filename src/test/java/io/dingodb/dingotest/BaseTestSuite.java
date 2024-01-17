@@ -28,6 +28,7 @@ import java.io.IOException;
 public class BaseTestSuite {
     public static IniReader iniReader;
     public static IniReader iniReaderBTREE;
+    public static IniReader iniReaderTXNBTREE;
     public static SQLHelper sqlHelper;
     @BeforeSuite(alwaysRun = true, description = "所有测试开始前的准备工作")
     public static void beforeSuite() {
@@ -35,8 +36,9 @@ public class BaseTestSuite {
         System.out.println("所有测试开始前，验证数据库连接正常");
         Assert.assertNotNull(SQLHelper.connection);
         try {
-            iniReader = new IniReader("src/test/resources/io.dingodb.test/ini/my_lsm.ini");
-            iniReaderBTREE = new IniReader("src/test/resources/io.dingodb.test/ini/my_btree.ini");
+            iniReader = new IniReader("src/test/resources/io.dingodb.test/ini/dingo_lsm.ini");
+            iniReaderBTREE = new IniReader("src/test/resources/io.dingodb.test/ini/dingo_btree.ini");
+            iniReaderTXNBTREE = new IniReader("src/test/resources/io.dingodb.test/ini/dingo_txn_btree.ini");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

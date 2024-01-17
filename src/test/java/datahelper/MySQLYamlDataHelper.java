@@ -26,7 +26,7 @@ public class MySQLYamlDataHelper extends BaseDataHelper{
     public Object[][] mysqlDQLCaseGroup1() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/dql/casegroup1/mysql_dql_cases1.xlsx";
         String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/dql/casegroup1/mysql_dql_cases1_btree.xlsx";
-        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE);
+        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE, excelPathBTREE);
     }
 
     @DataProvider (name = "mysqlDQLData2", parallel = false)
@@ -39,21 +39,21 @@ public class MySQLYamlDataHelper extends BaseDataHelper{
     public Object[][] mysqlDMLInsertCases() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/dml/insert/mysql_insert_cases.xlsx";
         String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/dml/insert/mysql_insert_cases_btree.xlsx";
-        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE);
+        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE, excelPathBTREE);
     }
 
     @DataProvider (name = "mysqlDMLUpDelData", parallel = true)
     public Object[][] mysqlDMLUpDelCases() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/dml/updatedelete/mysql_updatedelete_cases.xlsx";
         String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/dml/updatedelete/mysql_updatedelete_cases_btree.xlsx";
-        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE);
+        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE, excelPathBTREE);
     }
 
     @DataProvider (name = "mysqlDDLData1", parallel = true)
     public Object[][] mysqlDDLCases1() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/ddl/mysql_ddl_cases.xlsx";
         String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/ddl/mysql_ddl_cases_btree.xlsx";
-        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE);
+        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE, excelPathBTREE);
     }
 
     @DataProvider (name = "mysqlDCLData", parallel = true)
@@ -66,49 +66,49 @@ public class MySQLYamlDataHelper extends BaseDataHelper{
     public Object[][] mysqlSQLBatchCases() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/batchsql/mysql_batchsql_cases.xlsx";
         String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/batchsql/mysql_batchsql_cases_btree.xlsx";
-        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE);
+        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE, excelPathBTREE);
     }
 
     @DataProvider (name = "mysqlProtocolData", parallel = false)
     public Object[][] mysqlProtocolCases() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/protocol/mysql_protocol_cases.xlsx";
         String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/protocol/mysql_protocol_cases_btree.xlsx";
-        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE);
+        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE, excelPathBTREE);
     }
     
     @DataProvider (name = "mysqlNegativeData", parallel = false)
     public Object[][] mysqlNegativeCases() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/negative/mysql_negative_cases.xlsx";
         String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/negative/mysql_negative_cases_btree.xlsx";
-        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE);
+        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE, excelPathBTREE);
     }
 
     @DataProvider (name = "mysqlPSDQLData", parallel = true)
     public Object[][] mysqlPSDQLCases() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/prepareStatement/mysql_ps_dql_cases.xlsx";
         String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/prepareStatement/mysql_ps_dql_cases_btree.xlsx";
-        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE);
+        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE, excelPathBTREE);
     }
 
     @DataProvider (name = "mysqlPSDMLData", parallel = true)
     public Object[][] mysqlPSDMLCases() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/prepareStatement/mysql_ps_dml_cases.xlsx";
         String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/prepareStatement/mysql_ps_dml_cases_btree.xlsx";
-        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE);
+        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE, excelPathBTREE);
     }
 
     @DataProvider (name = "mysqlPSBatchData", parallel = false)
     public Object[][] mysqlPSBatchCases() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/prepareStatement/mysql_ps_batch_cases.xlsx";
         String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/prepareStatement/mysql_ps_batch_cases_btree.xlsx";
-        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE);
+        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE, excelPathBTREE);
     }
 
     @DataProvider (name = "mysqlPSBlobData", parallel = false)
     public Object[][] mysqlPSBlobCases() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/prepareStatement/mysql_ps_blob_cases.xlsx";
         String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/prepareStatement/mysql_ps_blob_cases_btree.xlsx";
-        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE);
+        return getMultiEngineCasesData(excelPathLSM, excelPathBTREE, excelPathBTREE);
     }
     
 }

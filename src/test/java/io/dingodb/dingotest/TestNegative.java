@@ -105,7 +105,9 @@ public class TestNegative extends BaseTestSuite {
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                        if (param.get("TestID").contains("btree")) {
+                        if (param.get("TestID").contains("txnbt")) {
+                            sqlHelper.execFile(connection, TestNegative.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        } else if (param.get("TestID").contains("btree")) {
                             sqlHelper.execFile(connection, TestNegative.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                         } else {
                             sqlHelper.execFile(connection, TestNegative.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
@@ -120,7 +122,9 @@ public class TestNegative extends BaseTestSuite {
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaName;
-                        if (param.get("TestID").contains("btree")) {
+                        if (param.get("TestID").contains("txnbt")) {
+                            sqlHelper.execFile(connection, TestNegative.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
+                        } else if (param.get("TestID").contains("btree")) {
                             sqlHelper.execFile(connection, TestNegative.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                         } else {
                             sqlHelper.execFile(connection, TestNegative.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
@@ -142,7 +146,10 @@ public class TestNegative extends BaseTestSuite {
                             String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                             tableName = param.get("TestID").trim() + "_0" + j + schemaName;
                         }
-                        if (param.get("TestID").contains("btree")) {
+
+                        if (param.get("TestID").contains("txnbt")) {
+                            sqlHelper.execFile(connection, TestNegative.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("NegativeValues", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("btree")) {
                             sqlHelper.execFile(connection, TestNegative.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("NegativeValues", value_List.get(j).trim())), tableName);
                         } else {
                             sqlHelper.execFile(connection, TestNegative.class.getClassLoader().getResourceAsStream(iniReader.getValue("NegativeValues", value_List.get(j).trim())), tableName);

@@ -107,7 +107,10 @@ public class TestBatchSQL extends BaseTestSuite {
         String querySql1 = param.get("Query_sql1");
         String querySql2 = param.get("Query_sql2");
         for ( int i = 0; i < 1; i++) {
-            if (param.get("TestID").contains("btree")) {
+            if (param.get("TestID").contains("txnbt")) {
+                sqlHelper.execFile(connection, TestBatchSQL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("BatchSQLOp",
+                        param.get("Batch_sql"))), tableList.get(i).trim());
+            } else if (param.get("TestID").contains("btree")) {
                 sqlHelper.execFile(connection, TestBatchSQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("BatchSQLOp",
                         param.get("Batch_sql"))), tableList.get(i).trim());
             } else {

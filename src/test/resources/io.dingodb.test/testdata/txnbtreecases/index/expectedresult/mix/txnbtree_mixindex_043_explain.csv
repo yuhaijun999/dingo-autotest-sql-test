@@ -1,0 +1,6 @@
+DingoHashJoin
+DingoGetVectorByDistance
+DingoTableScan
+DingoAggregate
+DingoValues
+"type" : "scan"

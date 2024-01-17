@@ -107,7 +107,9 @@ public class TestDDL extends BaseTestSuite{
                 String tableName = "";
                 if (!schemaList.get(i).contains("_")) {
                     tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                    if (param.get("TestID").contains("btree")) {
+                    if (param.get("TestID").contains("txnbt")) {
+                        sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    } else if (param.get("TestID").contains("btree")) {
                         sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else {
                         sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
@@ -115,7 +117,9 @@ public class TestDDL extends BaseTestSuite{
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = param.get("TestID").trim() + "_0" + i + schemaName;
-                    if (param.get("TestID").contains("btree")) {
+                    if (param.get("TestID").contains("txnbt")) {
+                        sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
+                    } else if (param.get("TestID").contains("btree")) {
                         sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else {
                         sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
@@ -134,7 +138,9 @@ public class TestDDL extends BaseTestSuite{
                     String tableName = "";
                     if (!schemaList.get(j).trim().contains("_")) {
                         tableName = param.get("TestID").trim() + "_0" + j + schemaList.get(j).trim();
-                        if (param.get("TestID").contains("btree")) {
+                        if (param.get("TestID").contains("txnbt")) {
+                            sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("btree")) {
                             sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
                         } else {
                             sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
@@ -142,7 +148,9 @@ public class TestDDL extends BaseTestSuite{
                     } else {
                         String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                         tableName = param.get("TestID").trim() + "_0" + j + schemaName;
-                        if (param.get("TestID").contains("btree")) {
+                        if (param.get("TestID").contains("txnbt")) {
+                            sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("btree")) {
                             sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
                         } else {
                             sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
