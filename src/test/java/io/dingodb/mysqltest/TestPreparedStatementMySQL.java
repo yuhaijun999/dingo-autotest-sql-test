@@ -457,6 +457,10 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
             System.out.println("输出文件大小：" + fileOutSize);
             
             Assert.assertEquals(fileOutSize, fileInSize);
+            
+            if (fileOut.exists()) {
+                fileOut.delete();
+            }
         }
     }
     

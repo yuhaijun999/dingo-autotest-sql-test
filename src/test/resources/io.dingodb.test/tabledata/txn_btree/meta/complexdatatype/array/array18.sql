@@ -1,0 +1,13 @@
+CREATE TABLE $table (
+    id int,
+    name varchar(20),
+    age int,
+    class_no int array,
+    user_info varchar array,
+    price double array,
+    run_inter date array,
+    test_time time array,
+    send_time timestamp array,
+    in_use boolean array,
+    primary key(id)
+) engine=TXN_BTREE

@@ -96,7 +96,9 @@ public class TestIndex extends BaseTestSuite {
                         tableList.add(tableName);
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                        if (param.get("TestID").contains("btree")) {
+                        if (param.get("TestID").contains("txnbt")) {
+                            sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        } else if (param.get("TestID").contains("btree")) {
                             sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                         } else {
                             sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
@@ -112,7 +114,9 @@ public class TestIndex extends BaseTestSuite {
                         tableList.add(tableName);
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaName;
-                        if (param.get("TestID").contains("btree")) {
+                        if (param.get("TestID").contains("txnbt")) {
+                            sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
+                        } else if (param.get("TestID").contains("btree")) {
                             sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                         } else {
                             sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
@@ -134,7 +138,10 @@ public class TestIndex extends BaseTestSuite {
                             String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                             tableName = param.get("TestID").trim() + "_0" + j + schemaName;
                         }
-                        if (param.get("TestID").contains("btree")) {
+
+                        if (param.get("TestID").contains("txnbt")) {
+                            sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("IndexValues", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("btree")) {
                             sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("IndexValues", value_List.get(j).trim())), tableName);
                         } else {
                             sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReader.getValue("IndexValues", value_List.get(j).trim())), tableName);
@@ -147,7 +154,9 @@ public class TestIndex extends BaseTestSuite {
                     List<String> value_List = CastUtils.construct1DListIncludeBlank(param.get("Table_value_ref").trim(),",");
                     for (int j = 0; j < value_List.size(); j++) {
                         String tableName = param.get("Case_table_dependency").trim() + "_0" + j + schemaList.get(j).trim();
-                        if (param.get("TestID").contains("btree")) {
+                        if (param.get("TestID").contains("txnbt")) {
+                            sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("IndexValues", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("btree")) {
                             sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("IndexValues", value_List.get(j).trim())), tableName);
                         } else {
                             sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReader.getValue("IndexValues", value_List.get(j).trim())), tableName);
@@ -253,8 +262,8 @@ public class TestIndex extends BaseTestSuite {
 
     @Test(priority = 1, enabled = true, dataProvider = "indexData2", dataProviderClass = YamlDataHelper.class, description = "标量和向量混合索引测试")
     public void testIndex2(LinkedHashMap<String,String> param) throws SQLException, IOException, InterruptedException, ClassNotFoundException {
-//        JDBCUtils jdbcUtils = new JDBCUtils();
-//        Connection connection = jdbcUtils.getDingoConnectionInstance();
+        JDBCUtils jdbcUtils = new JDBCUtils();
+        Connection connection = jdbcUtils.getDingoConnectionInstance();
         
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
@@ -274,7 +283,9 @@ public class TestIndex extends BaseTestSuite {
                         explainSql = explainSql.replace("$" + schemaList.get(i).trim(), tableName);
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                        if (param.get("TestID").contains("btree")) {
+                        if (param.get("TestID").contains("txnbt")) {
+                            sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        } else if (param.get("TestID").contains("btree")) {
                             sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                         } else {
                             sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
@@ -291,7 +302,9 @@ public class TestIndex extends BaseTestSuite {
                         explainSql = explainSql.replace("$" + schemaList.get(i).trim(), tableName);
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaName;
-                        if (param.get("TestID").contains("btree")) {
+                        if (param.get("TestID").contains("txnbt")) {
+                            sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
+                        } else if (param.get("TestID").contains("btree")) {
                             sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                         } else {
                             sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
@@ -314,7 +327,10 @@ public class TestIndex extends BaseTestSuite {
                             String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                             tableName = param.get("TestID").trim() + "_0" + j + schemaName;
                         }
-                        if (param.get("TestID").contains("btree")) {
+
+                        if (param.get("TestID").contains("txnbt")) {
+                            sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("IndexValues", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("btree")) {
                             sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("IndexValues", value_List.get(j).trim())), tableName);
                         } else {
                             sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReader.getValue("IndexValues", value_List.get(j).trim())), tableName);
@@ -328,7 +344,9 @@ public class TestIndex extends BaseTestSuite {
                     List<String> value_List = CastUtils.construct1DListIncludeBlank(param.get("Table_value_ref").trim(),",");
                     for (int j = 0; j < value_List.size(); j++) {
                         String tableName = param.get("Case_table_dependency").trim() + "_0" + j + schemaList.get(j).trim();
-                        if (param.get("TestID").contains("btree")) {
+                        if (param.get("TestID").contains("txnbt")) {
+                            sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("IndexValues", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("btree")) {
                             sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("IndexValues", value_List.get(j).trim())), tableName);
                         } else {
                             sqlHelper.execFile(connection, TestIndex.class.getClassLoader().getResourceAsStream(iniReader.getValue("IndexValues", value_List.get(j).trim())), tableName);
@@ -441,7 +459,7 @@ public class TestIndex extends BaseTestSuite {
             }
         }
         
-//        JDBCUtils.closeResource(connection);
+        JDBCUtils.closeResource(connection);
     }
 
     private Boolean assertSimilarityID(List<List<String>> actualList, List<List<String>> expectedList, String algorithm) {

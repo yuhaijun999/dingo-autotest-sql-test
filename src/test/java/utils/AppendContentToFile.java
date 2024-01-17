@@ -26,12 +26,17 @@ public class AppendContentToFile {
     
     public static List<String> fileList = new ArrayList<>();
     public static void main(String[] args) {
-        File folder = new File("src/test/resources/io.dingodb.test/tabledata/btree/meta/");
-        traverseFolderFirstDepth(folder);
+        File folder = new File("src/test/resources/io.dingodb.test/tabledata/txn_btree/meta/");
+//        traverseFolderFirstDepth(folder);
+        traverseFolder(folder);
 //        System.out.println(fileList);
+        String engineName = " ENGINE=TXN_BTREE";
+        int fileCount=0;
         for (String s : fileList) {
-            appendContent(s);
+            appendContent(s, engineName);
+            fileCount += 1;
         }
+        System.out.println("共修改文件数： " + fileCount);
 
     }
     
@@ -59,8 +64,8 @@ public class AppendContentToFile {
         }
     }
     
-    public static void appendContent(String filePath){
-        String content = " engine=BTREE";
+    public static void appendContent(String filePath, String content){
+//        String content = " ENGINE=TXN_BTREE";
         
         try {
             FileWriter writer = new FileWriter(filePath, true);

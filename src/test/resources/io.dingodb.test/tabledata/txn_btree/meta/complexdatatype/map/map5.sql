@@ -1,0 +1,12 @@
+CREATE TABLE $table (
+    user_info any,
+    birthday date,
+    create_time time,
+    update_time timestamp,
+    is_delete boolean,
+    name varchar(20),
+    age int,
+    amount double,
+    id int,
+    primary key(id)
+) engine=TXN_BTREE

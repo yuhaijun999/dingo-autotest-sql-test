@@ -1,0 +1,5 @@
+ID&NAME&AGE&AMOUNT&USER_INFO
+1&zhangsan&20&34.56&{address=beijing, class_no=1024}
+2&lisi&35&0.96&{address=tianjin}
+3&wangwu&8&0.0&{address=dalian, sex=male}
+4&liuyi&-56&-1834.29&{address=wuhan, sex=female, class_no=1001}
