@@ -45,7 +45,7 @@ public class DruidUtilsMySQL {
             properties.setProperty("url", jdbcUrl);
             properties.setProperty("username", USER);
             properties.setProperty("password", PASS);
-            String poolSize = String.valueOf(Runtime.getRuntime().availableProcessors() * 2);
+            String poolSize = String.valueOf(Runtime.getRuntime().availableProcessors() * 1);
             System.out.println("Mysql connection pool size: " + poolSize);
             properties.setProperty("initialSize", poolSize);
             properties.setProperty("maxActive", poolSize);
