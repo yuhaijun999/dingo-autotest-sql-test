@@ -16,36 +16,46 @@
 
 package io.dingodb.mysqltest;
 
-import io.dingodb.common.utils.MySQLUtils;
-import io.dingodb.dailytest.MySQLHelper;
+import io.dingodb.common.utils.DruidUtilsMySQL;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import utils.IniReader;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class BaseTestSuiteMySQL {
     public static IniReader mysqlIniReader;
     public static IniReader mysqlIniReaderBTREE;
-    public static MySQLHelper mySQLHelper;
+//    public static MySQLHelper mySQLHelper;
     @BeforeSuite(alwaysRun = true, enabled = true, description = "所有测试开始前的准备工作")
-    public static void beforeSuite() {
-        mySQLHelper = new MySQLHelper();
+    public static void beforeSuite() throws SQLException {
+//        mySQLHelper = new MySQLHelper();
         System.out.println("所有测试开始前，验证MySQL JDBC数据库连接正常");
-        Assert.assertNotNull(MySQLHelper.connection);
+//        Assert.assertNotNull(MySQLHelper.connection);
+        Connection connection = null;
+        Statement statement = null;
         try {
+            connection = DruidUtilsMySQL.getDruidMySQLConnection();
+            Assert.assertNotNull(connection);
             mysqlIniReader = new IniReader("src/test/resources/io.dingodb.test/ini/mysql_lsm.ini");
             mysqlIniReaderBTREE = new IniReader("src/test/resources/io.dingodb.test/ini/mysql_btree.ini");
+            statement = connection.createStatement();
+            statement.execute("set global connect_timeout=120");
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }  finally {
+            DruidUtilsMySQL.closeResource(connection, null, statement);
         }
     }
 
     @AfterSuite(alwaysRun = true, enabled = true, description = "所有测试结束后的操作")
     public static void afterSuite() {
         System.out.println("所有测试结束后，关闭MySQL JDBC数据库连接");
-        MySQLUtils.closeResource(MySQLHelper.connection);
+//        MySQLUtils.closeResource(MySQLHelper.connection);
     }
     
 //    public void dropTableAfterMethod(List<String> tableList) throws SQLException {

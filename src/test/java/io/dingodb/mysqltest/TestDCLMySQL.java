@@ -18,7 +18,7 @@ package io.dingodb.mysqltest;
 
 import datahelper.MySQLYamlDataHelper;
 import io.dingodb.common.utils.MySQLUtils;
-import io.dingodb.dailytest.MySQLHelper;
+import io.dingodb.dailytest.MySQLHelperDruid;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
@@ -37,20 +37,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class TestDCLMySQL extends BaseTestSuiteMySQL {
-    private static MySQLHelper mySQLHelper;
-    public static Connection myConnection;
+    private static MySQLHelperDruid mySQLHelperDruid;
     private static HashSet<String> createTableSet = new HashSet<>();
 
 
     @BeforeClass (alwaysRun = true)
     public static void setupAll() throws SQLException, IOException, ClassNotFoundException {
-        mySQLHelper = new MySQLHelper();
-        MySQLUtils mySQLUtils = new MySQLUtils();
-        myConnection = mySQLUtils.getMySQLConnectionInstance();
-        Assert.assertNotNull(myConnection);
-//        mySQLHelper = new MySQLHelper();
-//        myConnection = DruidUtils.getDruidMySQLConnection();
-//        Assert.assertNotNull(myConnection);
+        mySQLHelperDruid = new MySQLHelperDruid();
     }
 
     @AfterClass (alwaysRun = true)
@@ -59,11 +52,10 @@ public class TestDCLMySQL extends BaseTestSuiteMySQL {
             List<String> finalTableList = MySQLUtils.getTableList();
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
-                    mySQLHelper.doDropTable(myConnection, s);
+                    mySQLHelperDruid.doDropTable(s);
                 }
             }
         }
-        MySQLUtils.closeResource(myConnection);
     }
 
     @BeforeMethod (alwaysRun = true)
@@ -84,13 +76,13 @@ public class TestDCLMySQL extends BaseTestSuiteMySQL {
         String passStr = param.get("Pass_str");
         String hostStr = param.get("Host").trim();
         String createSql = param.get("Create_state");
-        mySQLHelper.execSql(myConnection, createSql);
+        mySQLHelperDruid.execSql(createSql);
         String queryUser = param.get("Query_user");
         if (param.get("Validation_type").equals("csv_containsAll")) {
             String resultFile = param.get("Expected_user").trim();
             List<List<String>> expectedUser = ParseCsv.splitCsvString(resultFile,",");
             System.out.println("Expected: " + expectedUser);
-            List<List<String>> actualUser = mySQLHelper.statementQueryWithHead(myConnection, queryUser);
+            List<List<String>> actualUser = mySQLHelperDruid.statementQueryWithHead(queryUser);
             System.out.println("Actual: " + actualUser);
             Assert.assertTrue(actualUser.containsAll(expectedUser));
             Assert.assertTrue(expectedUser.containsAll(actualUser));
@@ -103,9 +95,9 @@ public class TestDCLMySQL extends BaseTestSuiteMySQL {
         }
         
         if (hostStr.length() > 0) {
-            mySQLHelper.execSql(myConnection, "drop user '" + userName + "'@'" + hostStr + "'");
+            mySQLHelperDruid.execSql("drop user '" + userName + "'@'" + hostStr + "'");
         } else {
-            mySQLHelper.execSql(myConnection, "drop user '" + userName + "'");
+            mySQLHelperDruid.execSql("drop user '" + userName + "'");
         }
     }
 }

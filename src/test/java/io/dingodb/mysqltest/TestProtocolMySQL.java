@@ -19,7 +19,7 @@ package io.dingodb.mysqltest;
 import datahelper.MySQLYamlDataHelper;
 import io.dingodb.common.utils.CommonArgs;
 import io.dingodb.common.utils.MySQLUtils;
-import io.dingodb.dailytest.MySQLHelper;
+import io.dingodb.dailytest.MySQLHelperDruid;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
@@ -39,21 +39,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class TestProtocolMySQL extends BaseTestSuiteMySQL {
-    private static MySQLHelper mySQLHelper;
-    public static Connection myConnection;
+    private static MySQLHelperDruid mySQLHelperDruid;
     private static HashSet<String> createTableSet = new HashSet<>();
     private static HashSet<String> createUserSet = new HashSet<>();
 
 
     @BeforeClass (alwaysRun = true)
     public static void setupAll() throws SQLException, IOException, ClassNotFoundException {
-        mySQLHelper = new MySQLHelper();
-        MySQLUtils mySQLUtils = new MySQLUtils();
-        myConnection = mySQLUtils.getMySQLConnectionInstance();
-        Assert.assertNotNull(myConnection);
-//        mySQLHelper = new MySQLHelper();
-//        myConnection = DruidUtils.getDruidMySQLConnection();
-//        Assert.assertNotNull(myConnection);
+        mySQLHelperDruid = new MySQLHelperDruid();
     }
 
     @AfterClass (alwaysRun = true)
@@ -62,18 +55,16 @@ public class TestProtocolMySQL extends BaseTestSuiteMySQL {
             List<String> finalTableList = MySQLUtils.getTableList();
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
-                    mySQLHelper.doDropTable(myConnection, s);
+                    mySQLHelperDruid.doDropTable(s);
                 }
             }
         }
 
         if(createUserSet.size() > 0) {
             for (String s : createUserSet) {
-                mySQLHelper.execSql(myConnection, "drop user " + s);
+                mySQLHelperDruid.execSql("drop user " + s);
             }
         }
-        
-        MySQLUtils.closeResource(myConnection);
     }
 
     @BeforeMethod (alwaysRun = true)
@@ -94,7 +85,7 @@ public class TestProtocolMySQL extends BaseTestSuiteMySQL {
 
         String operationSql = param.get("Op_sql");
         if (operationSql.length()>0) {
-            mySQLHelper.execSql(myConnection, operationSql);
+            mySQLHelperDruid.execSql(operationSql);
         }
         
         if (param.get("Table_used").trim().length() > 0) {
@@ -122,7 +113,7 @@ public class TestProtocolMySQL extends BaseTestSuiteMySQL {
                 String resultFile = param.get("Query_result").trim();
                 List<List<String>> expectedResult = ParseCsv.splitCsvString(resultFile,"&");
                 System.out.println("Expected: " + expectedResult);
-                List<List<String>> actualResult = mySQLHelper.statementQueryWithHead(myConnection, querySql);
+                List<List<String>> actualResult = mySQLHelperDruid.statementQueryWithHead(querySql);
                 System.out.println("Actual: " + actualResult);
                 Assert.assertEquals(actualResult, expectedResult);
             }
@@ -131,7 +122,7 @@ public class TestProtocolMySQL extends BaseTestSuiteMySQL {
                 String resultFile = param.get("Query_result").trim();
                 List<List<String>> expectedResult = ParseCsv.splitCsvString(resultFile,"&");
                 System.out.println("Expected: " + expectedResult);
-                List<List<String>> actualResult = mySQLHelper.statementQueryWithHead(myConnection, querySql);
+                List<List<String>> actualResult = mySQLHelperDruid.statementQueryWithHead(querySql);
                 System.out.println("Actual: " + actualResult);
                 Assert.assertTrue(actualResult.containsAll(expectedResult));
                 Assert.assertTrue(expectedResult.containsAll(actualResult));
@@ -148,7 +139,7 @@ public class TestProtocolMySQL extends BaseTestSuiteMySQL {
                 List<List<String>> expectedResult = ParseCsv.splitCsvString(resultFile,"&");
                 System.out.println("Expected: " + expectedResult);
                 List<Integer> colIndexList = Arrays.asList(2,3);
-                List<List<String>> actualResult = mySQLHelper.statementQueryWithSpecifiedColIndex(myConnection, querySql, colIndexList);
+                List<List<String>> actualResult = mySQLHelperDruid.statementQueryWithSpecifiedColIndex(querySql, colIndexList);
                 System.out.println("Actual: " + actualResult);
                 Assert.assertEquals(actualResult, expectedResult);
             }
@@ -157,7 +148,7 @@ public class TestProtocolMySQL extends BaseTestSuiteMySQL {
                 List<List<String>> expectedResult = ParseCsv.splitCsvString(resultFile,"&");
                 System.out.println("Expected: " + expectedResult);
                 List<Integer> colIndexList = Arrays.asList(2,3);
-                List<List<String>> actualResult = mySQLHelper.statementQueryWithSpecifiedColIndex(myConnection, querySql, colIndexList);
+                List<List<String>> actualResult = mySQLHelperDruid.statementQueryWithSpecifiedColIndex(querySql, colIndexList);
                 System.out.println("Actual: " + actualResult);
                 Assert.assertTrue(actualResult.containsAll(expectedResult));
                 Assert.assertTrue(expectedResult.containsAll(actualResult));
@@ -168,7 +159,7 @@ public class TestProtocolMySQL extends BaseTestSuiteMySQL {
                 List<List<String>> expectedResult = ParseCsv.splitCsvString(resultFile,"&");
                 System.out.println("Expected: " + expectedResult);
                 List<Integer> colIndexList = Arrays.asList(2);
-                List<List<String>> actualResult = mySQLHelper.statementQueryWithSpecifiedColIndex(myConnection, querySql, colIndexList);
+                List<List<String>> actualResult = mySQLHelperDruid.statementQueryWithSpecifiedColIndex(querySql, colIndexList);
                 System.out.println("Actual: " + actualResult);
                 Assert.assertEquals(actualResult, expectedResult);
             }
@@ -177,7 +168,7 @@ public class TestProtocolMySQL extends BaseTestSuiteMySQL {
                 List<List<String>> expectedResult = ParseCsv.splitCsvString(resultFile,"&");
                 System.out.println("Expected: " + expectedResult);
                 List<Integer> colIndexList = Arrays.asList(2);
-                List<List<String>> actualResult = mySQLHelper.statementQueryWithSpecifiedColIndex(myConnection, querySql, colIndexList);
+                List<List<String>> actualResult = mySQLHelperDruid.statementQueryWithSpecifiedColIndex(querySql, colIndexList);
                 System.out.println("Actual: " + actualResult);
                 Assert.assertTrue(actualResult.containsAll(expectedResult));
                 Assert.assertTrue(expectedResult.containsAll(actualResult));

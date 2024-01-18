@@ -18,7 +18,7 @@ package io.dingodb.mysqltest;
 
 import datahelper.MySQLYamlDataHelper;
 import io.dingodb.common.utils.MySQLUtils;
-import io.dingodb.dailytest.MySQLHelper;
+import io.dingodb.dailytest.MySQLHelperDruid;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
@@ -30,7 +30,6 @@ import utils.CastUtils;
 import utils.ParseCsv;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -38,21 +37,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class TestDDLMySQL extends BaseTestSuiteMySQL{
-    private static MySQLHelper mySQLHelper;
-    public static Connection myConnection;
+    private static MySQLHelperDruid mySQLHelperDruid;
     private static HashSet<String> createTableSet = new HashSet<>();
     private static HashSet<String> createSchemaSet = new HashSet<>();
     private static HashSet<String> schemaTableSet = new HashSet<>();
 
     @BeforeClass (alwaysRun = true)
     public static void setupAll() throws SQLException, IOException, ClassNotFoundException {
-        mySQLHelper = new MySQLHelper();
-        MySQLUtils mySQLUtils = new MySQLUtils();
-        myConnection = mySQLUtils.getMySQLConnectionInstance();
-        Assert.assertNotNull(myConnection);
-//        mySQLHelper = new MySQLHelper();
-//        myConnection = DruidUtils.getDruidMySQLConnection();
-//        Assert.assertNotNull(myConnection);
+        mySQLHelperDruid = new MySQLHelperDruid();
     }
 
     @AfterClass (alwaysRun = true)
@@ -61,14 +53,14 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
             List<String> finalTableList = MySQLUtils.getTableList();
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
-                    mySQLHelper.doDropTable(myConnection, s);
+                    mySQLHelperDruid.doDropTable(s);
                 }
             }
         }
 
         System.out.println(schemaTableSet);
         for (String s : schemaTableSet) {
-            mySQLHelper.doDropTable(myConnection, s);
+            mySQLHelperDruid.doDropTable(s);
         }
 
         if(createSchemaSet.size() > 0) {
@@ -76,12 +68,10 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
             List<String> finalSchemaList = MySQLUtils.getSchemaList();
             for (String s : createSchemaSet) {
                 if (finalSchemaList.contains(s.toUpperCase())) {
-                    mySQLHelper.doDropSchema(myConnection, s);
+                    mySQLHelperDruid.doDropSchema(s);
                 }
             }
         }
-        
-        MySQLUtils.closeResource(myConnection);
     }
 
     @BeforeMethod (alwaysRun = true)
@@ -107,17 +97,17 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                 if (!schemaList.get(i).contains("_")) {
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                     if (param.get("TestID").contains("btree")) {
-                        mySQLHelper.execFile(myConnection, TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else {
-                        mySQLHelper.execFile(myConnection, TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     }
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
                     if (param.get("TestID").contains("btree")) {
-                        mySQLHelper.execFile(myConnection, TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                        mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else {
-                        mySQLHelper.execFile(myConnection, TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
+                        mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
                     }
                 }
                 ddlSql = ddlSql.replace("$" + schemaList.get(i).trim(), tableName);
@@ -134,17 +124,17 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                     if (!schemaList.get(j).trim().contains("_")) {
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaList.get(j).trim();
                         if (param.get("TestID").contains("btree")) {
-                            mySQLHelper.execFile(myConnection, TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                            mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
                         } else {
-                            mySQLHelper.execFile(myConnection, TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                            mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
                         }
                     } else {
                         String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaName;
                         if (param.get("TestID").contains("btree")) {
-                            mySQLHelper.execFile(myConnection, TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                            mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
                         } else {
-                            mySQLHelper.execFile(myConnection, TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                            mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
                         }
                     }
                 }
@@ -196,8 +186,8 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                 expectedResult = ParseCsv.splitCsvString(resultFile,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            mySQLHelper.execBatchSqlWithState(myConnection, ddlSql);
-            List<List<String>> actualResult = mySQLHelper.statementQueryWithHead(myConnection, querySql);
+            mySQLHelperDruid.execBatchSqlWithState(ddlSql);
+            List<List<String>> actualResult = mySQLHelperDruid.statementQueryWithHead(querySql);
             System.out.println("Actual: " + actualResult);
             Assert.assertEquals(actualResult, expectedResult);
         } else if (param.get("Validation_type").equals("csv_containsAll")) {
@@ -209,8 +199,8 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                 expectedResult = ParseCsv.splitCsvString(resultFile,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            mySQLHelper.execBatchSqlWithState(myConnection, ddlSql);
-            List<List<String>> actualResult = mySQLHelper.statementQueryWithHead(myConnection, querySql);
+            mySQLHelperDruid.execBatchSqlWithState(ddlSql);
+            List<List<String>> actualResult = mySQLHelperDruid.statementQueryWithHead(querySql);
             System.out.println("Actual: " + actualResult);
             Assert.assertTrue(actualResult.containsAll(expectedResult));
             Assert.assertTrue(expectedResult.containsAll(actualResult));
@@ -223,12 +213,12 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                 expectedResult = ParseCsv.splitCsvString(resultFile,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            mySQLHelper.execBatchSqlWithState(myConnection, ddlSql);
-            List<List<String>> actualResult = mySQLHelper.statementQueryWithHead(myConnection, querySql);
+            mySQLHelperDruid.execBatchSqlWithState(ddlSql);
+            List<List<String>> actualResult = mySQLHelperDruid.statementQueryWithHead(querySql);
             System.out.println("Actual: " + actualResult);
             Assert.assertTrue(actualResult.containsAll(expectedResult));
         } else if (param.get("Validation_type").equals("table_assert")) {
-            mySQLHelper.execSql(myConnection, ddlSql);
+            mySQLHelperDruid.execSql(ddlSql);
             String drop_table_name = "";
             if (ddlSql.contains("drop")) {
                 if (ddlSql.contains("if exists")) {
@@ -240,12 +230,12 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
             List<String> existTableList = MySQLUtils.getTableList();
             Assert.assertFalse(existTableList.contains(drop_table_name));
         } else if (param.get("Validation_type").equals("justExec")) {
-            mySQLHelper.execBatchSqlWithState(myConnection, ddlSql);
+            mySQLHelperDruid.execBatchSqlWithState(ddlSql);
         }
 
 //        if (tableList.size() > 0) {
 //            for (String s : tableList) {
-//                mySQLHelper.doDropTable(s);
+//                mySQLHelperDruid.doDropTable(s);
 //            }
 //        }
     }

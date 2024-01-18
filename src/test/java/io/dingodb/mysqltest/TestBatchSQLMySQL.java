@@ -17,10 +17,9 @@
 package io.dingodb.mysqltest;
 
 import datahelper.MySQLYamlDataHelper;
-import io.dingodb.common.utils.DruidUtils;
 import io.dingodb.common.utils.JDBCUtils;
 import io.dingodb.common.utils.MySQLUtils;
-import io.dingodb.dailytest.MySQLHelper;
+import io.dingodb.dailytest.MySQLHelperDruid;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
@@ -32,7 +31,6 @@ import utils.CastUtils;
 import utils.ParseCsv;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,22 +38,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
-    private static MySQLHelper mySQLHelper;
-    public static Connection myConnection;
+    private static MySQLHelperDruid mySQLHelperDruid;
     private static HashSet<String> createTableSet = new HashSet<>();
     private static HashSet<String> createSchemaSet = new HashSet<>();
 
 
     @BeforeClass (alwaysRun = true)
     public static void setupAll() throws SQLException, IOException, ClassNotFoundException {
-//        mySQLHelper = new MySQLHelper();
-//        MySQLUtils mySQLUtils = new MySQLUtils();
-//        myConnection = mySQLUtils.getMySQLConnectionInstance();
-//        Assert.assertNotNull(myConnection);
-        mySQLHelper = new MySQLHelper();
-        myConnection = DruidUtils.getDruidMySQLConnection();
-        Assert.assertNotNull(myConnection);
-        
+        mySQLHelperDruid = new MySQLHelperDruid();
     }
 
     @AfterClass (alwaysRun = true)
@@ -64,7 +54,7 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
             List<String> finalTableList = MySQLUtils.getTableList();
             for (String s : createTableSet) {
                 if (finalTableList.contains("MYSQL_" + s.toUpperCase())) {
-                    mySQLHelper.doDropTable(myConnection,"mysql_" + s);
+                    mySQLHelperDruid.doDropTable("mysql_" + s);
                 }
             }
         }
@@ -76,16 +66,14 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
                 System.out.println(finalSchemaTableList);
                 if (finalSchemaTableList.size() > 0) {
                     for (String t : finalSchemaTableList) {
-                        mySQLHelper.doDropTable(myConnection,sc.toUpperCase() + "." + t);
+                        mySQLHelperDruid.doDropTable(sc.toUpperCase() + "." + t);
                     }
                 }
                 if (sc.trim().length() > 0) {
-                    mySQLHelper.doDropSchema(myConnection, sc.toUpperCase());
+                    mySQLHelperDruid.doDropSchema(sc.toUpperCase());
                 }
             }
         }
-        
-        MySQLUtils.closeResource(myConnection);
     }
 
     @BeforeMethod(alwaysRun = true, enabled = true)
@@ -112,10 +100,10 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
         String querySql2 = param.get("Query_sql2");
         for ( int i = 0; i < 1; i++) {
             if (param.get("TestID").contains("btree")) {
-                mySQLHelper.execFile(myConnection, TestBatchSQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("BatchSQLOp",
+                mySQLHelperDruid.execFile(TestBatchSQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("BatchSQLOp",
                         param.get("Batch_sql"))), "mysql_" + tableList.get(i).trim());
             } else {
-                mySQLHelper.execFile(myConnection, TestBatchSQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("BatchSQLOp",
+                mySQLHelperDruid.execFile(TestBatchSQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("BatchSQLOp",
                         param.get("Batch_sql"))), "mysql_" + tableList.get(i).trim());
             }
             if (querySql1.trim().length() > 0) {
@@ -137,7 +125,7 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
                     expectedResult1 = ParseCsv.splitCsvString(resultFile1,"&");
                 }
                 System.out.println("Expected result1: " + expectedResult1);
-                List<List<String>> actualResult1 = mySQLHelper.statementQueryWithHead(myConnection, querySql1);
+                List<List<String>> actualResult1 = mySQLHelperDruid.statementQueryWithHead(querySql1);
                 System.out.println("Actual result1: " + actualResult1);
                 Assert.assertEquals(actualResult1, expectedResult1);
             }
@@ -151,7 +139,7 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
                     expectedResult2 = ParseCsv.splitCsvString(resultFile2,"&");
                 }
                 System.out.println("Expected result2: " + expectedResult2);
-                List<List<String>> actualResult2 = mySQLHelper.statementQueryWithHead(myConnection, querySql2);
+                List<List<String>> actualResult2 = mySQLHelperDruid.statementQueryWithHead(querySql2);
                 System.out.println("Actual result2: " + actualResult2);
                 Assert.assertEquals(actualResult2, expectedResult2);
             }
@@ -166,7 +154,7 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
                     expectedResult1 = ParseCsv.splitCsvString(resultFile1,"&");
                 }
                 System.out.println("Expected result1: " + expectedResult1);
-                List<List<String>> actualResult1 = mySQLHelper.statementQueryWithHead(myConnection, querySql1);
+                List<List<String>> actualResult1 = mySQLHelperDruid.statementQueryWithHead(querySql1);
                 System.out.println("Actual result1: " + actualResult1);
                 Assert.assertTrue(actualResult1.containsAll(expectedResult1));
                 Assert.assertTrue(expectedResult1.containsAll(actualResult1));
@@ -181,7 +169,7 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
                     expectedResult2 = ParseCsv.splitCsvString(resultFile2,"&");
                 }
                 System.out.println("Expected result2: " + expectedResult2);
-                List<List<String>> actualResult2 = mySQLHelper.statementQueryWithHead(myConnection, querySql2);
+                List<List<String>> actualResult2 = mySQLHelperDruid.statementQueryWithHead(querySql2);
                 System.out.println("Actual result2: " + actualResult2);
                 Assert.assertTrue(actualResult2.containsAll(expectedResult2));
                 Assert.assertTrue(expectedResult2.containsAll(actualResult2));
@@ -191,9 +179,9 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
         if (tableList.size() > 0) {
             for (String ts : tableList) {
                 if (param.get("Sub_component").trim().equalsIgnoreCase("Schema")) {
-                    mySQLHelper.doDropTable(myConnection, ts);
+                    mySQLHelperDruid.doDropTable(ts);
                 } else {
-                    mySQLHelper.doDropTable(myConnection,"mysql_" + ts);
+                    mySQLHelperDruid.doDropTable("mysql_" + ts);
                 }
                 
             }
