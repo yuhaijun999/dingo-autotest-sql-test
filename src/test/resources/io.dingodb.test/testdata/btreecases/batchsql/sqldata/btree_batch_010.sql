@@ -1,4 +1,4 @@
-CREATE DATABASE jarvex_btree;
+CREATE DATABASE IF NOT EXISTS jarvex_btree;
 USE jarvex_btree;
 DROP TABLE IF EXISTS jarvex_btree.`CHAT_QU_DATA_BTREE`;
 CREATE TABLE jarvex_btree.`CHAT_QU_DATA_BTREE` (

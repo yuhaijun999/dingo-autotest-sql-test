@@ -16,7 +16,9 @@
 
 package io.dingodb.mysqltest;
 
+import io.dingodb.common.utils.DruidUtilsMySQL;
 import io.dingodb.common.utils.MySQLUtils;
+import io.dingodb.dailytest.MySQLHelperDruid;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -34,6 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TestBVTMySQL extends BaseTestSuiteMySQL {
+    private static MySQLHelperDruid mySQLHelperDruid;
     public static Connection myConnection;
     public static String tableName = "mysqlbvttest";
     public static String tableName2 = "autoIdStateTest1";
@@ -53,15 +56,13 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
     
     @BeforeClass(alwaysRun = true, description = "测试开始前验证数据库连接")
     public static void setUpAll() throws SQLException, IOException, ClassNotFoundException {
-        MySQLUtils mySQLUtils = new MySQLUtils();
-        myConnection = mySQLUtils.getMySQLConnectionInstance();
-//        myConnection = DruidUtils.getDruidMySQLConnection();
-//        Assert.assertNotNull(myConnection);
+        myConnection = DruidUtilsMySQL.getDruidMySQLConnection();
+        Assert.assertNotNull(myConnection);
     }
 
     @AfterClass(alwaysRun = true, description = "测试结束后，关闭数据库连接资源")
     public static void tearDownAll() {
-        MySQLUtils.closeResource(myConnection);
+        DruidUtilsMySQL.closeResource(myConnection, null, null);
     }
     
     @Test(enabled = true, description = "测试创建表")

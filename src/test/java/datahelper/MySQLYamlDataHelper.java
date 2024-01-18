@@ -69,7 +69,7 @@ public class MySQLYamlDataHelper extends BaseDataHelper{
         return getMultiEngineCasesData(excelPathLSM, excelPathBTREE, excelPathBTREE);
     }
 
-    @DataProvider (name = "mysqlProtocolData", parallel = true)
+    @DataProvider (name = "mysqlProtocolData", parallel = false)
     public Object[][] mysqlProtocolCases() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/protocol/mysql_protocol_cases.xlsx";
         String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/protocol/mysql_protocol_cases_btree.xlsx";
