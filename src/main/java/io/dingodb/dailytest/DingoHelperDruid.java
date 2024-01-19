@@ -600,7 +600,7 @@ public class DingoHelperDruid {
         try {
             connection = DruidUtilsDingo.getDruidDingoConnection();
             statement = connection.createStatement();
-            String sql = "drop table " + tableName;
+            String sql = "drop table if exists " + tableName;
             statement.execute(sql);
         } finally {
             DruidUtilsDingo.closeResource(connection, null, statement);
@@ -613,7 +613,7 @@ public class DingoHelperDruid {
         try {
             connection = DruidUtilsDingo.getDruidDingoConnection();
             statement = connection.createStatement();
-            String sql = "drop schema " + schemaName;
+            String sql = "drop schema if exists " + schemaName;
             statement.execute(sql);
         } finally {
             DruidUtilsDingo.closeResource(connection, null, statement);
@@ -626,7 +626,7 @@ public class DingoHelperDruid {
         try {
             connection = DruidUtilsDingo.getDruidDingoConnection();
             statement = connection.createStatement();
-            String sql = "drop database " + databaseName;
+            String sql = "drop database if exists " + databaseName;
             statement.execute(sql);
         } finally {
             DruidUtilsDingo.closeResource(connection, null, statement);

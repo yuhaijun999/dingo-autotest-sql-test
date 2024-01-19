@@ -17,8 +17,8 @@
 package io.dingodb.dingotest;
 
 import datahelper.YamlDataHelper;
-import io.dingodb.common.utils.JDBCUtils;
-import io.dingodb.dailytest.SQLHelper;
+import io.dingodb.common.utils.DruidUtilsDingo;
+import io.dingodb.dailytest.DingoHelperDruid;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
@@ -30,7 +30,6 @@ import utils.CastUtils;
 import utils.ParseCsv;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -38,28 +37,24 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class TestBatchSQL extends BaseTestSuite {
-    private static SQLHelper sqlHelper;
-    public static Connection connection;
+    private static DingoHelperDruid dingoHelperDruid;
     private static HashSet<String> createTableSet = new HashSet<>();
     private static HashSet<String> createSchemaSet = new HashSet<>();
 
 
     @BeforeClass (alwaysRun = true)
     public static void setupAll() throws SQLException, ClassNotFoundException {
-        sqlHelper = new SQLHelper();
-        JDBCUtils jdbcUtils = new JDBCUtils();
-        connection = jdbcUtils.getDingoConnectionInstance();
-        Assert.assertNotNull(connection);
+        dingoHelperDruid = new DingoHelperDruid();
     }
 
     @AfterClass (alwaysRun = true)
     public static void tearDownAll() throws SQLException, IOException, ClassNotFoundException {
         System.out.println(createTableSet);
         if(createTableSet.size() > 0) {
-            List<String> finalTableList = JDBCUtils.getTableList();
+            List<String> finalTableList = DruidUtilsDingo.getTableList();
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
-                    sqlHelper.doDropTable(connection, s);
+                    dingoHelperDruid.doDropTable(s);
                 }
             }
         }
@@ -67,19 +62,17 @@ public class TestBatchSQL extends BaseTestSuite {
         System.out.println(createSchemaSet);
         if(createSchemaSet.size() > 0) {
             for (String sc: createSchemaSet) {
-                List<String> finalSchemaTableList = JDBCUtils.getTableListWithSchema(sc);
+                List<String> finalSchemaTableList = DruidUtilsDingo.getTableListWithSchema(sc);
                 if (finalSchemaTableList.size() > 0) {
                     for (String t : finalSchemaTableList) {
-                        sqlHelper.doDropTable(connection,sc.toUpperCase() + "." + t);
+                        dingoHelperDruid.doDropTable(sc.toUpperCase() + "." + t);
                     }
                 }
                 if (sc.trim().length() > 0) {
-                    sqlHelper.doDropSchema(connection, sc.toUpperCase());
+                    dingoHelperDruid.doDropSchema(sc.toUpperCase());
                 }
             }
         }
-        
-        JDBCUtils.closeResource(connection);
     }
 
     @BeforeMethod(enabled = true)
@@ -92,8 +85,6 @@ public class TestBatchSQL extends BaseTestSuite {
 
     @Test(priority = 0, enabled = true, dataProvider = "sqlBatchData", dataProviderClass = YamlDataHelper.class, description = "验证批量执行sql语句")
     public void testBatchSQL(LinkedHashMap<String,String> param) throws SQLException, IOException {
-//        JDBCUtils jdbcUtils = new JDBCUtils();
-//        Connection connection = jdbcUtils.getDingoConnectionInstance();
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
@@ -108,13 +99,13 @@ public class TestBatchSQL extends BaseTestSuite {
         String querySql2 = param.get("Query_sql2");
         for ( int i = 0; i < 1; i++) {
             if (param.get("TestID").contains("txnbt")) {
-                sqlHelper.execFile(connection, TestBatchSQL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("BatchSQLOp",
+                dingoHelperDruid.execFile(TestBatchSQL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("BatchSQLOp",
                         param.get("Batch_sql"))), tableList.get(i).trim());
             } else if (param.get("TestID").contains("btree")) {
-                sqlHelper.execFile(connection, TestBatchSQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("BatchSQLOp",
+                dingoHelperDruid.execFile(TestBatchSQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("BatchSQLOp",
                         param.get("Batch_sql"))), tableList.get(i).trim());
             } else {
-                sqlHelper.execFile(connection, TestBatchSQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("BatchSQLOp",
+                dingoHelperDruid.execFile(TestBatchSQL.class.getClassLoader().getResourceAsStream(iniReader.getValue("BatchSQLOp",
                         param.get("Batch_sql"))), tableList.get(i).trim());
             }
             if (querySql1.trim().length() > 0) {
@@ -136,7 +127,7 @@ public class TestBatchSQL extends BaseTestSuite {
                     expectedResult1 = ParseCsv.splitCsvString(resultFile1,"&");
                 }
                 System.out.println("Expected result1: " + expectedResult1);
-                List<List<String>> actualResult1 = sqlHelper.statementQueryWithHead(connection, querySql1);
+                List<List<String>> actualResult1 = dingoHelperDruid.statementQueryWithHead(querySql1);
                 System.out.println("Actual result1: " + actualResult1);
                 Assert.assertEquals(actualResult1, expectedResult1);
             }
@@ -150,7 +141,7 @@ public class TestBatchSQL extends BaseTestSuite {
                     expectedResult2 = ParseCsv.splitCsvString(resultFile2,"&");
                 }
                 System.out.println("Expected result2: " + expectedResult2);
-                List<List<String>> actualResult2 = sqlHelper.statementQueryWithHead(connection, querySql2);
+                List<List<String>> actualResult2 = dingoHelperDruid.statementQueryWithHead(querySql2);
                 System.out.println("Actual result2: " + actualResult2);
                 Assert.assertEquals(actualResult2, expectedResult2);
             }
@@ -165,7 +156,7 @@ public class TestBatchSQL extends BaseTestSuite {
                     expectedResult1 = ParseCsv.splitCsvString(resultFile1,"&");
                 }
                 System.out.println("Expected result1: " + expectedResult1);
-                List<List<String>> actualResult1 = sqlHelper.statementQueryWithHead(connection, querySql1);
+                List<List<String>> actualResult1 = dingoHelperDruid.statementQueryWithHead(querySql1);
                 System.out.println("Actual result1: " + actualResult1);
                 Assert.assertTrue(actualResult1.containsAll(expectedResult1));
                 Assert.assertTrue(expectedResult1.containsAll(actualResult1));
@@ -180,7 +171,7 @@ public class TestBatchSQL extends BaseTestSuite {
                     expectedResult2 = ParseCsv.splitCsvString(resultFile2,"&");
                 }
                 System.out.println("Expected result2: " + expectedResult2);
-                List<List<String>> actualResult2 = sqlHelper.statementQueryWithHead(connection, querySql2);
+                List<List<String>> actualResult2 = dingoHelperDruid.statementQueryWithHead(querySql2);
                 System.out.println("Actual result2: " + actualResult2);
                 Assert.assertTrue(actualResult2.containsAll(expectedResult2));
                 Assert.assertTrue(expectedResult2.containsAll(actualResult2));
@@ -189,10 +180,8 @@ public class TestBatchSQL extends BaseTestSuite {
 
         if (tableList.size() > 0) {
             for (String s : tableList) {
-                sqlHelper.doDropTable(connection, s);
+                dingoHelperDruid.doDropTable(s);
             }
         }
-
-//        JDBCUtils.closeResource(connection);
     }
 }

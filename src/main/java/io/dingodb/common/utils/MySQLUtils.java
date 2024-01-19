@@ -143,6 +143,7 @@ public class MySQLUtils {
             schemaList.add(resultSetSchema.getString(1).toUpperCase());
         }
         resultSetSchema.close();
+        closeResource(connection);
         return schemaList;
     }
     
@@ -163,6 +164,7 @@ public class MySQLUtils {
         }
         rst.close();
         resultSetSchema.close();
+        closeResource(connection);
         return tableList;
     }
     

@@ -118,6 +118,7 @@ public class JDBCUtils {
         }
         
         resultSetSchema.close();
+        closeResource(connection);
         return schemaList;
     }
     
@@ -139,6 +140,7 @@ public class JDBCUtils {
         }
         rst.close();
         resultSetSchema.close();
+        closeResource(connection);
         return tableList;
     }
     
@@ -160,6 +162,7 @@ public class JDBCUtils {
         }
         rst.close();
         resultSetSchema.close();
+        closeResource(connection);
         return tableList;
     }
     
@@ -180,6 +183,7 @@ public class JDBCUtils {
         }
         rst.close();
         resultSetSchema.close();
+        closeResource(connection);
         return tableList;
     }
     

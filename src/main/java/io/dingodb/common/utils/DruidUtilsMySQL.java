@@ -21,27 +21,25 @@ import com.alibaba.druid.pool.DruidDataSourceFactory;
 import javax.sql.DataSource;
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import java.util.Properties;
 
-public class DruidUtilsMySQL {
+public class DruidUtilsMySQL extends BaseJDBCUtils {
     static final String USER = CommonArgs.getDefaultConnectUser();
     static final String PASS = CommonArgs.getDefaultConnectPass();
     static final String SCHEMANAME = "DINGO";
     private static DataSource source;
     static {
+        Properties properties = null;
         try {
-            Properties properties = new Properties();
+            properties = new Properties();
             InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("druid_mysql.properties");
             properties.load(inputStream);
             String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
             String mysql_port = CommonArgs.getDefaultMySQLPort();
             String timeZone = "Asia/Shanghai";
-//            String jdbcUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/" + schemaName + "?serverTimezone=" + timeZone + "&autoReconnect=true&failOverReadOnly=false";
-            String jdbcUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/" + SCHEMANAME + "?serverTimezone=" + timeZone + "&connect_timeout=60";
+            String jdbcUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/" + SCHEMANAME + "?serverTimezone=" + timeZone + "&connectTimeout=120000&useServerPrepStmts=true&cachePrepStmts=true&useSSL=false";
             properties.setProperty("url", jdbcUrl);
             properties.setProperty("username", USER);
             properties.setProperty("password", PASS);
@@ -56,59 +54,99 @@ public class DruidUtilsMySQL {
     }
     
     public static Connection getDruidMySQLConnection() throws SQLException {
-        Connection connection = source.getConnection();
-        return connection;
-    }
-    
-    public static void closeResource(Connection connection, ResultSet rs, Statement stm) {
-        try{
-            if(rs != null) {
-                rs.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        try{
-            if(stm != null) {
-                stm.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        try{
-            if(connection != null) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        Connection myConnection = source.getConnection();
+        return myConnection;
     }
 
-    public static void closeResourcePS(Connection connection, ResultSet rs, PreparedStatement ps) {
-        try{
-            if(rs != null) {
-                rs.close();
-            }
-        } catch (SQLException e) {
+    private static DataSource sourceNoSchema;
+    public static Connection getDruidMySQLConnectionWithoutSchema() throws SQLException {
+        Properties properties = null;
+        try {
+            properties = new Properties();
+            InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("druid_mysql.properties");
+            properties.load(inputStream);
+            String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
+            String mysql_port = CommonArgs.getDefaultMySQLPort();
+            String timeZone = "Asia/Shanghai";
+            String jdbcUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "?serverTimezone=" + timeZone + "&connectTimeout=120000&useServerPrepStmts=true&cachePrepStmts=true";
+            properties.setProperty("url", jdbcUrl);
+            properties.setProperty("username", USER);
+            properties.setProperty("password", PASS);
+            properties.setProperty("initialSize", "2");
+            properties.setProperty("maxActive", "2");
+            sourceNoSchema = DruidDataSourceFactory.createDataSource(properties);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        Connection myConnection = sourceNoSchema.getConnection();
+        return myConnection;
+    }
 
-        try{
-            if(ps != null) {
-                ps.close();
-            }
-        } catch (SQLException e) {
+    private static DataSource sourceWithSchema;
+    public static Connection getDruidMySQLConnectionWithSchema(String schemaName) throws SQLException {
+        Properties properties = null;
+        try {
+            properties = new Properties();
+            InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("druid_mysql.properties");
+            properties.load(inputStream);
+            String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
+            String mysql_port = CommonArgs.getDefaultMySQLPort();
+            String timeZone = "Asia/Shanghai";
+            String jdbcUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/" + schemaName + "?serverTimezone=" + timeZone + "&connectTimeout=120000&useServerPrepStmts=true&cachePrepStmts=true";
+            properties.setProperty("url", jdbcUrl);
+            properties.setProperty("username", USER);
+            properties.setProperty("password", PASS);
+            properties.setProperty("initialSize", "2");
+            properties.setProperty("maxActive", "2");
+            sourceNoSchema = DruidDataSourceFactory.createDataSource(properties);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        Connection myConnection = sourceWithSchema.getConnection();
+        return myConnection;
+    }
 
-        try{
-            if(connection != null) {
-                connection.close();
-            }
-        } catch (SQLException e) {
+    private static DataSource sourceWithNotRoot;
+    public static Connection getDruidMySQLConnectionWithNotRoot(String userName, String passwd) throws SQLException {
+        Properties properties = null;
+        try {
+            properties = new Properties();
+            InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("druid_mysql.properties");
+            properties.load(inputStream);
+            String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
+            String mysql_port = CommonArgs.getDefaultMySQLPort();
+            String timeZone = "Asia/Shanghai";
+            String jdbcUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/" + SCHEMANAME + "?serverTimezone=" + timeZone + "&useServerPrepStmts=true&cachePrepStmts=true";
+            properties.setProperty("url", jdbcUrl);
+            properties.setProperty("username", userName);
+            properties.setProperty("password", passwd);
+            properties.setProperty("initialSize", "1");
+            properties.setProperty("maxActive", "1");
+            sourceWithNotRoot = DruidDataSourceFactory.createDataSource(properties);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        Connection myConnection = sourceWithNotRoot.getConnection();
+        return myConnection;
+    }
+
+    public static List<String> getSchemaList() throws SQLException {
+        Connection connection = getDruidMySQLConnection();
+        return baseGetSchemaList(connection);
+    }
+
+    public static List<String> getTableList() throws SQLException {
+        Connection connection = getDruidMySQLConnection();
+        return baseGetTableList(connection, SCHEMANAME);
+    }
+
+    public static List<String> getTableListWithSchema(String schemaName) throws SQLException {
+        Connection connection = getDruidMySQLConnection();
+        return baseGetTableListWithSchema(connection, schemaName);
+    }
+
+    public static List<String> getAllTableList() throws SQLException {
+        Connection connection = getDruidMySQLConnection();
+        return baseGetAllTableList(connection);
     }
 }

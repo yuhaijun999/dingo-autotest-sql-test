@@ -17,8 +17,8 @@
 package io.dingodb.dingotest;
 
 import datahelper.YamlDataHelper;
-import io.dingodb.common.utils.JDBCUtils;
-import io.dingodb.dailytest.SQLHelper;
+import io.dingodb.common.utils.DruidUtilsDingo;
+import io.dingodb.dailytest.DingoHelperDruid;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
@@ -30,7 +30,6 @@ import utils.CastUtils;
 import utils.ParseCsv;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -39,33 +38,27 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class TestPreparedStatement extends BaseTestSuite {
-    private static SQLHelper sqlHelper;
-    public static Connection connection;
+    private static DingoHelperDruid dingoHelperDruid;
     private static HashSet<String> createTableSet = new HashSet<>();
 
     @BeforeClass (alwaysRun = true)
     public static void setupAll() throws SQLException, ClassNotFoundException {
-        sqlHelper = new SQLHelper();
-        JDBCUtils jdbcUtils = new JDBCUtils();
-        connection = jdbcUtils.getDingoConnectionInstance();
-        Assert.assertNotNull(connection);
+        dingoHelperDruid = new DingoHelperDruid();
     }
 
     @AfterClass (alwaysRun = true)
     public static void tearDownAll() throws SQLException, IOException, ClassNotFoundException {
         System.out.println(createTableSet);
         if(createTableSet.size() > 0) {
-            List<String> finalTableList = JDBCUtils.getTableList();
+            List<String> finalTableList = DruidUtilsDingo.getTableList();
             System.out.println("Get table list: " + finalTableList);
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
-                    sqlHelper.doDropTable(connection, s);
+                    dingoHelperDruid.doDropTable(s);
                 }
             }
         }
         createTableSet.clear();
-        
-        JDBCUtils.closeResource(connection);
     }
 
     @BeforeMethod (alwaysRun = true)
@@ -78,8 +71,6 @@ public class TestPreparedStatement extends BaseTestSuite {
     
     @Test(priority = 0, enabled = true, dataProvider = "psDQLData", dataProviderClass = YamlDataHelper.class, description = "验证通过预编译语句进行查询")
     public void test01PrepareStatementDQL(LinkedHashMap<String,String> param) throws SQLException, IOException, ClassNotFoundException {
-//        JDBCUtils jdbcUtils = new JDBCUtils();
-//        Connection connection = jdbcUtils.getDingoConnectionInstance();
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
@@ -97,22 +88,22 @@ public class TestPreparedStatement extends BaseTestSuite {
                 if (!schemaList.get(i).trim().contains("_")) {
                     tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                     if (param.get("TestID").contains("txnbt")) {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else if (param.get("TestID").contains("btree")) {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName); 
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName); 
                     } else {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     }
                     
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = param.get("TestID").trim() + "_0" + i + schemaName;
                     if (param.get("TestID").contains("txnbt")) {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else if (param.get("TestID").contains("btree")) {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
                     }
                 }
                 tableList.add(tableName);
@@ -131,11 +122,11 @@ public class TestPreparedStatement extends BaseTestSuite {
                     }
 
                     if (param.get("TestID").contains("txnbt")) {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
                     } else if (param.get("TestID").contains("btree")) {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("PSValues", value_List.get(j).trim())), tableName); 
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("PSValues", value_List.get(j).trim())), tableName); 
                     } else {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
                     }
                 }
             }
@@ -149,24 +140,19 @@ public class TestPreparedStatement extends BaseTestSuite {
         }
         System.out.println("Expected: " + expectedResult);
         if (param.get("Validation_type").equals("csv_equals")) {
-            List<List<String>> actualResult = sqlHelper.preparedStatementQuery(connection, querySql, value_type_tuple, ps_values_tuple);
+            List<List<String>> actualResult = dingoHelperDruid.preparedStatementQuery(querySql, value_type_tuple, ps_values_tuple);
             System.out.println("Actual: " + actualResult);
             Assert.assertEquals(actualResult, expectedResult);
         } else if (param.get("Validation_type").equals("csv_containsAll")) {
-            List<List<String>> actualResult = sqlHelper.preparedStatementQuery(connection, querySql, value_type_tuple, ps_values_tuple);
+            List<List<String>> actualResult = dingoHelperDruid.preparedStatementQuery(querySql, value_type_tuple, ps_values_tuple);
             System.out.println("Actual: " + actualResult);
             Assert.assertTrue(actualResult.containsAll(expectedResult));
             Assert.assertTrue(expectedResult.containsAll(actualResult));
         }
-        
-//        JDBCUtils.closeResource(connection);
     }
 
     @Test(priority = 1, enabled = true, dataProvider = "psDMLData", dataProviderClass = YamlDataHelper.class, description = "验证通过预编译语句进行DML操作")
     public void test02PrepareStatementDML(LinkedHashMap<String,String> param) throws SQLException, IOException, ClassNotFoundException {
-//        JDBCUtils jdbcUtils = new JDBCUtils();
-//        Connection connection = jdbcUtils.getDingoConnectionInstance();
-        
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
@@ -185,21 +171,21 @@ public class TestPreparedStatement extends BaseTestSuite {
                 if (!schemaList.get(i).trim().contains("_")) {
                     tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                     if (param.get("TestID").contains("txnbt")) {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else if (param.get("TestID").contains("btree")) {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     }
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = param.get("TestID").trim() + "_0" + i + schemaName;
                     if (param.get("TestID").contains("txnbt")) {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else if (param.get("TestID").contains("btree")) {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
                     }
                 }
                 tableList.add(tableName);
@@ -219,11 +205,11 @@ public class TestPreparedStatement extends BaseTestSuite {
                     }
 
                     if (param.get("TestID").contains("txnbt")) {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
                     } else if (param.get("TestID").contains("btree")) {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
                     } else {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
                     }
                 }
             }
@@ -237,7 +223,7 @@ public class TestPreparedStatement extends BaseTestSuite {
                 expectedResult = ParseCsv.splitCsvString(resultFile,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            List<List<String>> actualResult = sqlHelper.preparedStatementDMLGetData(connection, dmlSql, querySql, value_type_tuple, ps_values_tuple);
+            List<List<String>> actualResult = dingoHelperDruid.preparedStatementDMLGetData(dmlSql, querySql, value_type_tuple, ps_values_tuple);
             System.out.println("Actual: " + actualResult);
             Assert.assertEquals(actualResult, expectedResult);
         } else if (param.get("Validation_type").equals("csv_containsAll")) {
@@ -249,31 +235,27 @@ public class TestPreparedStatement extends BaseTestSuite {
                 expectedResult = ParseCsv.splitCsvString(resultFile,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            List<List<String>> actualResult = sqlHelper.preparedStatementDMLGetData(connection, dmlSql, querySql, value_type_tuple, ps_values_tuple);
+            List<List<String>> actualResult = dingoHelperDruid.preparedStatementDMLGetData(dmlSql, querySql, value_type_tuple, ps_values_tuple);
             System.out.println("Actual: " + actualResult);
             Assert.assertTrue(actualResult.containsAll(expectedResult));
             Assert.assertTrue(expectedResult.containsAll(actualResult));
         } else if (param.get("Validation_type").equals("effected_rows_assert")) {
             int expectedEffectedRows = Integer.parseInt(param.get("Effected_rows"));
             System.out.println("Expected effected rows: " + expectedEffectedRows);
-            int actualEffectedRows = sqlHelper.preparedStatementDMLGetRows(connection, dmlSql, value_type_tuple, ps_values_tuple);
+            int actualEffectedRows = dingoHelperDruid.preparedStatementDMLGetRows(dmlSql, value_type_tuple, ps_values_tuple);
             System.out.println("Actual effected rows: " + actualEffectedRows);
             Assert.assertEquals(actualEffectedRows, expectedEffectedRows);
         }
 
 //        if (tableList.size() > 0) {
 //            for (String s : tableList) {
-//                sqlHelper.doDropTable(s);
+//                dingoHelperDruid.doDropTable(s);
 //            }
 //        }
-//        JDBCUtils.closeResource(connection);
     }
 
     @Test(priority = 2, enabled = true, dataProvider = "psBatchData", dataProviderClass = YamlDataHelper.class, description = "验证通过prepareStatement进行批量插入数据")
     public void test03PrepareStatementBatchInsert(LinkedHashMap<String,String> param) throws SQLException, IOException, ParseException, InterruptedException, ClassNotFoundException {
-//        JDBCUtils jdbcUtils = new JDBCUtils();
-//        Connection connection = jdbcUtils.getDingoConnectionInstance();
-        
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
@@ -295,21 +277,21 @@ public class TestPreparedStatement extends BaseTestSuite {
                 if (!schemaList.get(i).trim().contains("_")) {
                     tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                     if (param.get("TestID").contains("txnbt")) {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else if (param.get("TestID").contains("btree")) {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     }
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = param.get("TestID").trim() + "_0" + i + schemaName;
                     if (param.get("TestID").contains("txnbt")) {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else if (param.get("TestID").contains("btree")) {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
                     }
                 }
                 tableList.add(tableName);
@@ -334,16 +316,16 @@ public class TestPreparedStatement extends BaseTestSuite {
                     }
 
                     if (param.get("TestID").contains("txnbt")) {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
                     } else if (param.get("TestID").contains("btree")) {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
                     } else {
-                        sqlHelper.execFile(connection, TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
+                        dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
                     }
                 }
             }
         }
-        sqlHelper.preparedStatementBatchInsert(connection, 
+        dingoHelperDruid.preparedStatementBatchInsert(
                 insertSql,Integer.parseInt(param.get("Insert_count")), value_type_tuple,6,
                 100,0,10000,2, -1000000,1000000,2, 
                 "yyyy-MM-dd","1970-10-01","2022-03-31","HH:mm:ss",
@@ -354,46 +336,45 @@ public class TestPreparedStatement extends BaseTestSuite {
        if (param.get("Validation_type").equals("effected_rows_assert")) {
            int expectedQuery1Rows = Integer.parseInt(param.get("Query_result1"));
            System.out.println("Expected query1 rows: " + expectedQuery1Rows);
-           int actualQuery1Rows = Integer.parseInt(sqlHelper.queryWithStrReturn(connection, querySql1));
+           int actualQuery1Rows = Integer.parseInt(dingoHelperDruid.queryWithStrReturn(querySql1));
            System.out.println("Actual query1 rows: " + actualQuery1Rows);
            Assert.assertEquals(actualQuery1Rows, expectedQuery1Rows);
 
            int expectedQuery2Rows = Integer.parseInt(param.get("Query_result2"));
            System.out.println("Expected query2 rows: " + expectedQuery2Rows);
-           int actualQuery2Rows = Integer.parseInt(sqlHelper.queryWithStrReturn(connection, querySql2));
+           int actualQuery2Rows = Integer.parseInt(dingoHelperDruid.queryWithStrReturn(querySql2));
            System.out.println("Actual query2 rows: " + actualQuery2Rows);
            Assert.assertEquals(actualQuery2Rows, expectedQuery2Rows);
 
            int expectedDml1Rows = Integer.parseInt(param.get("Dml_result1"));
            System.out.println("Expected dml1 rows: " + expectedDml1Rows);
-           int actualDml1Rows = sqlHelper.doDMLReturnRows(connection, dmlSql1);
+           int actualDml1Rows = dingoHelperDruid.doDMLReturnRows(dmlSql1);
            System.out.println("Actual dml1 rows: " + actualDml1Rows);
            Assert.assertEquals(actualDml1Rows, expectedDml1Rows);
 
            int expectedQuery3Rows = Integer.parseInt(param.get("Query_result3"));
            System.out.println("Expected query3 rows: " + expectedQuery3Rows);
-           int actualQuery3Rows = Integer.parseInt(sqlHelper.queryWithStrReturn(connection, querySql3));
+           int actualQuery3Rows = Integer.parseInt(dingoHelperDruid.queryWithStrReturn(querySql3));
            System.out.println("Actual query3 rows: " + actualQuery3Rows);
            Assert.assertEquals(actualQuery3Rows, expectedQuery3Rows);
 
            int expectedDml2Rows = Integer.parseInt(param.get("Dml_result2"));
            System.out.println("Expected dml2 rows: " + expectedDml2Rows);
-           int actualDml2Rows = sqlHelper.doDMLReturnRows(connection, dmlSql2);
+           int actualDml2Rows = dingoHelperDruid.doDMLReturnRows(dmlSql2);
            System.out.println("Actual dml2 rows: " + actualDml2Rows);
            Assert.assertEquals(actualDml2Rows, expectedDml2Rows);
            
            int expectedQuery4Rows = Integer.parseInt(param.get("Query_result4"));
            System.out.println("Expected query4 rows: " + expectedQuery4Rows);
-           int actualQuery4Rows = Integer.parseInt(sqlHelper.queryWithStrReturn(connection, querySql4));
+           int actualQuery4Rows = Integer.parseInt(dingoHelperDruid.queryWithStrReturn(querySql4));
            System.out.println("Actual query4 rows: " + actualQuery4Rows);
            Assert.assertEquals(actualQuery4Rows, expectedQuery4Rows);
         }
 
 //        if (tableList.size() > 0) {
 //            for (String s : tableList) {
-//                sqlHelper.doDropTable(s);
+//                dingoHelperDruid.doDropTable(s);
 //            }
 //        }
-//        JDBCUtils.closeResource(connection);
     }
 }

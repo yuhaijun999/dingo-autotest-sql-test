@@ -17,8 +17,8 @@
 package io.dingodb.dingotest;
 
 import datahelper.YamlDataHelper;
-import io.dingodb.common.utils.JDBCUtils;
-import io.dingodb.dailytest.SQLHelper;
+import io.dingodb.common.utils.DruidUtilsDingo;
+import io.dingodb.dailytest.DingoHelperDruid;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
@@ -40,15 +40,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class TestDCL extends BaseTestSuite {
-    private static SQLHelper sqlHelper;
-    public static Connection connection;
+    private static DingoHelperDruid dingoHelperDruid;
 
     @BeforeClass (alwaysRun = true)
     public static void setupAll() throws SQLException, ClassNotFoundException {
-        sqlHelper = new SQLHelper();
-        JDBCUtils jdbcUtils = new JDBCUtils();
-        connection = jdbcUtils.getDingoConnectionInstance();
-        Assert.assertNotNull(connection);
+        dingoHelperDruid = new DingoHelperDruid();
         //权限测试类执行前，先创建若干表用于测试。
         String createSql1 = "create table studentdc (\n" +
                 "    sno varchar(6), \n" +
@@ -78,17 +74,16 @@ public class TestDCL extends BaseTestSuite {
                 "('903','class1-3'),\n" +
                 "('904','class1-4'),\n" +
                 "('906','class1-6')";
-        sqlHelper.execSql(connection, createSql1);
-        sqlHelper.execSql(connection, createSql2);
-        sqlHelper.execSql(connection, insertSql1);
-        sqlHelper.execSql(connection, insertSql2);
+        dingoHelperDruid.execSql(createSql1);
+        dingoHelperDruid.execSql(createSql2);
+        dingoHelperDruid.execSql(insertSql1);
+        dingoHelperDruid.execSql(insertSql2);
     }
 
     @AfterClass (alwaysRun = true)
     public static void tearDownAll() throws SQLException, IOException, ClassNotFoundException {
-        sqlHelper.doDropTable(connection,"studentdc");
-        sqlHelper.doDropTable(connection,"classesdc");
-        JDBCUtils.closeResource(connection);
+        dingoHelperDruid.doDropTable("studentdc");
+        dingoHelperDruid.doDropTable("classesdc");
     }
 
     @BeforeMethod (alwaysRun = true)
@@ -100,7 +95,7 @@ public class TestDCL extends BaseTestSuite {
     }
 
     @Test(priority = 0, enabled = true, dataProvider = "dclData", dataProviderClass = YamlDataHelper.class, description = "dcl操作，正向用例")
-    public void test01DCL(LinkedHashMap<String,String> param) throws SQLException, ClassNotFoundException, IOException {
+    public void test01DCL(LinkedHashMap<String,String> param) throws SQLException, ClassNotFoundException {
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
@@ -117,17 +112,17 @@ public class TestDCL extends BaseTestSuite {
         }
         
         String createSql = param.get("Create_state");
-        sqlHelper.execSql(connection, createSql);
+        dingoHelperDruid.execSql(createSql);
         
         //为用户赋权
         if (param.get("Grant_state").trim().length() > 0) {
             String grantState = param.get("Grant_state").trim();
-            sqlHelper.execSql(connection, grantState);
+            dingoHelperDruid.execSql(grantState);
         }
         //show grants断言
         if (param.get("Query_grants").trim().length() > 0) {
             String queryGrants = param.get("Query_grants");
-            List<List<String>> actualGrantsResult = sqlHelper.statementQueryWithHead(connection, queryGrants);
+            List<List<String>> actualGrantsResult = dingoHelperDruid.statementQueryWithHead(queryGrants);
             System.out.println("Actual show grants: " + actualGrantsResult);
             String grantsResultFile = param.get("Expected_grants");
             List<List<String>> expectedGrantsResult = ParseCsv.splitCsvString(grantsResultFile,",");
@@ -142,7 +137,7 @@ public class TestDCL extends BaseTestSuite {
             String userResultFile = param.get("Expected_user").trim();
             List<List<String>> expectedUser = ParseCsv.splitCsvString(userResultFile,",");
             System.out.println("Expected user table: " + expectedUser);
-            List<List<String>> actualUser = sqlHelper.statementQueryWithHead(connection, queryUser);
+            List<List<String>> actualUser = dingoHelperDruid.statementQueryWithHead(queryUser);
             System.out.println("Actual user table: " + actualUser);
             Assert.assertTrue(actualUser.containsAll(expectedUser));
             Assert.assertTrue(expectedUser.containsAll(actualUser));
@@ -154,7 +149,7 @@ public class TestDCL extends BaseTestSuite {
             String dbResultFile = param.get("Expected_db").trim();
             List<List<String>> expectedDb = ParseCsv.splitCsvString(dbResultFile,",");
             System.out.println("Expected db table: " + expectedDb);
-            List<List<String>> actualDb = sqlHelper.statementQueryWithHead(connection, queryDb);
+            List<List<String>> actualDb = dingoHelperDruid.statementQueryWithHead(queryDb);
             System.out.println("Actual db table: " + actualDb);
             Assert.assertTrue(actualDb.containsAll(expectedDb));
             Assert.assertTrue(expectedDb.containsAll(actualDb));
@@ -166,20 +161,20 @@ public class TestDCL extends BaseTestSuite {
             String tablesPrivResultFile = param.get("Expected_tablesPriv").trim();
             List<List<String>> expectedTablesPriv = ParseCsv.splitCsvString(tablesPrivResultFile,",");
             System.out.println("Expected tables_priv table: " + expectedTablesPriv);
-            List<List<String>> actualTablesPriv = sqlHelper.statementQueryWithHead(connection, queryTablesPriv);
+            List<List<String>> actualTablesPriv = dingoHelperDruid.statementQueryWithHead(queryTablesPriv);
             System.out.println("Actual tables_priv table: " + actualTablesPriv);
             Assert.assertTrue(actualTablesPriv.containsAll(expectedTablesPriv));
             Assert.assertTrue(expectedTablesPriv.containsAll(actualTablesPriv));
         }
         
         if (param.get("Connection_verify").equalsIgnoreCase("yes")) {
-            Connection connectionWithUser = JDBCUtils.getConnectionWithNotRoot(userName, passStr);
+            Connection connectionWithUser = DruidUtilsDingo.getDruidDingoConnectionWithNotRoot(userName, passStr);
             Assert.assertNotNull(connectionWithUser);
 
             try {
                 Statement userstate = connectionWithUser.createStatement();
                 String tableOperation = param.get("Table_operations");
-                sqlHelper.execBatchSql(userstate, tableOperation);
+                dingoHelperDruid.execBatchSql(userstate, tableOperation);
 
                 //用户连接获取可以看到的tables
                 DatabaseMetaData databaseMetaData = connectionWithUser.getMetaData();
@@ -208,19 +203,23 @@ public class TestDCL extends BaseTestSuite {
             if (param.get("Reset_pass_str").length() > 0) {
                 String newPass = param.get("Reset_pass_str");
                 String resetSql = "set password for " + userStr + " = password('" + newPass + "')";
-                sqlHelper.execSql(connection, resetSql);
-                Connection connectionWithNewPass = JDBCUtils.getConnectionWithNotRoot(userName, newPass);
-                Assert.assertNotNull(connectionWithUser);
-                connectionWithNewPass.close();
+                dingoHelperDruid.execSql(resetSql);
+                Connection connectionWithNewPass = null;
+                try {
+                    connectionWithNewPass = DruidUtilsDingo.getDruidDingoConnectionWithNotRoot(userName, newPass);
+                    Assert.assertNotNull(connectionWithUser);
+                } finally {
+                    DruidUtilsDingo.closeResource(connectionWithNewPass,null,null);
+                }
             }
         }
 
         if (param.get("Revoke_state").trim().length() > 0) {
             String revokeState = param.get("Revoke_state").trim();
-            sqlHelper.execSql(connection, revokeState);
+            dingoHelperDruid.execSql(revokeState);
 
             String queryGrantsAfterRevoke = param.get("Query_grants");
-            List<List<String>> actualGrantsAfterRevoke = sqlHelper.statementQueryWithHead(connection, queryGrantsAfterRevoke);
+            List<List<String>> actualGrantsAfterRevoke = dingoHelperDruid.statementQueryWithHead(queryGrantsAfterRevoke);
             System.out.println("Actual grants after revoke: " + actualGrantsAfterRevoke);
             String grantsResultFile = param.get("Expected_grants_after_revoke");
             List<List<String>> expectedGrantsAfterRevoke = ParseCsv.splitCsvString(grantsResultFile,",");
@@ -230,7 +229,7 @@ public class TestDCL extends BaseTestSuite {
         }
         
         //测试完后，删除用户
-        sqlHelper.execSql(connection, "drop user " + userStr);
+        dingoHelperDruid.execSql("drop user " + userStr);
         
     }
 }

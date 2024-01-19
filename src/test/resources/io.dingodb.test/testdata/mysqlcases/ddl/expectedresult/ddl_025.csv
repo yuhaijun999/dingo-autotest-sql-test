@@ -2,6 +2,5 @@ CATALOG_NAME,SCHEMA_NAME,DEFAULT_CHARACTER_SET_NAME,DEFAULT_COLLATION_NAME,SQL_P
 def,MYDDL_025,utf8,utf8_bin,null
 def,META,utf8,utf8_bin,null
 def,DINGO,utf8,utf8_bin,null
-def,ROOT,utf8,utf8_bin,null
 def,MYSQL,utf8,utf8_bin,null
 def,INFORMATION_SCHEMA,utf8,utf8_bin,null
