@@ -17,8 +17,6 @@
 package io.dingodb.mysqltest;
 
 import io.dingodb.common.utils.DruidUtilsMySQL;
-import io.dingodb.common.utils.MySQLUtils;
-import io.dingodb.dailytest.MySQLHelperDruid;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -36,7 +34,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TestBVTMySQL extends BaseTestSuiteMySQL {
-    private static MySQLHelperDruid mySQLHelperDruid;
     public static Connection myConnection;
     public static String tableName = "mysqlbvttest";
     public static String tableName2 = "autoIdStateTest1";
@@ -55,7 +52,7 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
     }
     
     @BeforeClass(alwaysRun = true, description = "测试开始前验证数据库连接")
-    public static void setUpAll() throws SQLException, IOException, ClassNotFoundException {
+    public static void setUpAll() throws SQLException {
         myConnection = DruidUtilsMySQL.getDruidMySQLConnection();
         Assert.assertNotNull(myConnection);
     }
@@ -66,11 +63,11 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
     }
     
     @Test(enabled = true, description = "测试创建表")
-    public void test01TableCreate() throws SQLException, IOException, ClassNotFoundException {
+    public void test01TableCreate() throws SQLException {
         String sql = "create table " + tableName + "(id int, name varchar(20), age int, amount double, birthday date, create_time time, update_time timestamp, is_delete boolean, primary key(id))";
         try(Statement statement = myConnection.createStatement()) {
             statement.execute(sql);
-            List<String> tableList = MySQLUtils.getTableList();
+            List<String> tableList = DruidUtilsMySQL.getTableList();
             System.out.println("TableList: " + tableList);
             Assert.assertTrue(tableList.contains(tableName.toUpperCase()));
             System.out.println(tableList);
@@ -108,8 +105,9 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
 
         String sql = "select * from " + tableName + " where id < 5";
         List<List> queryList = new ArrayList<>();
+        ResultSet resultSet = null;
         try(Statement statement = myConnection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(sql);
+            resultSet = statement.executeQuery(sql);
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             while (resultSet.next()) {
@@ -128,7 +126,14 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
                 }
                 queryList.add(rowList);
             }
-            resultSet.close();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
         System.out.println("Actual: " + queryList);
         Assert.assertTrue(queryList.containsAll(expectedList));
@@ -147,11 +152,12 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
         String updateSql = "update " + tableName + " set age=100 where id=1 or id=4";
         String querySql = "select id,name,age,amount,birthday,create_time,update_time from " + tableName + " where id=1 or id=4";
         List<List> queryList = new ArrayList<>();
+        ResultSet resultSet = null;
         try(Statement statement = myConnection.createStatement()) {
             int effectedRows = statement.executeUpdate(updateSql);
             Assert.assertEquals(effectedRows,2);
             
-            ResultSet resultSet = statement.executeQuery(querySql);
+            resultSet = statement.executeQuery(querySql);
             while (resultSet.next()) {
                 List rowList = new ArrayList<>();
                 rowList.add(resultSet.getString("id"));
@@ -163,6 +169,7 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
                 rowList.add(resultSet.getTimestamp("update_time").toString());
                 queryList.add(rowList);
             }
+        } finally {
             resultSet.close();
         }
         System.out.println("Actual: " + queryList);
@@ -174,13 +181,21 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
     public void test05Delete() throws SQLException {
         String deleteSql = "delete from " + tableName;
         String querySql = "select * from " + tableName;
+        ResultSet resultSet = null;
         try(Statement statement = myConnection.createStatement()) {
             int effectedRows = statement.executeUpdate(deleteSql);
             Assert.assertEquals(effectedRows,9);
 
-            ResultSet resultSet = statement.executeQuery(querySql);
+            resultSet = statement.executeQuery(querySql);
             Assert.assertFalse(resultSet.next());
-            resultSet.close();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
     
@@ -190,14 +205,14 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
         String sql = "drop table " + tableName;
         try(Statement statement = myConnection.createStatement();) {
             statement.execute(sql);
-            List<String> tableList = MySQLUtils.getTableList();
+            List<String> tableList = DruidUtilsMySQL.getTableList();
             Assert.assertFalse(tableList.contains(tableName.toUpperCase()));
             System.out.println(tableList);
         }
     }
 
     @Test(enabled = true, description = "Statement获取lastInsertID")
-    public void test07StateGetLastInsertId() throws SQLException, IOException, ClassNotFoundException {
+    public void test07StateGetLastInsertId() throws SQLException {
         String createSql = "create table " + tableName2 + "(" +
                 "id int not null auto_increment, " +
                 "name varchar(20), " +
@@ -209,20 +224,28 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
                 "('zhangsan', 24, '1999-10-12')," +
                 "('lisi', 35, '1988-05-23')," +
                 "('wangwu', 18, '2005-02-08')";
+        ResultSet resultSet = null;
         try(Statement statement = myConnection.createStatement();) {
             statement.execute(createSql);
             statement.executeUpdate(insertSql, Statement.RETURN_GENERATED_KEYS);
-            ResultSet resultSet = statement.getGeneratedKeys();
+            resultSet = statement.getGeneratedKeys();
             List<String> actualGenerateKeys = new ArrayList<>();
             while (resultSet.next()) {
                 actualGenerateKeys.add(resultSet.getObject(1).toString());
             }
-            resultSet.close();
             statement.execute("drop table " + tableName2);
             List<String> expectedKeys = Arrays.asList("1", "2", "3");
             System.out.println("Expected: " + expectedKeys);
             System.out.println("Actual: " + actualGenerateKeys);
             Assert.assertEquals(expectedKeys, actualGenerateKeys);
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -235,29 +258,55 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
                 "birthday date, " +
                 "primary key(id)" +
                 ")";
-        Statement statement = myConnection.createStatement();
-        statement.execute(createSql);
-        
         String insertSql = "insert into " + tableName3 + "(name,age,birthday) values " +
                 "('zhangsan', 24, '1999-10-12')," +
                 "('lisi', 35, '1988-05-23')," +
                 "('wangwu', 18, '2005-02-08')," +
                 "('liuliu', 40, '2010-12-12')";
-        PreparedStatement ps = myConnection.prepareStatement(insertSql);
-        ps.executeUpdate(insertSql, PreparedStatement.RETURN_GENERATED_KEYS);
-        ResultSet resultSet = ps.getGeneratedKeys();
-        List<String> actualGenerateKeys = new ArrayList<>();
-        while (resultSet.next()) {
-            actualGenerateKeys.add(resultSet.getObject(1).toString());
+        Statement statement = null;
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+        try {
+            statement = myConnection.createStatement();
+            statement.execute(createSql);
+            ps = myConnection.prepareStatement(insertSql);
+            ps.executeUpdate(insertSql, PreparedStatement.RETURN_GENERATED_KEYS);
+            resultSet = ps.getGeneratedKeys();
+            List<String> actualGenerateKeys = new ArrayList<>();
+            while (resultSet.next()) {
+                actualGenerateKeys.add(resultSet.getObject(1).toString());
+            }
+            resultSet.close();
+            ps.close();
+            statement.execute("drop table " + tableName3);
+            statement.close();
+            List<String> expectedKeys = Arrays.asList("1", "2", "3", "4");
+            System.out.println("Expected: " + expectedKeys);
+            System.out.println("Actual: " + actualGenerateKeys);
+            Assert.assertEquals(expectedKeys, actualGenerateKeys);
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
-        resultSet.close();
-        ps.close();
-        statement.execute("drop table " + tableName3);
-        statement.close();
-        List<String> expectedKeys = Arrays.asList("1", "2", "3", "4");
-        System.out.println("Expected: " + expectedKeys);
-        System.out.println("Actual: " + actualGenerateKeys);
-        Assert.assertEquals(expectedKeys, actualGenerateKeys);
     }
     
 }

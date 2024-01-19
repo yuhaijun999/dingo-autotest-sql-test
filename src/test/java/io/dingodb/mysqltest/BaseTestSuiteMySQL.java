@@ -30,12 +30,9 @@ import java.sql.Statement;
 public class BaseTestSuiteMySQL {
     public static IniReader mysqlIniReader;
     public static IniReader mysqlIniReaderBTREE;
-//    public static MySQLHelper mySQLHelper;
     @BeforeSuite(alwaysRun = true, enabled = true, description = "所有测试开始前的准备工作")
     public static void beforeSuite() throws SQLException {
-//        mySQLHelper = new MySQLHelper();
         System.out.println("所有测试开始前，验证MySQL JDBC数据库连接正常");
-//        Assert.assertNotNull(MySQLHelper.connection);
         Connection connection = null;
         Statement statement = null;
         try {
@@ -55,13 +52,7 @@ public class BaseTestSuiteMySQL {
     @AfterSuite(alwaysRun = true, enabled = true, description = "所有测试结束后的操作")
     public static void afterSuite() {
         System.out.println("所有测试结束后，关闭MySQL JDBC数据库连接");
-//        MySQLUtils.closeResource(MySQLHelper.connection);
     }
     
-//    public void dropTableAfterMethod(List<String> tableList) throws SQLException {
-//        for (String s : tableList) {
-//            mySQLHelper.doDropTable(s);
-//        }
-//    }
     
 }

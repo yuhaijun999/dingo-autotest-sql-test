@@ -21,25 +21,24 @@ import com.alibaba.druid.pool.DruidDataSourceFactory;
 import javax.sql.DataSource;
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import java.util.Properties;
 
-public class DruidUtilsDingo {
+public class DruidUtilsDingo extends BaseJDBCUtils {
     static final String USER = CommonArgs.getDefaultConnectUser();
     static final String PASS = CommonArgs.getDefaultConnectPass();
     static final String SCHEMANAME = "DINGO";
     private static DataSource source;
     static {
+        Properties properties = null;
         try {
-            Properties properties = new Properties();
+            properties = new Properties();
             InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("druid_dingo.properties");
             properties.load(inputStream);
             String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
             String port = CommonArgs.getDefaultExecutorPort();
-            String jdbcUrl = "jdbc:dingo:thin://" + defaultConnectIP + ":" + port + "/" + SCHEMANAME + "?timeout=600";
+            String jdbcUrl = "jdbc:dingo:thin:url=" + defaultConnectIP + ":" + port + "/" + SCHEMANAME + "?timeout=420";
             properties.setProperty("url", jdbcUrl);
             properties.setProperty("username", USER);
             properties.setProperty("password", PASS);
@@ -57,56 +56,94 @@ public class DruidUtilsDingo {
         Connection connection = source.getConnection();
         return connection;
     }
-    
-    public static void closeResource(Connection connection, ResultSet rs, Statement stm) {
-        try{
-            if(rs != null) {
-                rs.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-        try{
-            if(stm != null) {
-                stm.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    private static DataSource sourceNoSchema;
 
-        try{
-            if(connection != null) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public static Connection getDruidDingoConnectionWithoutSchema() throws SQLException {
+        Properties properties = null;
+        try {
+            properties = new Properties();
+            InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("druid_dingo.properties");
+            properties.load(inputStream);
+            String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
+            String port = CommonArgs.getDefaultExecutorPort();
+            String jdbcUrl = "jdbc:dingo:thin:url=" + defaultConnectIP + ":" + port;
+            properties.setProperty("url", jdbcUrl);
+            properties.setProperty("username", USER);
+            properties.setProperty("password", PASS);
+            properties.setProperty("initialSize", "2");
+            properties.setProperty("maxActive", "2");
+            sourceNoSchema = DruidDataSourceFactory.createDataSource(properties);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        Connection connection = sourceNoSchema.getConnection();
+        return connection;
     }
 
-    public static void closeResourcePS(Connection connection, ResultSet rs, PreparedStatement ps) {
-        try{
-            if(rs != null) {
-                rs.close();
-            }
-        } catch (SQLException e) {
+    private static DataSource sourceWithSchema;
+    public static Connection getDruidDingoConnectionWithSchema(String schemaName) throws SQLException {
+        Properties properties = null;
+        try {
+            properties = new Properties();
+            InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("druid_dingo.properties");
+            properties.load(inputStream);
+            String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
+            String port = CommonArgs.getDefaultExecutorPort();
+            String jdbcUrl = "jdbc:dingo:thin:url=" + defaultConnectIP + ":" + port + "/" + schemaName;
+            properties.setProperty("url", jdbcUrl);
+            properties.setProperty("username", USER);
+            properties.setProperty("password", PASS);
+            properties.setProperty("initialSize", "2");
+            properties.setProperty("maxActive", "2");
+            sourceWithSchema = DruidDataSourceFactory.createDataSource(properties);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        Connection connection = sourceWithSchema.getConnection();
+        return connection;
+    }
 
-        try{
-            if(ps != null) {
-                ps.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    private static DataSource sourceWithNotRoot;
+    public static Connection getDruidDingoConnectionWithNotRoot(String userName, String passwd) throws ClassNotFoundException, SQLException {
+        Properties properties = null;
+        try {
+            properties = new Properties();
+            InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("druid_dingo.properties");
+            properties.load(inputStream);
+            String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
+            String port = CommonArgs.getDefaultExecutorPort();
+            String jdbcUrl = "jdbc:dingo:thin:url=" + defaultConnectIP + ":" + port + "/" + SCHEMANAME;
+            properties.setProperty("url", jdbcUrl);
+            properties.setProperty("username", userName);
+            properties.setProperty("password", passwd);
+            properties.setProperty("initialSize", "2");
+            properties.setProperty("maxActive", "2");
+            sourceWithNotRoot = DruidDataSourceFactory.createDataSource(properties);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        Connection connection = sourceWithNotRoot.getConnection();
+        return connection;
+    }
 
-        try{
-            if(connection != null) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public static List<String> getSchemaList() throws SQLException {
+        Connection connection = getDruidDingoConnection();
+        return baseGetSchemaList(connection);
+    }
+
+    public static List<String> getTableList() throws SQLException {
+        Connection connection = getDruidDingoConnection();
+        return baseGetTableList(connection, SCHEMANAME);
+    }
+
+    public static List<String> getTableListWithSchema(String schemaName) throws SQLException {
+        Connection connection = getDruidDingoConnection();
+        return baseGetTableListWithSchema(connection, schemaName);
+    }
+
+    public static List<String> getAllTableList() throws SQLException {
+        Connection connection = getDruidDingoConnection();
+        return baseGetAllTableList(connection);
     }
 }

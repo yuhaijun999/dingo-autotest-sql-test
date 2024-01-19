@@ -17,7 +17,7 @@
 package io.dingodb.mysqltest;
 
 import datahelper.MySQLYamlDataHelper;
-import io.dingodb.common.utils.MySQLUtils;
+import io.dingodb.common.utils.DruidUtilsMySQL;
 import io.dingodb.dailytest.MySQLHelperDruid;
 import org.testng.Assert;
 import org.testng.SkipException;
@@ -49,7 +49,7 @@ public class TestDCLMySQL extends BaseTestSuiteMySQL {
     @AfterClass (alwaysRun = true)
     public static void tearDownAll() throws SQLException, IOException, ClassNotFoundException {
         if(createTableSet.size() > 0) {
-            List<String> finalTableList = MySQLUtils.getTableList();
+            List<String> finalTableList = DruidUtilsMySQL.getTableList();
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
                     mySQLHelperDruid.doDropTable(s);
@@ -89,7 +89,7 @@ public class TestDCLMySQL extends BaseTestSuiteMySQL {
         }
         
         if (param.get("Connection_verify").equalsIgnoreCase("yes")) {
-            Connection connectionWithUser = MySQLUtils.getConnectionWithNotRoot(userName, passStr);
+            Connection connectionWithUser = DruidUtilsMySQL.getDruidMySQLConnectionWithNotRoot(userName, passStr);
             Assert.assertNotNull(connectionWithUser);
             connectionWithUser.close();
         }

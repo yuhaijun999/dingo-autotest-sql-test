@@ -16,13 +16,15 @@
 
 package io.dingodb.dingotest;
 
-import io.dingodb.common.utils.JDBCUtils;
+import io.dingodb.common.utils.DruidUtilsDingo;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import utils.IniReader;
 
+import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public class BaseTestSuite {
     public static IniReader iniReader;
@@ -30,35 +32,25 @@ public class BaseTestSuite {
     public static IniReader iniReaderTXNBTREE;
 //    public static SQLHelper sqlHelper;
     @BeforeSuite(alwaysRun = true, description = "所有测试开始前的准备工作")
-    public static void beforeSuite() {
-//        sqlHelper = new SQLHelper();
+    public static void beforeSuite() throws SQLException {
         System.out.println("所有测试开始前，验证数据库连接正常");
-//        Assert.assertNotNull(SQLHelper.connection);
         Connection connection = null;
         try {
-//            connection = DruidUtilsDingo.getDruidDingoConnection();
-            connection = JDBCUtils.getConnection();
+            connection = DruidUtilsDingo.getDruidDingoConnection();
             Assert.assertNotNull(connection);
             iniReader = new IniReader("src/test/resources/io.dingodb.test/ini/dingo_lsm.ini");
             iniReaderBTREE = new IniReader("src/test/resources/io.dingodb.test/ini/dingo_btree.ini");
             iniReaderTXNBTREE = new IniReader("src/test/resources/io.dingodb.test/ini/dingo_txn_btree.ini");
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
-            JDBCUtils.closeResource(connection);
+            DruidUtilsDingo.closeResource(connection,null,null);
         }
     }
 
     @AfterSuite(alwaysRun = true, description = "所有测试结束后的操作")
     public static void afterSuite() {
         System.out.println("所有测试结束后，关闭数据库连接");
-//        JDBCUtils.closeResource(SQLHelper.connection);
     }
-    
-//    public void dropTableAfterMethod(List<String> tableList) throws SQLException {
-//        for (String s : tableList) {
-//            sqlHelper.doDropTable(SQLHelper.connection, s);
-//        }
-//    }
     
 }

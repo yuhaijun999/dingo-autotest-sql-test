@@ -17,7 +17,7 @@
 package io.dingodb.mysqltest;
 
 import datahelper.MySQLYamlDataHelper;
-import io.dingodb.common.utils.MySQLUtils;
+import io.dingodb.common.utils.DruidUtilsMySQL;
 import io.dingodb.dailytest.MySQLHelperDruid;
 import org.testng.Assert;
 import org.testng.SkipException;
@@ -50,7 +50,7 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
     @AfterClass (alwaysRun = true)
     public static void tearDownAll() throws SQLException, IOException, ClassNotFoundException {
         if(createTableSet.size() > 0) {
-            List<String> finalTableList = MySQLUtils.getTableList();
+            List<String> finalTableList = DruidUtilsMySQL.getTableList();
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
                     mySQLHelperDruid.doDropTable(s);
@@ -65,7 +65,7 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
 
         if(createSchemaSet.size() > 0) {
             System.out.println(createSchemaSet);
-            List<String> finalSchemaList = MySQLUtils.getSchemaList();
+            List<String> finalSchemaList = DruidUtilsMySQL.getSchemaList();
             for (String s : createSchemaSet) {
                 if (finalSchemaList.contains(s.toUpperCase())) {
                     mySQLHelperDruid.doDropSchema(s);
@@ -227,7 +227,7 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                     drop_table_name = ddlSql.substring(11);
                 }
             }
-            List<String> existTableList = MySQLUtils.getTableList();
+            List<String> existTableList = DruidUtilsMySQL.getTableList();
             Assert.assertFalse(existTableList.contains(drop_table_name));
         } else if (param.get("Validation_type").equals("justExec")) {
             mySQLHelperDruid.execBatchSqlWithState(ddlSql);

@@ -17,8 +17,8 @@
 package io.dingodb.dingotest;
 
 import datahelper.YamlDataHelper;
-import io.dingodb.common.utils.JDBCUtils;
-import io.dingodb.dailytest.SQLHelper;
+import io.dingodb.common.utils.DruidUtilsDingo;
+import io.dingodb.dailytest.DingoHelperDruid;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
@@ -30,7 +30,6 @@ import utils.CastUtils;
 import utils.ParseCsv;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -38,47 +37,42 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class TestDDL extends BaseTestSuite{
-    private static SQLHelper sqlHelper;
-    public static Connection connection;
+    private static DingoHelperDruid dingoHelperDruid;
     private static HashSet<String> createTableSet = new HashSet<>();
     private static HashSet<String> createSchemaSet = new HashSet<>();
     private static HashSet<String> schemaTableSet = new HashSet<>();
 
     @BeforeClass (alwaysRun = true)
     public static void setupAll() throws SQLException, ClassNotFoundException {
-        sqlHelper = new SQLHelper();
-        JDBCUtils jdbcUtils = new JDBCUtils();
-        connection = jdbcUtils.getDingoConnectionInstance();
-        Assert.assertNotNull(connection);
+        dingoHelperDruid = new DingoHelperDruid();
     }
 
     @AfterClass (alwaysRun = true)
     public static void tearDownAll() throws SQLException, IOException, ClassNotFoundException {
 //        System.out.println(createTableSet);
         if(createTableSet.size() > 0) {
-            List<String> finalTableList = JDBCUtils.getTableList();
+            List<String> finalTableList = DruidUtilsDingo.getTableList();
             for (String s : createTableSet) {
                 if (finalTableList.contains(s.toUpperCase())) {
-                    sqlHelper.doDropTable(connection, s);
+                    dingoHelperDruid.doDropTable(s);
                 }
             }
         }
         
         System.out.println(schemaTableSet);
         for (String s : schemaTableSet) {
-            sqlHelper.doDropTable(connection, s);
+            dingoHelperDruid.doDropTable(s);
         }
 
         if(createSchemaSet.size() > 0) {
             System.out.println(createSchemaSet);
-            List<String> finalSchemaList = JDBCUtils.getSchemaList();
+            List<String> finalSchemaList = DruidUtilsDingo.getSchemaList();
             for (String s : createSchemaSet) {
                 if (finalSchemaList.contains(s.toUpperCase())) {
-                    sqlHelper.doDropSchema(connection, s);
+                    dingoHelperDruid.doDropSchema(s);
                 }
             }
         }
-        JDBCUtils.closeResource(connection);
     }
 
     @BeforeMethod (alwaysRun = true)
@@ -91,9 +85,6 @@ public class TestDDL extends BaseTestSuite{
 
     @Test(priority = 0, enabled = true, dataProvider = "ddlData1", dataProviderClass = YamlDataHelper.class, description = "ddl操作1")
     public void testDDL1(LinkedHashMap<String,String> param) throws SQLException, IOException, ClassNotFoundException {
-//        JDBCUtils jdbcUtils = new JDBCUtils();
-//        Connection connection = jdbcUtils.getDingoConnectionInstance();
-        
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
         }
@@ -108,21 +99,21 @@ public class TestDDL extends BaseTestSuite{
                 if (!schemaList.get(i).contains("_")) {
                     tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                     if (param.get("TestID").contains("txnbt")) {
-                        sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        dingoHelperDruid.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else if (param.get("TestID").contains("btree")) {
-                        sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        dingoHelperDruid.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else {
-                        sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        dingoHelperDruid.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     }
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = param.get("TestID").trim() + "_0" + i + schemaName;
                     if (param.get("TestID").contains("txnbt")) {
-                        sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
+                        dingoHelperDruid.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else if (param.get("TestID").contains("btree")) {
-                        sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                        dingoHelperDruid.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else {
-                        sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
+                        dingoHelperDruid.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
                     }
                 }
                 ddlSql = ddlSql.replace("$" + schemaList.get(i).trim(), tableName);
@@ -139,21 +130,21 @@ public class TestDDL extends BaseTestSuite{
                     if (!schemaList.get(j).trim().contains("_")) {
                         tableName = param.get("TestID").trim() + "_0" + j + schemaList.get(j).trim();
                         if (param.get("TestID").contains("txnbt")) {
-                            sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                            dingoHelperDruid.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
                         } else if (param.get("TestID").contains("btree")) {
-                            sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                            dingoHelperDruid.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
                         } else {
-                            sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                            dingoHelperDruid.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
                         }
                     } else {
                         String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                         tableName = param.get("TestID").trim() + "_0" + j + schemaName;
                         if (param.get("TestID").contains("txnbt")) {
-                            sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                            dingoHelperDruid.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
                         } else if (param.get("TestID").contains("btree")) {
-                            sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                            dingoHelperDruid.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
                         } else {
-                            sqlHelper.execFile(connection, TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                            dingoHelperDruid.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
                         }
                     }
                 }
@@ -205,8 +196,8 @@ public class TestDDL extends BaseTestSuite{
                 expectedResult = ParseCsv.splitCsvString(resultFile,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            sqlHelper.execBatchSqlWithState(connection, ddlSql);
-            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(connection, querySql);
+            dingoHelperDruid.execBatchSqlWithState(ddlSql);
+            List<List<String>> actualResult = dingoHelperDruid.statementQueryWithHead(querySql);
             System.out.println("Actual: " + actualResult);
             Assert.assertEquals(actualResult, expectedResult);
         } else if (param.get("Validation_type").equals("csv_containsAll")) {
@@ -218,8 +209,8 @@ public class TestDDL extends BaseTestSuite{
                 expectedResult = ParseCsv.splitCsvString(resultFile,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            sqlHelper.execBatchSqlWithState(connection, ddlSql);
-            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(connection, querySql);
+            dingoHelperDruid.execBatchSqlWithState(ddlSql);
+            List<List<String>> actualResult = dingoHelperDruid.statementQueryWithHead(querySql);
             System.out.println("Actual: " + actualResult);
             Assert.assertTrue(actualResult.containsAll(expectedResult));
             Assert.assertTrue(expectedResult.containsAll(actualResult));
@@ -232,12 +223,12 @@ public class TestDDL extends BaseTestSuite{
                 expectedResult = ParseCsv.splitCsvString(resultFile,"&");
             }
             System.out.println("Expected: " + expectedResult);
-            sqlHelper.execBatchSqlWithState(connection, ddlSql);
-            List<List<String>> actualResult = sqlHelper.statementQueryWithHead(connection, querySql);
+            dingoHelperDruid.execBatchSqlWithState(ddlSql);
+            List<List<String>> actualResult = dingoHelperDruid.statementQueryWithHead(querySql);
             System.out.println("Actual: " + actualResult);
             Assert.assertTrue(actualResult.containsAll(expectedResult));
         } else if (param.get("Validation_type").equals("table_assert")) {
-            sqlHelper.execBatchSqlWithState(connection, ddlSql);
+            dingoHelperDruid.execBatchSqlWithState(ddlSql);
             String drop_table_name = "";
             if (ddlSql.contains("drop")) {
                 if (ddlSql.contains("if exists")) {
@@ -246,12 +237,10 @@ public class TestDDL extends BaseTestSuite{
                     drop_table_name = ddlSql.substring(11);
                 }
             }
-            List<String> existTableList = JDBCUtils.getTableList();
+            List<String> existTableList = DruidUtilsDingo.getTableList();
             Assert.assertFalse(existTableList.contains(drop_table_name));
         } else if (param.get("Validation_type").equals("justExec")) {
-            sqlHelper.execBatchSqlWithState(connection, ddlSql);
+            dingoHelperDruid.execBatchSqlWithState(ddlSql);
         }
-        
-//        JDBCUtils.closeResource(connection);
     }
 }
