@@ -25,7 +25,6 @@ import utils.IniReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class BaseTestSuiteMySQL {
     public static IniReader mysqlIniReader;
@@ -34,18 +33,18 @@ public class BaseTestSuiteMySQL {
     public static void beforeSuite() throws SQLException {
         System.out.println("所有测试开始前，验证MySQL JDBC数据库连接正常");
         Connection connection = null;
-        Statement statement = null;
+//        Statement statement = null;
         try {
             connection = DruidUtilsMySQL.getDruidMySQLConnection();
             Assert.assertNotNull(connection);
             mysqlIniReader = new IniReader("src/test/resources/io.dingodb.test/ini/mysql_lsm.ini");
             mysqlIniReaderBTREE = new IniReader("src/test/resources/io.dingodb.test/ini/mysql_btree.ini");
-            statement = connection.createStatement();
-            statement.execute("set global connect_timeout=120");
+//            statement = connection.createStatement();
+//            statement.execute("set global connect_timeout=1200");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }  finally {
-            DruidUtilsMySQL.closeResource(connection, null, statement);
+            DruidUtilsMySQL.closeResource(connection, null, null);
         }
     }
 

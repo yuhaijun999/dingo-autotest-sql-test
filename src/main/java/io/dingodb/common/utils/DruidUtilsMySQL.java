@@ -39,7 +39,7 @@ public class DruidUtilsMySQL extends BaseJDBCUtils {
             String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
             String mysql_port = CommonArgs.getDefaultMySQLPort();
             String timeZone = "Asia/Shanghai";
-            String jdbcUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/" + SCHEMANAME + "?serverTimezone=" + timeZone + "&connectTimeout=120000&useServerPrepStmts=true&cachePrepStmts=true&useSSL=false";
+            String jdbcUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/" + SCHEMANAME + "?serverTimezone=" + timeZone + "&connectTimeout=600000&socketTimeout=3600000&useServerPrepStmts=true&cachePrepStmts=true&useSSL=false";
             properties.setProperty("url", jdbcUrl);
             properties.setProperty("username", USER);
             properties.setProperty("password", PASS);
@@ -68,7 +68,7 @@ public class DruidUtilsMySQL extends BaseJDBCUtils {
             String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
             String mysql_port = CommonArgs.getDefaultMySQLPort();
             String timeZone = "Asia/Shanghai";
-            String jdbcUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "?serverTimezone=" + timeZone + "&connectTimeout=120000&useServerPrepStmts=true&cachePrepStmts=true";
+            String jdbcUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "?serverTimezone=" + timeZone + "&connectTimeout=420000&socketTimeout=600000&useServerPrepStmts=true&cachePrepStmts=true";
             properties.setProperty("url", jdbcUrl);
             properties.setProperty("username", USER);
             properties.setProperty("password", PASS);
@@ -92,7 +92,7 @@ public class DruidUtilsMySQL extends BaseJDBCUtils {
             String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
             String mysql_port = CommonArgs.getDefaultMySQLPort();
             String timeZone = "Asia/Shanghai";
-            String jdbcUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/" + schemaName + "?serverTimezone=" + timeZone + "&connectTimeout=120000&useServerPrepStmts=true&cachePrepStmts=true";
+            String jdbcUrl = "jdbc:mysql://" + defaultConnectIP + ":" + mysql_port + "/" + schemaName + "?serverTimezone=" + timeZone + "&connectTimeout=420000&socketTimeout=600000&useServerPrepStmts=true&cachePrepStmts=true";
             properties.setProperty("url", jdbcUrl);
             properties.setProperty("username", USER);
             properties.setProperty("password", PASS);
@@ -120,8 +120,8 @@ public class DruidUtilsMySQL extends BaseJDBCUtils {
             properties.setProperty("url", jdbcUrl);
             properties.setProperty("username", userName);
             properties.setProperty("password", passwd);
-            properties.setProperty("initialSize", "1");
-            properties.setProperty("maxActive", "1");
+            properties.setProperty("initialSize", "2");
+            properties.setProperty("maxActive", "2");
             sourceWithNotRoot = DruidDataSourceFactory.createDataSource(properties);
         } catch (Exception e) {
             e.printStackTrace();
