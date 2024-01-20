@@ -57,10 +57,10 @@ public class BaseDataHelper {
     protected Object[][] getMultiEngineCasesData(String excelPathLSM, String excelPathBTREE, String excelPathTXNBTREE) throws IOException, InterruptedException {
         String yamlPathLSM = GetYaml.convertExcelToYaml(excelPathLSM,0,0);
         String yamlPathBTREE = GetYaml.convertExcelToYaml(excelPathBTREE,0,0);
-//        String yamlPathTXNBTREE = GetYaml.convertExcelToYaml(excelPathTXNBTREE,0,0);
+        String yamlPathTXNBTREE = GetYaml.convertExcelToYaml(excelPathTXNBTREE,0,0);
         List<Map<String, String>> yamlListLSM = getYamlList(yamlPathLSM);
         List<Map<String, String>> yamlListBTREE = getYamlList(yamlPathBTREE);
-//        List<Map<String, String>> yamlListTXNBTREE = getYamlList(yamlPathTXNBTREE);
+        List<Map<String, String>> yamlListTXNBTREE = getYamlList(yamlPathTXNBTREE);
         Object[][] cases_lsm = new Object[yamlListLSM.size()][];
         for (int i = 0; i< yamlListLSM.size(); i++) {
             cases_lsm[i] = new Object[] {yamlListLSM.get(i)};
@@ -69,10 +69,10 @@ public class BaseDataHelper {
         for (int i = 0; i< yamlListBTREE.size(); i++) {
             cases_btree[i] = new Object[] {yamlListBTREE.get(i)};
         }
-//        Object[][] cases_txnbtree = new Object[yamlListTXNBTREE.size()][];
-//        for (int i = 0; i< yamlListTXNBTREE.size(); i++) {
-//            cases_txnbtree[i] = new Object[] {yamlListTXNBTREE.get(i)};
-//        }
+        Object[][] cases_txnbtree = new Object[yamlListTXNBTREE.size()][];
+        for (int i = 0; i< yamlListTXNBTREE.size(); i++) {
+            cases_txnbtree[i] = new Object[] {yamlListTXNBTREE.get(i)};
+        }
         List<Object[]> cases_merge = Lists.newArrayList();
         cases_merge.addAll(Arrays.asList(cases_lsm));
         cases_merge.addAll(Arrays.asList(cases_btree));
