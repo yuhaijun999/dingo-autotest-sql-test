@@ -3,4 +3,4 @@ CREATE TABLE $table (
     age int,
     birthday date,
     primary key(name)
-) ttl=300
+)  ENGINE=LSM ttl=300

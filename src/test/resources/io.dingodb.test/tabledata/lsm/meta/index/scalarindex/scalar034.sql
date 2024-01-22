@@ -12,5 +12,5 @@ CREATE TABLE $table (
     zip_code varchar(20),
     is_delete boolean,
     PRIMARY KEY (id),
-    index zc_index (zip_code) with (name,age,gmt,price,amount,address,birthday,create_time,update_time,is_delete)
-)
+    index zc_index (zip_code) with (name,age,gmt,price,amount,address,birthday,create_time,update_time,is_delete) ENGINE=LSM
+) ENGINE=LSM

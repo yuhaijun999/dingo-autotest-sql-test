@@ -12,5 +12,5 @@ CREATE TABLE $table (
     zip_code varchar(20),
     is_delete boolean,
     PRIMARY KEY (id,name),
-    index amount_index (amount) replica=2
-)
+    index amount_index (amount) ENGINE=LSM replica=2
+) ENGINE=LSM

@@ -5,4 +5,4 @@ CREATE TABLE $table (
     ssex varchar(10),
     class_no varchar(6), 
     primary key(sno)
-)
+) ENGINE=LSM

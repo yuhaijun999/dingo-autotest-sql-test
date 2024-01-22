@@ -13,5 +13,5 @@ CREATE TABLE $table (
     RMW_AverageLatency varchar(20),
     RMW_99thPercentileLatency varchar(20),
     primary key(test_date,test_type,op_count,thread_num),
-    index td_tt_oc_tn_index (test_date,test_type,op_count,thread_num)
-)
+    index td_tt_oc_tn_index (test_date,test_type,op_count,thread_num) ENGINE=LSM
+) ENGINE=LSM

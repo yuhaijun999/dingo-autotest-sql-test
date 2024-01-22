@@ -15,8 +15,8 @@ CREATE TABLE $table (
     user_info any,
     feature_id bigint not null,
     PRIMARY KEY (id),
-    index name_index (name) with (amount),
-    index age_index (age),
-    index birthday_index (birthday) with (gmt,update_time),
-    index feature_index vector(feature_id, feature) partition by hash partitions=5 parameters(type=hnsw, metricType=L2, dimension=64, efConstruction=40, nlinks=32)
-)
+    index name_index (name) with (amount) ENGINE=LSM,
+    index age_index (age) ENGINE=LSM,
+    index birthday_index (birthday) with (gmt,update_time) ENGINE=LSM,
+    index feature_index vector(feature_id, feature) ENGINE=LSM partition by hash partitions=5 parameters(type=hnsw, metricType=L2, dimension=64, efConstruction=40, nlinks=32)
+) ENGINE=LSM

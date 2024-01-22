@@ -27,11 +27,11 @@ import java.util.List;
 public class FileStringReplace {
     public static List<String> fileList = new ArrayList<>();
     public static void main(String[] args) throws IOException {
-        File folder = new File("src/test/resources/io.dingodb.test/tabledata/txn_btree/meta/");
+        File folder = new File("src/test/resources/io.dingodb.test/tabledata/txn_lsm/");
 //        traverseFolderFirstDepth(folder);
         traverseFolder(folder);
-        String oldString = "BTREE";
-        String newString = "TXN_BTREE";
+        String oldString = "=LSM";
+        String newString = "=TXN_LSM";
         int fileCount=0;
         for (String s : fileList) {
             stringReplace(s, oldString, newString);

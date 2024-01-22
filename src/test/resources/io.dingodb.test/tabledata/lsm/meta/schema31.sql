@@ -196,4 +196,5 @@ CREATE TABLE $table (
    `last_sms_date` bigint,
    `churn_target` varchar,
    `c_custid` varchar,
-   primary key(c_custid))
+   primary key(c_custid)
+) ENGINE=LSM

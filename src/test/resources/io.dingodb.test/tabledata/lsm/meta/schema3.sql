@@ -3,4 +3,4 @@ CREATE TABLE $table (
     lowest_sal int,
     highest_sal int,
     primary key(grade_level)
-)
+) ENGINE=LSM

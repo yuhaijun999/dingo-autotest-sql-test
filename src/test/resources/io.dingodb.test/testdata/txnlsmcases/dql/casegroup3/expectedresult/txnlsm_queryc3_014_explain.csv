@@ -1,0 +1,3 @@
+DingoTableScan
+"type" : "txnScan"
+"pushDown" : false

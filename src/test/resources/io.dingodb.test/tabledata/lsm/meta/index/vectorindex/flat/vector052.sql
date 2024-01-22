@@ -6,5 +6,5 @@ CREATE TABLE $table (
     feature float array not null,
     feature_id bigint not null,
     primary key(id),
-    index feature_index vector(feature_id, feature) partition by hash partitions=5 parameters(type=flat, metricType=L2, dimension=64)
-)
+    index feature_index vector(feature_id, feature) ENGINE=LSM partition by hash partitions=5 parameters(type=flat, metricType=L2, dimension=64)
+) ENGINE=LSM

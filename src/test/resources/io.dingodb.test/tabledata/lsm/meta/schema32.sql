@@ -5,4 +5,4 @@ CREATE TABLE IF NOT EXISTS $table (
         `phone` VARCHAR NOT NULL,
         `byte_array` BINARY NOT NULL,
         PRIMARY KEY(dimension, metric_id)
-) partition by range values ('139e39',5),('258f36',10),('396783',15)
+) ENGINE=LSM partition by range values ('139e39',5),('258f36',10),('396783',15)

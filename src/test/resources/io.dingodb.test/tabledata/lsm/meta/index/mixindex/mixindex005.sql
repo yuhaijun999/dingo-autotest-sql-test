@@ -15,6 +15,6 @@ CREATE TABLE $table (
     user_info any,
     feature_id bigint not null,
     PRIMARY KEY (id),
-    index price_index (price),
-    index feature_index vector(feature_id, feature) partition by hash partitions=5 parameters(type=hnsw, metricType=L2, dimension=64, efConstruction=40, nlinks=32)
-)
+    index price_index (price) ENGINE=LSM,
+    index feature_index vector(feature_id, feature) ENGINE=LSM partition by hash partitions=5 parameters(type=hnsw, metricType=L2, dimension=64, efConstruction=40, nlinks=32)
+) ENGINE=LSM

@@ -7,4 +7,4 @@ CREATE TABLE $table (
     data any,
     good_info any,
     primary key(id)
-)
+) ENGINE=LSM

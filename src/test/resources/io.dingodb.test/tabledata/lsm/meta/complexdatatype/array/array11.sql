@@ -4,4 +4,4 @@ CREATE TABLE $table (
     age int,
     class_no int array not null default array[101,102,103],
     PRIMARY KEY (id)
-)
+) ENGINE=LSM

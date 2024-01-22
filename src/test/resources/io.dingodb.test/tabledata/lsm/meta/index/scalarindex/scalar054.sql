@@ -15,6 +15,6 @@ CREATE TABLE $table (
     user_info any,
     feature_id bigint not null,
     PRIMARY KEY (id),
-    index address_index(address),
-    index age_birthday_index(age,birthday) with (amount) partition by hash partitions=100
-)
+    index address_index(address) ENGINE=LSM,
+    index age_birthday_index(age,birthday) with (amount) ENGINE=LSM partition by hash partitions=100
+) ENGINE=LSM

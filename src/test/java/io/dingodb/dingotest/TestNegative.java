@@ -94,7 +94,9 @@ public class TestNegative extends BaseTestSuite {
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                        if (param.get("TestID").contains("txnbt")) {
+                        if (param.get("TestID").contains("txnlsm")) {
+                            dingoHelperDruid.execFile(TestNegative.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        } else if (param.get("TestID").contains("txnbt")) {
                             dingoHelperDruid.execFile(TestNegative.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                         } else if (param.get("TestID").contains("btree")) {
                             dingoHelperDruid.execFile(TestNegative.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
@@ -111,7 +113,9 @@ public class TestNegative extends BaseTestSuite {
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaName;
-                        if (param.get("TestID").contains("txnbt")) {
+                        if (param.get("TestID").contains("txnlsm")) {
+                            dingoHelperDruid.execFile(TestNegative.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("TableSchema",schemaName)), tableName);
+                        } else if (param.get("TestID").contains("txnbt")) {
                             dingoHelperDruid.execFile(TestNegative.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
                         } else if (param.get("TestID").contains("btree")) {
                             dingoHelperDruid.execFile(TestNegative.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
@@ -136,7 +140,9 @@ public class TestNegative extends BaseTestSuite {
                             tableName = param.get("TestID").trim() + "_0" + j + schemaName;
                         }
 
-                        if (param.get("TestID").contains("txnbt")) {
+                        if (param.get("TestID").contains("txnlsm")) {
+                            dingoHelperDruid.execFile(TestNegative.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("NegativeValues", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("txnbt")) {
                             dingoHelperDruid.execFile(TestNegative.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("NegativeValues", value_List.get(j).trim())), tableName);
                         } else if (param.get("TestID").contains("btree")) {
                             dingoHelperDruid.execFile(TestNegative.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("NegativeValues", value_List.get(j).trim())), tableName);

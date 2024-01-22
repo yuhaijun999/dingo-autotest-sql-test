@@ -10,4 +10,4 @@ CREATE TABLE $table (
     send_time timestamp multiset,
     in_use boolean multiset,
     primary key(id)
-)
+) ENGINE=LSM

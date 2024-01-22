@@ -3,4 +3,4 @@ CREATE TABLE $table (
     cname varchar(20), 
     tno varchar, 
     primary key (cno)
-)
+) ENGINE=LSM

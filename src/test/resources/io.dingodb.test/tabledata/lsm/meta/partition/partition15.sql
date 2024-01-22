@@ -6,4 +6,4 @@ CREATE TABLE $table (
     birthday date,
     create_time time,
     primary key(create_time)
-) partition by range values (10:30:30), (18:00:00), (21:59:59) with (propKey=propValue)
+) ENGINE=LSM partition by range values (10:30:30), (18:00:00), (21:59:59) with (propKey=propValue)

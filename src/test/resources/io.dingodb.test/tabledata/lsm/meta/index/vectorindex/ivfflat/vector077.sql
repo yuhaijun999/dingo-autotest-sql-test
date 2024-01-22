@@ -5,6 +5,6 @@ CREATE TABLE $table (
     amount double,
     feature float array not null,
     feature_id bigint not null,
-    index feature_index vector(feature_id, feature) parameters(type=ivfflat, metricType=INNER_PRODUCT, dimension=128, ncentroids=64),
+    index feature_index vector(feature_id, feature) ENGINE=LSM parameters(type=ivfflat, metricType=INNER_PRODUCT, dimension=128, ncentroids=64),
     primary key(id)
-)
+) ENGINE=LSM

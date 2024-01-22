@@ -12,7 +12,7 @@ CREATE TABLE $table (
     zip_code varchar(20),
     is_delete boolean,
     PRIMARY KEY (id),
-    index name_index (name),
-    index amount_index (amount),
-    index name_address_age_create_time (name,address,age,create_time)
-)
+    index name_index (name) ENGINE=LSM,
+    index amount_index (amount) ENGINE=LSM,
+    index name_address_age_create_time (name,address,age,create_time) ENGINE=LSM
+) ENGINE=LSM

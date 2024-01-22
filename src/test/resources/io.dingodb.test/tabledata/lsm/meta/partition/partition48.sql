@@ -5,4 +5,4 @@ CREATE TABLE $table (
     amount double,
     write_date date,
     primary key(id,write_date)
-) ttl=7200 partition by range values (100000, '1995-01-01'),(10000000,'2010-07-01'),(100000000,'2022-09-30') with (propKey=propValue)
+) ENGINE=LSM ttl=7200 partition by range values (100000, '1995-01-01'),(10000000,'2010-07-01'),(100000000,'2022-09-30') with (propKey=propValue)

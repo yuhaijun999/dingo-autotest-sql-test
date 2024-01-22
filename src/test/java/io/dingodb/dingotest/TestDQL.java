@@ -88,7 +88,9 @@ public class TestDQL extends BaseTestSuite {
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName.toUpperCase());
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                        if (param.get("TestID").contains("txnbt")) {
+                        if (param.get("TestID").contains("txnlsm")) {
+                            dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        } else if (param.get("TestID").contains("txnbt")) {
                             dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                         } else if (param.get("TestID").contains("btree")) {
                             dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
@@ -105,7 +107,9 @@ public class TestDQL extends BaseTestSuite {
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName.toUpperCase());
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaName;
-                        if (param.get("TestID").contains("txnbt")) {
+                        if (param.get("TestID").contains("txnlsm")) {
+                            dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("TableSchema",schemaName)), tableName);
+                        } else if (param.get("TestID").contains("txnbt")) {
                             dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
                         } else if (param.get("TestID").contains("btree")) {
                             dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
@@ -130,7 +134,9 @@ public class TestDQL extends BaseTestSuite {
                             tableName = param.get("TestID").trim() + "_0" + j + schemaName;
                         }
 
-                        if (param.get("TestID").contains("txnbt")) {
+                        if (param.get("TestID").contains("txnlsm")) {
+                            dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("txnbt")) {
                             dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
                         } else if (param.get("TestID").contains("btree")) {
                             dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
@@ -145,7 +151,9 @@ public class TestDQL extends BaseTestSuite {
                     List<String> value_List = CastUtils.construct1DListIncludeBlank(param.get("Table_value_ref").trim(),",");
                     for (int j = 0; j < value_List.size(); j++) {
                         String tableName = param.get("Case_table_dependency").trim() + "_0" + j + schemaList.get(j).trim();
-                        if (param.get("TestID").contains("txnbt")) {
+                        if (param.get("TestID").contains("txnlsm")) {
+                            dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("txnbt")) {
                             dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
                         } else if (param.get("TestID").contains("btree")) {
                             dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DQLGroup1Values", value_List.get(j).trim())), tableName);
@@ -314,7 +322,9 @@ public class TestDQL extends BaseTestSuite {
                         explainSql = explainSql.replace("$" + schemaList.get(i).trim(), tableName);
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                        if (param.get("TestID").contains("txnbt")) {
+                        if (param.get("TestID").contains("txnlsm")) {
+                            dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        } else if (param.get("TestID").contains("txnbt")) {
                             dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                         } else if (param.get("TestID").contains("btree")) {
                             dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
@@ -333,7 +343,9 @@ public class TestDQL extends BaseTestSuite {
                         explainSql = explainSql.replace("$" + schemaList.get(i).trim(), tableName);
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaName;
-                        if (param.get("TestID").contains("txnbt")) {
+                        if (param.get("TestID").contains("txnlsm")) {
+                            dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("TableSchema",schemaName)), tableName);
+                        } else if (param.get("TestID").contains("txnbt")) {
                             dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
                         } else if (param.get("TestID").contains("btree")) {
                             dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
@@ -359,7 +371,9 @@ public class TestDQL extends BaseTestSuite {
                             tableName = param.get("TestID").trim() + "_0" + j + schemaName;
                         }
 
-                        if (param.get("TestID").contains("txnbt")) {
+                        if (param.get("TestID").contains("txnlsm")) {
+                            dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("DQLGroup3Values", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("txnbt")) {
                             dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("DQLGroup3Values", value_List.get(j).trim())), tableName);
                         } else if (param.get("TestID").contains("btree")) {
                             dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DQLGroup3Values", value_List.get(j).trim())), tableName);
@@ -374,7 +388,9 @@ public class TestDQL extends BaseTestSuite {
                     List<String> value_List = CastUtils.construct1DListIncludeBlank(param.get("Table_value_ref").trim(),",");
                     for (int j = 0; j < value_List.size(); j++) {
                         String tableName = param.get("Case_table_dependency").trim() + "_0" + j + schemaList.get(j).trim();
-                        if (param.get("TestID").contains("txnbt")) {
+                        if (param.get("TestID").contains("txnlsm")) {
+                            dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("DQLGroup3Values", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("txnbt")) {
                             dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("DQLGroup3Values", value_List.get(j).trim())), tableName);
                         } else if (param.get("TestID").contains("btree")) {
                             dingoHelperDruid.execFile(TestDQL.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DQLGroup3Values", value_List.get(j).trim())), tableName);

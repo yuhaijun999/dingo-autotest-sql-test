@@ -12,4 +12,4 @@ CREATE TABLE $table (
     zip_code varchar(10),
     is_delete boolean,
     PRIMARY KEY (is_delete)
-)
+) ENGINE=LSM

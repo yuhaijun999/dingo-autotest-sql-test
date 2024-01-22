@@ -4,4 +4,4 @@ CREATE TABLE $table (
     is_delete boolean,
     in_use boolean array not null default array[true],
     PRIMARY KEY (id)
-)
+) ENGINE=LSM

@@ -5,4 +5,4 @@ CREATE TABLE $table (
     amount double,
     user_info any not null default map['sex','male','birthday','2022-01-01'],
     primary key(id)
-)
+) ENGINE=LSM

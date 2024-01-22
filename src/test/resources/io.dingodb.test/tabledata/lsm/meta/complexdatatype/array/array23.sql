@@ -5,4 +5,4 @@ CREATE TABLE $table (
     age int,
     amount double,
     PRIMARY KEY (id)
-)
+) ENGINE=LSM

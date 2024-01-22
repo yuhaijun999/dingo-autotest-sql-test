@@ -4,4 +4,4 @@ CREATE TABLE $table (
     amount double,
     price double array not null default array[1234.56,0.01],
     PRIMARY KEY (id)
-)
+) ENGINE=LSM

@@ -4,4 +4,4 @@ CREATE TABLE $table (
     name varchar(20), 
     age int, 
     primary key(id)
-)
+) ENGINE=LSM

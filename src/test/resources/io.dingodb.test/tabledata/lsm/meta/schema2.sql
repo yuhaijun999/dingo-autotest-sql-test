@@ -11,4 +11,4 @@ CREATE TABLE $table (
     department_id int DEFAULT NULL,
     hiredate timestamp DEFAULT NULL,
     PRIMARY KEY (employee_id)
-)
+) ENGINE=LSM

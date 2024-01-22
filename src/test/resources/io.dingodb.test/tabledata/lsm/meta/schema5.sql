@@ -4,4 +4,4 @@ CREATE TABLE $table (
     age int,
     amount double,
     primary key(id,name)
-) ttl=300
+)  ENGINE=LSM ttl=300

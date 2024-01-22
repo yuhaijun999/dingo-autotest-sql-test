@@ -3,4 +3,4 @@ CREATE TABLE $table (
     cno varchar(6), 
     score int, 
     primary key(sno,cno)
-)
+) ENGINE=LSM

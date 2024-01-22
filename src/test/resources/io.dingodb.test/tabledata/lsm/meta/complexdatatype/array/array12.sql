@@ -4,4 +4,4 @@ CREATE TABLE $table (
     address varchar(255),
     user_info varchar array not null default array['male','BJ','18'],
     PRIMARY KEY (id)
-)
+) ENGINE=LSM

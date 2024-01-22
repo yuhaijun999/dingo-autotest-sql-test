@@ -5,4 +5,4 @@ CREATE TABLE $table (
     amount double,
     create_time time,
     primary key(create_time, id)
-) partition by range values (08:30:00),(14:00:00),(19:00:00) with (propKey=propValue)
+) ENGINE=LSM partition by range values (08:30:00),(14:00:00),(19:00:00) with (propKey=propValue)

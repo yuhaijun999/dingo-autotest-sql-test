@@ -5,4 +5,4 @@ CREATE TABLE $table (
     amount DOUBLE,
     class_no int array,
     PRIMARY KEY (id)
-)
+) ENGINE=LSM

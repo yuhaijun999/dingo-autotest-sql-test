@@ -4,4 +4,4 @@ CREATE TABLE $table (
     w3cschool_author varchar(255) DEFAULT NULL,
     submission_date date DEFAULT NULL,
     PRIMARY KEY (w3cschool_id)
-)
+) ENGINE=LSM

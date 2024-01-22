@@ -5,4 +5,4 @@ CREATE TABLE $table (
     amount DOUBLE,
     price float array,
     PRIMARY KEY (id)
-)
+) ENGINE=LSM

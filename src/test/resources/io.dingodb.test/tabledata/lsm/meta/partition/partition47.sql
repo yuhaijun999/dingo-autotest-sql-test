@@ -4,4 +4,4 @@ CREATE TABLE $table (
     age int,
     address varchar(255),
     primary key(name)
-) partition by range values ('') with (propKey=propValue)
+) ENGINE=LSM partition by range values ('') with (propKey=propValue)

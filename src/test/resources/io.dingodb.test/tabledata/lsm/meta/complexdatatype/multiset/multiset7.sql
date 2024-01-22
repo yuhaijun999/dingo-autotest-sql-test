@@ -5,4 +5,4 @@ CREATE TABLE $table (
     amount double,
     run_inter date multiset,
     primary key(id)
-)
+) ENGINE=LSM
