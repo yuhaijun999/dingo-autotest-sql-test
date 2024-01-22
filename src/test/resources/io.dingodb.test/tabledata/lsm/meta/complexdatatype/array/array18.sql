@@ -10,4 +10,4 @@ CREATE TABLE $table (
     send_time timestamp array,
     in_use boolean array,
     primary key(id)
-)
+) ENGINE=LSM

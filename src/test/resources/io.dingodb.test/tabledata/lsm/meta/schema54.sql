@@ -6,4 +6,4 @@ CREATE TABLE $table (
     phone varchar(11) NOT NULL,
     boyfriend_id int DEFAULT NULL,
     PRIMARY KEY (id)
-) ttl=3600 partition by hash partitions=5
+) ENGINE=LSM ttl=3600 partition by hash partitions=5

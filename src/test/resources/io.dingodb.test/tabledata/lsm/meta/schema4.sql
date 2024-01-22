@@ -9,4 +9,4 @@ CREATE TABLE $table (
     update_time timestamp,
     is_delete boolean,
     primary key (id,name,update_time)
-)
+) ENGINE=LSM

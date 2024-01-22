@@ -6,4 +6,4 @@ CREATE TABLE $table (
     birthday date,
     run_inter date multiset not null default multiset['2022-06-18','2022-11-11','2023-01-01'],
     primary key(id)
-)
+) ENGINE=LSM

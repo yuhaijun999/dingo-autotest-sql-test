@@ -12,5 +12,5 @@ CREATE TABLE $table (
     zip_code varchar(20),
     is_delete boolean,
     PRIMARY KEY (id,birthday),
-    index name_index (name) with (price,gmt) partition by range values ('Z'),('z') replica=3
-) partition by range values (10,'2000-01-01'),(20,'2020-12-31') replica=2
+    index name_index (name) with (price,gmt) ENGINE=LSM partition by range values ('Z'),('z') replica=3
+) ENGINE=LSM partition by range values (10,'2000-01-01'),(20,'2020-12-31') replica=2

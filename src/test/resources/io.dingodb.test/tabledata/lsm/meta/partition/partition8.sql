@@ -4,4 +4,4 @@ CREATE TABLE $table (
     age int,
     amount double,
     primary key(name)
-) partition by range values (a),(m),(u) with (propKey=propValue)
+) ENGINE=LSM partition by range values (a),(m),(u) with (propKey=propValue)

@@ -10,4 +10,4 @@ CREATE TABLE $table (
     is_delete boolean,
     data any,
     primary key(id)
-)
+) ENGINE=LSM

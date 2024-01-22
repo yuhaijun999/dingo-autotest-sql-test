@@ -12,8 +12,8 @@ CREATE TABLE $table (
     zip_code varchar(20),
     is_delete boolean,
     PRIMARY KEY (id),
-    index name_index (name),
-    index age_index (age),
-    index price_index (price) partition by range values (0.0),
-    index ct_index (create_time)
-)
+    index name_index (name) ENGINE=LSM,
+    index age_index (age) ENGINE=LSM,
+    index price_index (price) ENGINE=LSM partition by range values (0.0),
+    index ct_index (create_time) ENGINE=LSM
+) ENGINE=LSM

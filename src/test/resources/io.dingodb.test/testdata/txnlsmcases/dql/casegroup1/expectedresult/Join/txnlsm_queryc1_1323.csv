@@ -1,0 +1,19 @@
+sid1,sn1,sa1,sid2,sn2,sa2
+1,zhangsan,23.5,1,Haha,23.45
+1,zhangsan,23.5,2,null,18.9
+1,zhangsan,23.5,3,Lolo,0.0
+1,zhangsan,23.5,4,Li Si,0.01
+2,lisi,895.0,1,Haha,23.45
+2,lisi,895.0,2,null,18.9
+2,lisi,895.0,3,Lolo,0.0
+2,lisi,895.0,4,Li Si,0.01
+3,l3,123.123,1,Haha,23.45
+3,l3,123.123,2,null,18.9
+3,l3,123.123,3,Lolo,0.0
+3,l3,123.123,4,Li Si,0.01
+4,HAHA,9.0762556,3,Lolo,0.0
+4,HAHA,9.0762556,4,Li Si,0.01
+5,awJDs,1453.9999,1,Haha,23.45
+5,awJDs,1453.9999,2,null,18.9
+5,awJDs,1453.9999,3,Lolo,0.0
+5,awJDs,1453.9999,4,Li Si,0.01

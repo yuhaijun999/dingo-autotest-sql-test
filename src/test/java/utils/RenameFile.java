@@ -28,7 +28,7 @@ import java.util.List;
 public class RenameFile {
     public static List<String> fileList = new ArrayList<>();
     public static void main(String[] args) {
-        File folder = new File("src/test/resources/io.dingodb.test/testdata/txnbtreecases/prepareStatement/expectedresult/");
+        File folder = new File("src/test/resources/io.dingodb.test/testdata/txnlsmcases/prepareStatement/expectedresult/");
         traverseFolder(folder);
 //        traverseFolderFirstDepth(folder);
         System.out.println(fileList.size());
@@ -38,7 +38,8 @@ public class RenameFile {
             Path oldFilePath = Paths.get(s);
             String oldFileName = oldFilePath.getFileName().toString();
 //            String oldFileName = s.substring(s.lastIndexOf("\\") + 1);
-            String newFileName = "txn" + oldFileName;
+//            String newFileName = "txn" + oldFileName;
+            String newFileName = oldFileName.replace("txnbtree","txnlsm");
             String newFilePath = oldFilePath.getParent().toString() + "\\" + newFileName;
 //            System.out.println(newFilePath);
             File newFile = new File(newFilePath);

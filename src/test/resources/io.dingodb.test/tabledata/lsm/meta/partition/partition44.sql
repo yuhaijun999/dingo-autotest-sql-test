@@ -4,4 +4,4 @@ CREATE TABLE $table (
     amount double,
     update_time timestamp,
     primary key(name,update_time)
-) partition by range values (a,1998-12-31 10:00:00),(M,2011-11-11 18:30:00) with (propKey=propValue)
+) ENGINE=LSM partition by range values (a,1998-12-31 10:00:00),(M,2011-11-11 18:30:00) with (propKey=propValue)

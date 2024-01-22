@@ -5,4 +5,4 @@ CREATE TABLE $table (
     amount double, 
     address varchar(255), 
     primary key(id)
-)
+) ENGINE=LSM

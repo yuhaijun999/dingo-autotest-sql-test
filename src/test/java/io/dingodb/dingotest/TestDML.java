@@ -87,7 +87,9 @@ public class TestDML extends BaseTestSuite {
                 String tableName = "";
                 if (!schemaList.get(i).trim().contains("_")) {
                     tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                    if (param.get("TestID").contains("txnbt")) {
+                    if (param.get("TestID").contains("txnlsm")) {
+                        dingoHelperDruid.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    } else if (param.get("TestID").contains("txnbt")) {
                         dingoHelperDruid.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else if (param.get("TestID").contains("btree")) {
                         dingoHelperDruid.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
@@ -97,7 +99,9 @@ public class TestDML extends BaseTestSuite {
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = param.get("TestID").trim() + "_0" + i + schemaName;
-                    if (param.get("TestID").contains("txnbt")) {
+                    if (param.get("TestID").contains("txnlsm")) {
+                        dingoHelperDruid.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("TableSchema",schemaName)), tableName);
+                    } else if (param.get("TestID").contains("txnbt")) {
                         dingoHelperDruid.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else if (param.get("TestID").contains("btree")) {
                         dingoHelperDruid.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
@@ -124,7 +128,10 @@ public class TestDML extends BaseTestSuite {
                         tableName = param.get("TestID").trim() + "_0" + j + schemaName;
                     }
 
-                    if (param.get("TestID").contains("txnbt")) {
+                    if (param.get("TestID").contains("txnlsm")) {
+                        InputStream stream = TestDML.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("DMLValues", value_List.get(j).trim()));
+                        insertSql = IOUtils.toString(stream, StandardCharsets.UTF_8).replace("$table", tableName);
+                    } else if (param.get("TestID").contains("txnbt")) {
                         InputStream stream = TestDML.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("DMLValues", value_List.get(j).trim()));
                         insertSql = IOUtils.toString(stream, StandardCharsets.UTF_8).replace("$table", tableName);
                     } if (param.get("TestID").contains("btree")) {
@@ -213,7 +220,9 @@ public class TestDML extends BaseTestSuite {
                 String tableName = "";
                 if (!schemaList.get(i).contains("_")) {
                     tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                    if (param.get("TestID").contains("txnbt")) {
+                    if (param.get("TestID").contains("txnlsm")) {
+                        dingoHelperDruid.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    } else if (param.get("TestID").contains("txnbt")) {
                         dingoHelperDruid.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else if (param.get("TestID").contains("btree")) {
                         dingoHelperDruid.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
@@ -223,7 +232,9 @@ public class TestDML extends BaseTestSuite {
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = param.get("TestID").trim() + "_0" + i + schemaName;
-                    if (param.get("TestID").contains("txnbt")) {
+                    if (param.get("TestID").contains("txnlsm")) {
+                        dingoHelperDruid.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("TableSchema",schemaName)), tableName);
+                    } else if (param.get("TestID").contains("txnbt")) {
                         dingoHelperDruid.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else if (param.get("TestID").contains("btree")) {
                         dingoHelperDruid.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
@@ -247,7 +258,9 @@ public class TestDML extends BaseTestSuite {
                         tableName = param.get("TestID").trim() + "_0" + j + schemaName;
                     }
 
-                    if (param.get("TestID").contains("txnbt")) {
+                    if (param.get("TestID").contains("txnlsm")) {
+                        dingoHelperDruid.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("DMLValues", value_List.get(j).trim())), tableName);
+                    } else if (param.get("TestID").contains("txnbt")) {
                         dingoHelperDruid.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("DMLValues", value_List.get(j).trim())), tableName);
                     } else if (param.get("TestID").contains("btree")) {
                         dingoHelperDruid.execFile(TestDML.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("DMLValues", value_List.get(j).trim())), tableName);

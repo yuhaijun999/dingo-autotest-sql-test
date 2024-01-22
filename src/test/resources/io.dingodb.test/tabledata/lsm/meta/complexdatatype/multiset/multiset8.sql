@@ -5,4 +5,4 @@ CREATE TABLE $table (
     amount double,
     test_time time multiset,
     primary key(id)
-)
+) ENGINE=LSM

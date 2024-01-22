@@ -5,4 +5,4 @@ CREATE TABLE $table (
     amount double,
     price double multiset not null default multiset[1234.56,0.01],
     primary key(id)
-)
+) ENGINE=LSM

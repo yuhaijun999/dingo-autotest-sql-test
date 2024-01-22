@@ -5,4 +5,4 @@ CREATE TABLE $table (
     amount DOUBLE,
     send_time timestamp array,
     PRIMARY KEY (id)
-)
+) ENGINE=LSM

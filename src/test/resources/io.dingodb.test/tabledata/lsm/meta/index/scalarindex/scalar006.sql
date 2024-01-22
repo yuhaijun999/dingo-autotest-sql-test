@@ -11,6 +11,6 @@ CREATE TABLE $table (
     update_time TIMESTAMP,
     zip_code varchar(20),
     is_delete boolean,
-    index birthday_index (birthday),
+    index birthday_index (birthday) ENGINE=LSM,
     PRIMARY KEY (id)
-)
+) ENGINE=LSM

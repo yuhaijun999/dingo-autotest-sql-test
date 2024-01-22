@@ -6,4 +6,4 @@ CREATE TABLE $table (
     is_delete boolean,
     in_use boolean multiset not null default multiset[true],
     primary key(id)
-)
+) ENGINE=LSM

@@ -15,4 +15,4 @@ CREATE TABLE $table (
     user_info any,
     feature_id bigint not null,
     PRIMARY KEY (id)
-) partition by hash partitions=10
+) ENGINE=LSM partition by hash partitions=10

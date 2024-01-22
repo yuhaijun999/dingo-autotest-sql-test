@@ -3,4 +3,4 @@ CREATE TABLE $table (
     name varchar(20),
     class_id int,
     primary key(sid)
-)
+) ENGINE=LSM

@@ -3,4 +3,4 @@ CREATE TABLE IF NOT EXISTS $table (
         ProductName VARCHAR(50) NOT NULL,
         OrderTime INT NOT NULL DEFAULT Unix_TimeStamp(now()),
         PRIMARY KEY(OrderId)
-)
+) ENGINE=LSM

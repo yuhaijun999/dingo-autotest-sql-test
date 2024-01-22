@@ -6,4 +6,4 @@ CREATE TABLE $table (
     reg_time timestamp,
     total_gmt double,
     primary key(uuid,phone,acct_date)
-)
+) ENGINE=LSM

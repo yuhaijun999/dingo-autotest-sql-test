@@ -12,4 +12,4 @@ CREATE TABLE $table (
     zip_code varchar(10),
     is_delete boolean,
     PRIMARY KEY (id)
-) partition by range values (1001),(5001),(10001),(15001) replica=2 with (propKey=propValue)
+) ENGINE=LSM partition by range values (1001),(5001),(10001),(15001) replica=2 with (propKey=propValue)

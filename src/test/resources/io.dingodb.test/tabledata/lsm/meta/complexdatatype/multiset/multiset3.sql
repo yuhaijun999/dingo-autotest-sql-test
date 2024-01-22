@@ -5,4 +5,4 @@ CREATE TABLE $table (
     amount double,
     user_info varchar multiset,
     primary key(id)
-)
+) ENGINE=LSM

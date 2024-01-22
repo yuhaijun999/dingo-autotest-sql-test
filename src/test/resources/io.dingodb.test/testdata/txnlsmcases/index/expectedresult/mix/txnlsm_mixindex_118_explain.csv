@@ -1,0 +1,11 @@
+DingoHashJoin
+DingoSort
+DingoFilter
+DingoVector
+DingoGetVectorByDistance
+VectorStreamConvertor
+DingoGetByIndex
+"type" : "index"
+"type" : "partVector"
+"type" : "sort"
+"type" : "hashJoin"

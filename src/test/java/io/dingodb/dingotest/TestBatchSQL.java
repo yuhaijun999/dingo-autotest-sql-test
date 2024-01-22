@@ -98,7 +98,10 @@ public class TestBatchSQL extends BaseTestSuite {
         String querySql1 = param.get("Query_sql1");
         String querySql2 = param.get("Query_sql2");
         for ( int i = 0; i < 1; i++) {
-            if (param.get("TestID").contains("txnbt")) {
+            if (param.get("TestID").contains("txnlsm")) {
+                dingoHelperDruid.execFile(TestBatchSQL.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("BatchSQLOp",
+                        param.get("Batch_sql"))), tableList.get(i).trim());
+            } else if (param.get("TestID").contains("txnbt")) {
                 dingoHelperDruid.execFile(TestBatchSQL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("BatchSQLOp",
                         param.get("Batch_sql"))), tableList.get(i).trim());
             } else if (param.get("TestID").contains("btree")) {

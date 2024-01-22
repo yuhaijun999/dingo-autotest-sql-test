@@ -4,4 +4,4 @@ CREATE TABLE $table (
     amount double,
     is_delete boolean,
     primary key(name,is_delete)
-) partition by range values (a,true) with (propKey=propValue)
+) ENGINE=LSM partition by range values (a,true) with (propKey=propValue)

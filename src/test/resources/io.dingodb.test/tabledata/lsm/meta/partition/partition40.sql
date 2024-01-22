@@ -4,4 +4,4 @@ CREATE TABLE $table (
     amount double,
     address varchar(255),
     primary key(name,address)
-) partition by range values (Li,Bj),(wang,sh) with (propKey=propValue)
+) ENGINE=LSM partition by range values (Li,Bj),(wang,sh) with (propKey=propValue)

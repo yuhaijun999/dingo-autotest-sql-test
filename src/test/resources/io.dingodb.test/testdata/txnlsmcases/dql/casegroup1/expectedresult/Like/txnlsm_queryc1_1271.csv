@@ -1,0 +1,25 @@
+age,id,address,name
+18,1,beijing,zhangsan
+20,31,ChangPing2,Zhang Fei
+29,37,heiling,MM
+49,38,JiNan,HM
+60,39,JiNai,4A
+70,40,HuNan, A
+8,42,368 Street,null
+0,44,406 Street,163.com
+1,45,Street Go1,baidu.com
+100,48,Minger,Carson
+101,49,Zinger,Karsen
+-100,51,,
+55,52, , MM 
+-18,54, Tinger,null
+9,55,JiNan,zhangfei
+90,56,JiNan,lixue
+91,57,shanghai,Zhangsan
+87,58,shanghai,wangling
+0,59,WuHan,zhangxiaoguang
+10,61,Street No1,zhangsan
+68,62, ,carson
+-18,64,Jinan,null
+96,67,Street No1,zhangsan
+111,68,1,4

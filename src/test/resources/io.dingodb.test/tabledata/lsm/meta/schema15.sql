@@ -4,4 +4,4 @@ CREATE TABLE $table (
     manager_id int DEFAULT NULL,
     location_id int DEFAULT NULL,
     PRIMARY KEY (department_id)
-)
+) ENGINE=LSM

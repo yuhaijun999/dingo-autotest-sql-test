@@ -54,16 +54,24 @@ public class BaseDataHelper {
         return map;
     }
     
-    protected Object[][] getMultiEngineCasesData(String excelPathLSM, String excelPathBTREE, String excelPathTXNBTREE) throws IOException, InterruptedException {
+    protected Object[][] getMultiEngineCasesData(String excelPathLSM, String excelPathTXNLSM, String excelPathBTREE, String excelPathTXNBTREE) throws IOException, InterruptedException {
         String yamlPathLSM = GetYaml.convertExcelToYaml(excelPathLSM,0,0);
+        String yamlPathTXNLSM = GetYaml.convertExcelToYaml(excelPathTXNLSM,0,0);
         String yamlPathBTREE = GetYaml.convertExcelToYaml(excelPathBTREE,0,0);
         String yamlPathTXNBTREE = GetYaml.convertExcelToYaml(excelPathTXNBTREE,0,0);
+        
         List<Map<String, String>> yamlListLSM = getYamlList(yamlPathLSM);
+        List<Map<String, String>> yamlListTXNLSM = getYamlList(yamlPathTXNLSM);
         List<Map<String, String>> yamlListBTREE = getYamlList(yamlPathBTREE);
         List<Map<String, String>> yamlListTXNBTREE = getYamlList(yamlPathTXNBTREE);
+        
         Object[][] cases_lsm = new Object[yamlListLSM.size()][];
         for (int i = 0; i< yamlListLSM.size(); i++) {
             cases_lsm[i] = new Object[] {yamlListLSM.get(i)};
+        }
+        Object[][] cases_txnlsm = new Object[yamlListTXNLSM.size()][];
+        for (int i = 0; i< yamlListTXNLSM.size(); i++) {
+            cases_txnlsm[i] = new Object[] {yamlListTXNLSM.get(i)};
         }
         Object[][] cases_btree = new Object[yamlListBTREE.size()][];
         for (int i = 0; i< yamlListBTREE.size(); i++) {
@@ -73,8 +81,10 @@ public class BaseDataHelper {
         for (int i = 0; i< yamlListTXNBTREE.size(); i++) {
             cases_txnbtree[i] = new Object[] {yamlListTXNBTREE.get(i)};
         }
+        
         List<Object[]> cases_merge = Lists.newArrayList();
         cases_merge.addAll(Arrays.asList(cases_lsm));
+//        cases_merge.addAll(Arrays.asList(cases_txnlsm));
         cases_merge.addAll(Arrays.asList(cases_btree));
 //        cases_merge.addAll(Arrays.asList(cases_txnbtree));
         return cases_merge.toArray(new Object[cases_merge.size()][]);

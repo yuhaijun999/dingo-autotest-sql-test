@@ -5,4 +5,4 @@ CREATE TABLE $table (
     amount double,
     is_delete boolean,
     primary key(id,is_delete)
-) partition by range values (10000,true),(99999,true) with (propKey=propValue)
+) ENGINE=LSM partition by range values (10000,true),(99999,true) with (propKey=propValue)

@@ -5,4 +5,4 @@ CREATE TABLE $table (
     amount double,
     birthday date,
     primary key(birthday,id)
-) partition by range values (1999-07-07),(2010-01-01),(2020-12-31) with (propKey=propValue)
+) ENGINE=LSM partition by range values (1999-07-07),(2010-01-01),(2020-12-31) with (propKey=propValue)

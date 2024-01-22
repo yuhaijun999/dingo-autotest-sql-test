@@ -5,4 +5,4 @@ CREATE TABLE $table (
     amount double,
     send_time timestamp multiset,
     primary key(id)
-)
+) ENGINE=LSM

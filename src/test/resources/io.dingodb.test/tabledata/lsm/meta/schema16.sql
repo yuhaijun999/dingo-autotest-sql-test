@@ -4,4 +4,4 @@ CREATE TABLE $table (
     min_salary int DEFAULT NULL,
     max_salary int DEFAULT NULL,
     PRIMARY KEY (job_id)
-)
+) ENGINE=LSM

@@ -129,4 +129,4 @@ fake_125 varchar(83),
 fake_126 varchar(80),
 fake_127 varchar(42),
 primary key(id)
-)
+) ENGINE=LSM

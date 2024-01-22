@@ -30,6 +30,7 @@ public class BaseTestSuite {
     public static IniReader iniReader;
     public static IniReader iniReaderBTREE;
     public static IniReader iniReaderTXNBTREE;
+    public static IniReader iniReaderTXNLSM;
 //    public static SQLHelper sqlHelper;
     @BeforeSuite(alwaysRun = true, description = "所有测试开始前的准备工作")
     public static void beforeSuite() throws SQLException {
@@ -41,6 +42,7 @@ public class BaseTestSuite {
             iniReader = new IniReader("src/test/resources/io.dingodb.test/ini/dingo_lsm.ini");
             iniReaderBTREE = new IniReader("src/test/resources/io.dingodb.test/ini/dingo_btree.ini");
             iniReaderTXNBTREE = new IniReader("src/test/resources/io.dingodb.test/ini/dingo_txn_btree.ini");
+            iniReaderTXNLSM = new IniReader("src/test/resources/io.dingodb.test/ini/dingo_txn_lsm.ini");
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {

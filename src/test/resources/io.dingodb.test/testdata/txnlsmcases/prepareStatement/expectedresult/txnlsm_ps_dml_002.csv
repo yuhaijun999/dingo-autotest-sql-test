@@ -1,0 +1,30 @@
+3
+id,name,age,is_delete
+1,zhangsan,18,true
+3,l3,55,false
+4,HAHA,57,true
+5,awJDs,1,true
+6,123,544,true
+7,yamaha,76,false
+8,zhangsan,18,true
+9,op ,76,true
+10,lisi,256,false
+11,  aB c  dE ,61,false
+12, abcdef,2,true
+13,HAHA,57,false
+14,zhngsna,99,true
+15,1.5,18,true
+16, ,82,false
+17,,0,true
+18,tTATtt,181,false
+19,777,77,false
+20,null,null,null
+21,Z,76,false
+23,HAHA,57,false
+24, ,82,false
+25,zhangsan,-18,true
+26,R,-1,true
+27,L3,null,false
+28,HAHA,57,false
+29,lisi,100,false
+30,yamaha,76,false

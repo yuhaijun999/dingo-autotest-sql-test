@@ -5,4 +5,4 @@ CREATE TABLE $table (
     amount double,
     update_time timestamp,
     primary key(update_time, id)
-) partition by range values (1990-07-07 08:30:00),(2010-10-01 14:00:00) with (propKey=propValue)
+) ENGINE=LSM partition by range values (1990-07-07 08:30:00),(2010-10-01 14:00:00) with (propKey=propValue)

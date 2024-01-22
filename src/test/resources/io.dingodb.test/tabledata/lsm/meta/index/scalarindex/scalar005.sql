@@ -11,6 +11,6 @@ CREATE TABLE $table (
     update_time TIMESTAMP,
     zip_code varchar(20),
     is_delete boolean,
-    index price_index (price),
+    index price_index (price) ENGINE=LSM,
     PRIMARY KEY (id)
-)
+) ENGINE=LSM

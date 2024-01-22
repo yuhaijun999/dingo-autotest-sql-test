@@ -4,4 +4,4 @@ CREATE TABLE $table (
     age int,
     amount DOUBLE,
     PRIMARY KEY (id)
-) auto_increment=100
+) ENGINE=LSM auto_increment=100

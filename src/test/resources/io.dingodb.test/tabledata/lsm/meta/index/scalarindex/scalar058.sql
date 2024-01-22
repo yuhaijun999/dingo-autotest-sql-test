@@ -11,6 +11,6 @@ CREATE TABLE $table(
     update_time TIMESTAMP,
     zip_code varchar(20),
     is_delete BOOLEAN,
-    INDEX age_index (age),
+    INDEX age_index (age) ENGINE=LSM,
     PRIMARY KEY (id)
-) partition by range values (5),(10),(20),(30)
+) ENGINE=LSM partition by range values (5),(10),(20),(30)
