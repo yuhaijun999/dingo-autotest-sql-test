@@ -96,7 +96,11 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                 String tableName = "";
                 if (!schemaList.get(i).contains("_")) {
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                    if (param.get("TestID").contains("btree")) {
+                    if (param.get("TestID").contains("txnlsm")) {
+                        mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    } else if (param.get("TestID").contains("txnbt")) {
+                        mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    } else if (param.get("TestID").contains("btree")) {
                         mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else {
                         mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
@@ -104,7 +108,11 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
-                    if (param.get("TestID").contains("btree")) {
+                    if (param.get("TestID").contains("txnlsm")) {
+                        mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("TableSchema",schemaName)), tableName);
+                    } else if (param.get("TestID").contains("txnbt")) {
+                        mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
+                    } else if (param.get("TestID").contains("btree")) {
                         mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else {
                         mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
@@ -123,7 +131,11 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                     String tableName = "";
                     if (!schemaList.get(j).trim().contains("_")) {
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaList.get(j).trim();
-                        if (param.get("TestID").contains("btree")) {
+                        if (param.get("TestID").contains("txnlsm")) {
+                            mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("txnbt")) {
+                            mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("btree")) {
                             mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
                         } else {
                             mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);
@@ -131,7 +143,11 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                     } else {
                         String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaName;
-                        if (param.get("TestID").contains("btree")) {
+                        if (param.get("TestID").contains("txnlsm")) {
+                            mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("txnbt")) {
+                            mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("btree")) {
                             mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("DDLValues", value_List.get(j).trim())), tableName);
                         } else {
                             mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("DDLValues", value_List.get(j).trim())), tableName);

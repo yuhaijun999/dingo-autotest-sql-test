@@ -1,0 +1,23 @@
+gid,name,boyfriend_id,bid,boyName
+9,Shuange,9,1,Zhang Wuji
+9,Shuange,9,2,Han Han
+9,Shuange,9,3,Xiao Ming
+9,Shuange,9,4,DuanYU
+9,Shuange,9,5,Zhang Fei
+9,Shuange,9,6,Panda
+10,Wang Yuyan,4,1,Zhang Wuji
+10,Wang Yuyan,4,2,Han Han
+10,Wang Yuyan,4,3,Xiao Ming
+10,Wang Yuyan,4,5,Zhang Fei
+10,Wang Yuyan,4,6,Panda
+11,Xia Xue,9,1,Zhang Wuji
+11,Xia Xue,9,2,Han Han
+11,Xia Xue,9,3,Xiao Ming
+11,Xia Xue,9,4,DuanYU
+11,Xia Xue,9,5,Zhang Fei
+11,Xia Xue,9,6,Panda
+12,Zhao Min,1,2,Han Han
+12,Zhao Min,1,3,Xiao Ming
+12,Zhao Min,1,4,DuanYU
+12,Zhao Min,1,5,Zhang Fei
+12,Zhao Min,1,6,Panda

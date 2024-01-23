@@ -84,9 +84,9 @@ public class BaseDataHelper {
         
         List<Object[]> cases_merge = Lists.newArrayList();
         cases_merge.addAll(Arrays.asList(cases_lsm));
-//        cases_merge.addAll(Arrays.asList(cases_txnlsm));
+        cases_merge.addAll(Arrays.asList(cases_txnlsm));
         cases_merge.addAll(Arrays.asList(cases_btree));
-//        cases_merge.addAll(Arrays.asList(cases_txnbtree));
+        cases_merge.addAll(Arrays.asList(cases_txnbtree));
         return cases_merge.toArray(new Object[cases_merge.size()][]);
     }
 

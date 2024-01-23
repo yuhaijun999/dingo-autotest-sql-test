@@ -123,7 +123,7 @@ public class YamlDataHelper extends BaseDataHelper{
         return getMultiEngineCasesData(excelPathLSM, excelPathTXNLSM, excelPathBTREE, excelPathTXNBTREE);
     }
 
-    @DataProvider (name = "psDMLData", parallel = true)
+    @DataProvider (name = "psDMLData", parallel = false)
     public Object[][] psDMLCases() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/cases/prepareStatement/sql_ps_dml_cases.xlsx";
         String excelPathTXNLSM = "src/test/resources/io.dingodb.test/testdata/txnlsmcases/prepareStatement/sql_ps_dml_cases_txnlsm.xlsx";

@@ -1,0 +1,6 @@
+id,name,age,amount,birthday,is_delete
+1,zhangsan,10,2.58,1998-04-06,true
+3,haha,20,null,2022-03-04,false
+5,lw,0,-98.19,2010-10-01,true
+7,lolo,35,56.0,1949-01-01,false
+9,,2568,2568.0,2021-03-04,false

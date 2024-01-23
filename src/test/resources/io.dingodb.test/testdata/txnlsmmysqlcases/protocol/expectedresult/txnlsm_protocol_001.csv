@@ -1,0 +1,2 @@
+Table&Create Table
+txnlsm_protocol_001&create table txnlsm_protocol_001(id int auto_increment, name varchar(32) not null, age int, amount double, write_date date, primary key(id,write_date)) engine=TXN_LSM ttl=7200 partition by range values (100000, '1995-01-01'),(10000000,'2010-07-01'),(100000000,'2022-09-30') with (propKey=propValue)

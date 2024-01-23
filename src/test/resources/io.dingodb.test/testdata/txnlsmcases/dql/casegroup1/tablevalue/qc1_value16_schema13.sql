@@ -1,4 +1,0 @@
-insert into $table values
-(1, 'Learn PHP', 'John Poul', '2007-05-24'),
-(2, 'Learn MySQL', 'Abdul S', '2007-05-24'),
-(3, 'JAVA Tutorial', 'Sanjay', '2007-05-06')

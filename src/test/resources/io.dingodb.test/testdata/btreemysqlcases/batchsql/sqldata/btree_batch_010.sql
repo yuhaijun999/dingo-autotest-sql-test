@@ -1,6 +1,6 @@
 CREATE DATABASE IF NOT EXISTS myjarvex_btree;
 USE myjarvex_btree;
-DROP TABLE IF EXISTS myjarvex_btree.`CHAT_QU_DATA_BTREE_BTREE`;
+DROP TABLE IF EXISTS myjarvex_btree.`CHAT_QU_DATA_BTREE`;
 CREATE TABLE myjarvex_btree.`CHAT_QU_DATA_BTREE` (
 	user_id VARCHAR(255),
 	chat_se_id VARCHAR(255),

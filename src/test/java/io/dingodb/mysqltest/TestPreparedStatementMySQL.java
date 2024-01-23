@@ -89,7 +89,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                 String tableName = "";
                 if (!schemaList.get(i).trim().contains("_")) {
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                    if (param.get("TestID").contains("btree")) {
+                    if (param.get("TestID").contains("txnlsm")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    } else if (param.get("TestID").contains("txnbt")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    } else if (param.get("TestID").contains("btree")) {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
@@ -97,7 +101,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
-                    if (param.get("TestID").contains("btree")) {
+                    if (param.get("TestID").contains("txnlsm")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("TableSchema",schemaName)), tableName);
+                    } else if (param.get("TestID").contains("txnbt")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
+                    } else if (param.get("TestID").contains("btree")) {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
@@ -117,7 +125,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                         String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaName;
                     }
-                    if (param.get("TestID").contains("btree")) {
+                    if (param.get("TestID").contains("txnlsm")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("PSValues", value_List.get(j).trim())), tableName);
+                    } else if (param.get("TestID").contains("txnbt")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
+                    } else if (param.get("TestID").contains("btree")) {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
                     } else {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
@@ -170,7 +182,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                 String tableName = "";
                 if (!schemaList.get(i).trim().contains("_")) {
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                    if (param.get("TestID").contains("btree")) {
+                    if (param.get("TestID").contains("txnlsm")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    } else if (param.get("TestID").contains("txnbt")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    } else if (param.get("TestID").contains("btree")) {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
@@ -178,7 +194,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
-                    if (param.get("TestID").contains("btree")) {
+                    if (param.get("TestID").contains("txnlsm")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("TableSchema",schemaName)), tableName);
+                    } else if (param.get("TestID").contains("txnbt")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
+                    } else if (param.get("TestID").contains("btree")) {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
@@ -199,7 +219,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                         String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaName;
                     }
-                    if (param.get("TestID").contains("btree")) {
+                    if (param.get("TestID").contains("txnlsm")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("PSValues", value_List.get(j).trim())), tableName);
+                    } else if (param.get("TestID").contains("txnbt")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
+                    } else if (param.get("TestID").contains("btree")) {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
                     } else {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
@@ -269,7 +293,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                 String tableName = "";
                 if (!schemaList.get(i).trim().contains("_")) {
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
-                    if (param.get("TestID").contains("btree")) {
+                    if (param.get("TestID").contains("txnlsm")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    } else if (param.get("TestID").contains("txnbt")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    } else if (param.get("TestID").contains("btree")) {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
@@ -277,7 +305,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
-                    if (param.get("TestID").contains("btree")) {
+                    if (param.get("TestID").contains("txnlsm")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("TableSchema",schemaName)), tableName);
+                    } else if (param.get("TestID").contains("txnbt")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
+                    } else if (param.get("TestID").contains("btree")) {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
@@ -303,7 +335,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                         String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + j + schemaName;
                     }
-                    if (param.get("TestID").contains("btree")) {
+                    if (param.get("TestID").contains("txnlsm")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("PSValues", value_List.get(j).trim())), tableName);
+                    } else if (param.get("TestID").contains("txnbt")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
+                    } else if (param.get("TestID").contains("btree")) {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("PSValues", value_List.get(j).trim())), tableName);
                     } else {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("PSValues", value_List.get(j).trim())), tableName);
@@ -388,7 +424,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                     } else {
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
                     }
-                    if (param.get("TestID").contains("btree")) {
+                    if (param.get("TestID").contains("txnlsm")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    } else if (param.get("TestID").contains("txnbt")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                    } else if (param.get("TestID").contains("btree")) {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
@@ -400,7 +440,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
                     } else {
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
                     }
-                    if (param.get("TestID").contains("btree")) {
+                    if (param.get("TestID").contains("txnlsm")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("TableSchema",schemaName)), tableName);
+                    } else if (param.get("TestID").contains("txnbt")) {
+                        mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
+                    } else if (param.get("TestID").contains("btree")) {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else {
                         mySQLHelperDruid.execFile(TestPreparedStatementMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReader.getValue("TableSchema",schemaName)), tableName);
@@ -415,7 +459,11 @@ public class TestPreparedStatementMySQL extends BaseTestSuiteMySQL {
         
         if (param.get("Blob_resource").trim().length() > 0) {
             String blobResource = null;
-            if (param.get("TestID").contains("btree")) {
+            if (param.get("TestID").contains("txnlsm")) {
+                blobResource = mysqlIniReaderTXNLSM.getValue("PSValues", param.get("Blob_resource"));
+            } else if (param.get("TestID").contains("txnbt")) {
+                blobResource = mysqlIniReaderTXNBTREE.getValue("PSValues", param.get("Blob_resource"));
+            } else if (param.get("TestID").contains("btree")) {
                 blobResource = mysqlIniReaderBTREE.getValue("PSValues", param.get("Blob_resource"));
             } else {
                 blobResource = mysqlIniReader.getValue("PSValues", param.get("Blob_resource"));

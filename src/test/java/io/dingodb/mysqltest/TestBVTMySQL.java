@@ -17,9 +17,12 @@
 package io.dingodb.mysqltest;
 
 import io.dingodb.common.utils.DruidUtilsMySQL;
+import listener.DetailReporterListener;
+import listener.EmailableReporterListener;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -33,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Listeners({EmailableReporterListener.class, DetailReporterListener.class})
 public class TestBVTMySQL extends BaseTestSuiteMySQL {
     public static Connection myConnection;
     public static String tableName = "mysqlbvttest";
