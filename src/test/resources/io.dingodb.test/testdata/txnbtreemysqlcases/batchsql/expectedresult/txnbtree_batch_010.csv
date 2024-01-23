@@ -1,0 +1,4 @@
+pid,rid,rname,type,key,code,oname,rel_id
+68,68,编辑用户,element,user_edit,view,查看按钮,null
+66,66,用户管理,element,user_manage,view,查看按钮,null
+67,67,新增用户,element,user_create,view,查看按钮,null

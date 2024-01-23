@@ -28,7 +28,9 @@ import java.sql.SQLException;
 
 public class BaseTestSuiteMySQL {
     public static IniReader mysqlIniReader;
+    public static IniReader mysqlIniReaderTXNLSM;
     public static IniReader mysqlIniReaderBTREE;
+    public static IniReader mysqlIniReaderTXNBTREE;
     @BeforeSuite(alwaysRun = true, enabled = true, description = "所有测试开始前的准备工作")
     public static void beforeSuite() throws SQLException {
         System.out.println("所有测试开始前，验证MySQL JDBC数据库连接正常");
@@ -38,7 +40,9 @@ public class BaseTestSuiteMySQL {
             connection = DruidUtilsMySQL.getDruidMySQLConnection();
             Assert.assertNotNull(connection);
             mysqlIniReader = new IniReader("src/test/resources/io.dingodb.test/ini/mysql_lsm.ini");
+            mysqlIniReaderTXNLSM = new IniReader("src/test/resources/io.dingodb.test/ini/mysql_txn_lsm.ini");
             mysqlIniReaderBTREE = new IniReader("src/test/resources/io.dingodb.test/ini/mysql_btree.ini");
+            mysqlIniReaderTXNBTREE = new IniReader("src/test/resources/io.dingodb.test/ini/mysql_txn_btree.ini");
 //            statement = connection.createStatement();
 //            statement.execute("set global connect_timeout=1200");
         } catch (IOException e) {

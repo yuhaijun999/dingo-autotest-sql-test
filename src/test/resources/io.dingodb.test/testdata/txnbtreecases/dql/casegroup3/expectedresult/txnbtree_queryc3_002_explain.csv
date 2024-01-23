@@ -1,2 +1,2 @@
 DingoTableScan
-"type" : "scan"
+"type" : "txnScan"

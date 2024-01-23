@@ -1,6 +1,0 @@
-insert into $table values
-('mahran', 20),
-('Jen', null),
-('Gill', 20),
-('John Poul', 1),
-('Sanjay', 1)

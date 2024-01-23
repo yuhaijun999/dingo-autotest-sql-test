@@ -28,7 +28,7 @@ import java.util.List;
 public class RenameFile {
     public static List<String> fileList = new ArrayList<>();
     public static void main(String[] args) {
-        File folder = new File("src/test/resources/io.dingodb.test/testdata/txnlsmcases/prepareStatement/expectedresult/");
+        File folder = new File("src/test/resources/io.dingodb.test/testdata/txnlsmmysqlcases/protocol/expectedresult/");
         traverseFolder(folder);
 //        traverseFolderFirstDepth(folder);
         System.out.println(fileList.size());

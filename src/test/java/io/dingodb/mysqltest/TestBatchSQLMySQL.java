@@ -98,7 +98,13 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
         String querySql1 = param.get("Query_sql1");
         String querySql2 = param.get("Query_sql2");
         for ( int i = 0; i < 1; i++) {
-            if (param.get("TestID").contains("btree")) {
+            if (param.get("TestID").contains("txnlsm")) {
+                mySQLHelperDruid.execFile(TestBatchSQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("BatchSQLOp",
+                        param.get("Batch_sql"))), "mysql_" + tableList.get(i).trim());
+            } else if (param.get("TestID").contains("txnbt")) {
+                mySQLHelperDruid.execFile(TestBatchSQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNBTREE.getValue("BatchSQLOp",
+                        param.get("Batch_sql"))), "mysql_" + tableList.get(i).trim());
+            } else if (param.get("TestID").contains("btree")) {
                 mySQLHelperDruid.execFile(TestBatchSQLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderBTREE.getValue("BatchSQLOp",
                         param.get("Batch_sql"))), "mysql_" + tableList.get(i).trim());
             } else {
