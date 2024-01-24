@@ -1,5 +1,5 @@
 Variable_name&Value
-character_set_connection&utf8
-character_set_results&utf8
-character_set_client&utf8
+character_set_connection&gbk
+character_set_results&gbk
+character_set_client&gbk
 character_set_server&utf8
