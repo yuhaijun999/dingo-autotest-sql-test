@@ -82,18 +82,13 @@ public class TestProtocolMySQL extends BaseTestSuiteMySQL {
         }
         List<String> tableList = new ArrayList<>();
         List<String> userList = new ArrayList<>();
-
-        String operationSql = param.get("Op_sql");
-        if (operationSql.length()>0) {
-            mySQLHelperDruid.execSql(operationSql);
-        }
         
         if (param.get("Table_used").trim().length() > 0) {
             String tableUsed = param.get("Table_used");
             mySQLHelperDruid.doDropTable(tableUsed);
             tableList.add(tableUsed);
-        } 
-        
+        }
+
         if (param.get("User_used").trim().length() > 0) {
             String userName;
             userName = param.get("User_used").trim();
@@ -104,7 +99,12 @@ public class TestProtocolMySQL extends BaseTestSuiteMySQL {
             }
 //            mySQLHelperDruid.doDropUser(userName);
             userList.add(userName);
-        } 
+        }
+
+        String operationSql = param.get("Op_sql");
+        if (operationSql.length()>0) {
+            mySQLHelperDruid.execSql(operationSql);
+        }
 
         createTableSet.addAll(tableList);
         createUserSet.addAll(userList);
