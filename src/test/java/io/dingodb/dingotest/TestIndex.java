@@ -86,6 +86,7 @@ public class TestIndex extends BaseTestSuite {
                         tableList.add(tableName);
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
+                        dingoHelperDruid.doDropTable(tableName);
                         if (param.get("TestID").contains("txnlsm")) {
                             dingoHelperDruid.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                         } else if (param.get("TestID").contains("txnbt")) {
@@ -106,6 +107,7 @@ public class TestIndex extends BaseTestSuite {
                         tableList.add(tableName);
                     } else {
                         tableName = param.get("TestID").trim() + "_0" + i + schemaName;
+                        dingoHelperDruid.doDropTable(tableName);
                         if (param.get("TestID").contains("txnlsm")) {
                             dingoHelperDruid.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("TableSchema",schemaName)), tableName);
                         } else if (param.get("TestID").contains("txnbt")) {

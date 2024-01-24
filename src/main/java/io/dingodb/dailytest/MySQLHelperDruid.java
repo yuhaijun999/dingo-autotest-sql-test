@@ -633,6 +633,19 @@ public class MySQLHelperDruid {
         }
     }
 
+    public void doDropUser(String userName) throws SQLException {
+        Connection connection = null;
+        Statement statement = null;
+        try {
+            connection = DruidUtilsMySQL.getDruidMySQLConnection();
+            statement = connection.createStatement();
+            String sql = "drop user if exists " + userName;
+            statement.execute(sql);
+        } finally {
+            DruidUtilsMySQL.closeResource(connection, null, statement);
+        }
+    }
+
     //通过指定列索引查询表数据, 返回List<List<String>>,包含输出表头
     public List<List<String>> statementQueryWithSpecifiedColIndex(String sql, List<Integer> colIndexList) throws SQLException {
         Connection connection = null;

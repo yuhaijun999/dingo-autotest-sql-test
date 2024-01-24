@@ -17,6 +17,7 @@
 package io.dingodb.mysqltest;
 
 import io.dingodb.common.utils.DruidUtilsMySQL;
+import io.dingodb.dailytest.MySQLHelperDruid;
 import listener.DetailReporterListener;
 import listener.EmailableReporterListener;
 import org.testng.Assert;
@@ -38,6 +39,7 @@ import java.util.List;
 
 @Listeners({EmailableReporterListener.class, DetailReporterListener.class})
 public class TestBVTMySQL extends BaseTestSuiteMySQL {
+    private static MySQLHelperDruid mySQLHelperDruid;
     public static Connection myConnection;
     public static String tableName = "mysqlbvttest";
     public static String tableName2 = "autoIdStateTest1";
@@ -57,8 +59,12 @@ public class TestBVTMySQL extends BaseTestSuiteMySQL {
     
     @BeforeClass(alwaysRun = true, description = "测试开始前验证数据库连接")
     public static void setUpAll() throws SQLException {
+        mySQLHelperDruid = new MySQLHelperDruid();
         myConnection = DruidUtilsMySQL.getDruidMySQLConnection();
         Assert.assertNotNull(myConnection);
+        mySQLHelperDruid.doDropTable(tableName);
+        mySQLHelperDruid.doDropTable(tableName2);
+        mySQLHelperDruid.doDropTable(tableName3);
     }
 
     @AfterClass(alwaysRun = true, description = "测试结束后，关闭数据库连接资源")

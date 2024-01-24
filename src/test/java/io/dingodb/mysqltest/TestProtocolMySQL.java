@@ -90,6 +90,7 @@ public class TestProtocolMySQL extends BaseTestSuiteMySQL {
         
         if (param.get("Table_used").trim().length() > 0) {
             String tableUsed = param.get("Table_used");
+            mySQLHelperDruid.doDropTable(tableUsed);
             tableList.add(tableUsed);
         } 
         
@@ -101,6 +102,7 @@ public class TestProtocolMySQL extends BaseTestSuiteMySQL {
                 String hostStr = param.get("Host_used").trim();
                 userName = "'" + userStr + "'@'" + hostStr + "'";
             }
+//            mySQLHelperDruid.doDropUser(userName);
             userList.add(userName);
         } 
 

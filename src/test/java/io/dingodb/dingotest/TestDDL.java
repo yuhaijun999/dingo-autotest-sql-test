@@ -92,12 +92,12 @@ public class TestDDL extends BaseTestSuite{
         String ddlSql = param.get("Ddl_sql").trim();
         String querySql = param.get("Query_sql").trim();
         if (param.get("Table_schema_ref").trim().length() > 0) {
-//            List<String> tableList = new ArrayList<>();
             List<String> schemaList = CastUtils.construct1DListIncludeBlank(param.get("Table_schema_ref"),",");
             for (int i = 0; i < schemaList.size(); i++) {
                 String tableName = "";
                 if (!schemaList.get(i).contains("_")) {
                     tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
+                    dingoHelperDruid.doDropTable(tableName);
                     if (param.get("TestID").contains("txnlsm")) {
                         dingoHelperDruid.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else if (param.get("TestID").contains("txnbt")) {
@@ -110,6 +110,7 @@ public class TestDDL extends BaseTestSuite{
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = param.get("TestID").trim() + "_0" + i + schemaName;
+                    dingoHelperDruid.doDropTable(tableName);
                     if (param.get("TestID").contains("txnlsm")) {
                         dingoHelperDruid.execFile(TestDDL.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
                     } else if (param.get("TestID").contains("txnbt")) {

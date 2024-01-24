@@ -63,5 +63,5 @@ test {
     useTestNG() {
         suites(file('src/test/resources/testng/testng.xml'));
     }
-    reports.html.enabled = true
+//    reports.html.enabled = true
 }
