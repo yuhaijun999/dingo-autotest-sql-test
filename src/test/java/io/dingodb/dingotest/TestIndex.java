@@ -67,7 +67,198 @@ public class TestIndex extends BaseTestSuite {
     public void cleanUp() throws Exception {
     }
 
-    @Test(priority = 0, enabled = true, dataProvider = "indexData1", dataProviderClass = YamlDataHelper.class, description = "标量和向量索引测试")
+    @Test(priority = 0, enabled = true, dataProvider = "indexData0", dataProviderClass = YamlDataHelper.class, description = "标量和向量索引测试并发")
+    public void testIndex0(LinkedHashMap<String,String> param) throws SQLException, IOException, InterruptedException, ClassNotFoundException {
+        if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
+            throw new SkipException("skip this test case");
+        }
+
+        List<String> tableList = new ArrayList<>();
+        String sql = param.get("Sql_state").trim();
+        if (param.get("Table_schema_ref").trim().length() > 0) {
+            List<String> schemaList = CastUtils.construct1DListIncludeBlank(param.get("Table_schema_ref"),",");
+            for (int i = 0; i < schemaList.size(); i++) {
+                String tableName = "";
+                if (!schemaList.get(i).trim().contains("_")) {
+                    if (param.get("Case_table_dependency").trim().length() > 0) {
+                        tableName = param.get("Case_table_dependency").trim() + "_0" + i + schemaList.get(i).trim();
+                        sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
+                        tableList.add(tableName);
+                    } else {
+                        tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
+                        dingoHelperDruid.doDropTable(tableName);
+                        if (param.get("TestID").contains("txnlsm")) {
+                            dingoHelperDruid.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        } else if (param.get("TestID").contains("txnbt")) {
+                            dingoHelperDruid.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        } else if (param.get("TestID").contains("btree")) {
+                            dingoHelperDruid.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        } else {
+                            dingoHelperDruid.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaList.get(i).trim())), tableName);
+                        }
+                        tableList.add(tableName);
+                        sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
+                    }
+                } else {
+                    String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
+                    if (param.get("Case_table_dependency").trim().length() > 0) {
+                        tableName = param.get("Case_table_dependency").trim() + "_0" + i + schemaName;
+                        sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
+                        tableList.add(tableName);
+                    } else {
+                        tableName = param.get("TestID").trim() + "_0" + i + schemaName;
+                        dingoHelperDruid.doDropTable(tableName);
+                        if (param.get("TestID").contains("txnlsm")) {
+                            dingoHelperDruid.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("TableSchema",schemaName)), tableName);
+                        } else if (param.get("TestID").contains("txnbt")) {
+                            dingoHelperDruid.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("TableSchema",schemaName)), tableName);
+                        } else if (param.get("TestID").contains("btree")) {
+                            dingoHelperDruid.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("TableSchema",schemaName)), tableName);
+                        } else {
+                            dingoHelperDruid.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReader.getValue("TableSchema",schemaName)), tableName);
+                        }
+                        tableList.add(tableName);
+                        sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
+                    }
+                }
+            }
+            createTableSet.addAll(tableList);
+            if (param.get("Case_table_dependency").trim().length() == 0) {
+                if (param.get("Table_value_ref").trim().length() > 0) {
+                    List<String> value_List = CastUtils.construct1DListIncludeBlank(param.get("Table_value_ref").trim(),",");
+                    for (int j = 0; j < value_List.size(); j++) {
+                        String tableName = "";
+                        if (!schemaList.get(j).trim().contains("_")) {
+                            tableName = param.get("TestID").trim() + "_0" + j + schemaList.get(j).trim();
+                        } else {
+                            String schemaName = schemaList.get(j).trim().substring(0,schemaList.get(j).trim().indexOf("_"));
+                            tableName = param.get("TestID").trim() + "_0" + j + schemaName;
+                        }
+
+                        if (param.get("TestID").contains("txnlsm")) {
+                            dingoHelperDruid.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("IndexValues", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("txnbt")) {
+                            dingoHelperDruid.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("IndexValues", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("btree")) {
+                            dingoHelperDruid.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("IndexValues", value_List.get(j).trim())), tableName);
+                        } else {
+                            dingoHelperDruid.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReader.getValue("IndexValues", value_List.get(j).trim())), tableName);
+                        }
+                    }
+                }
+            }
+            if (param.get("Case_table_dependency").trim().length() > 0) {
+                if (param.get("Table_value_ref").trim().length() > 0) {
+                    List<String> value_List = CastUtils.construct1DListIncludeBlank(param.get("Table_value_ref").trim(),",");
+                    for (int j = 0; j < value_List.size(); j++) {
+                        String tableName = param.get("Case_table_dependency").trim() + "_0" + j + schemaList.get(j).trim();
+                        if (param.get("TestID").contains("txnlsm")) {
+                            dingoHelperDruid.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("IndexValues", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("txnbt")) {
+                            dingoHelperDruid.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReaderTXNBTREE.getValue("IndexValues", value_List.get(j).trim())), tableName);
+                        } else if (param.get("TestID").contains("btree")) {
+                            dingoHelperDruid.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReaderBTREE.getValue("IndexValues", value_List.get(j).trim())), tableName);
+                        } else {
+                            dingoHelperDruid.execFile(TestIndex.class.getClassLoader().getResourceAsStream(iniReader.getValue("IndexValues", value_List.get(j).trim())), tableName);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (param.get("Validation_type").equals("csv_equals")) {
+            String resultFile = param.get("Expected_result").trim();
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+            }
+            System.out.println("Expected: " + expectedResult);
+            List<List<String>> actualResult = dingoHelperDruid.statementQueryWithHead(sql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertEquals(actualResult, expectedResult);
+        } else if (param.get("Validation_type").equals("csv_containsAll")) {
+            String resultFile = param.get("Expected_result").trim();
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+            }
+            System.out.println("Expected: " + expectedResult);
+            List<List<String>> actualResult = dingoHelperDruid.statementQueryWithHead(sql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertTrue(actualResult.containsAll(expectedResult));
+            Assert.assertTrue(expectedResult.containsAll(actualResult));
+        } else if (param.get("Validation_type").equalsIgnoreCase("similarity")) {
+            String resultFile = param.get("Expected_result").trim();
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+            }
+            System.out.println("Expected: " + expectedResult);
+            List<List<String>> actualResult = dingoHelperDruid.statementQueryWithHead(sql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertTrue(assertSimilarity(actualResult, expectedResult, param.get("Sub_component")));
+        } else if (param.get("Validation_type").equalsIgnoreCase("similarityId")) {
+            String resultFile = param.get("Expected_result").trim();
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+            }
+            System.out.println("Expected: " + expectedResult);
+            List<List<String>> actualResult = dingoHelperDruid.statementQueryWithHead(sql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertTrue(assertSimilarityID(actualResult, expectedResult, param.get("Sub_component")));
+        } else if (param.get("Validation_type").equalsIgnoreCase("similarityDistance")) {
+            String resultFile = param.get("Expected_result").trim();
+            List<List<String>> expectedResult = new ArrayList<>();
+            if (!param.get("Component").equalsIgnoreCase("ComplexDataType")){
+                expectedResult = ParseCsv.splitCsvString(resultFile,",");
+            } else {
+                expectedResult = ParseCsv.splitCsvString(resultFile,"&");
+            }
+            System.out.println("Expected: " + expectedResult);
+            List<List<String>> actualResult = dingoHelperDruid.statementQueryWithHead(sql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertTrue(assertSimilarityDistance(actualResult, expectedResult, param.get("Sub_component")));
+        } else if (param.get("Validation_type").equals("string_equals")) {
+            String expectedResult = param.get("Expected_result");
+            System.out.println("Expected: " + expectedResult);
+            String actualResult = dingoHelperDruid.queryWithStrReturn(sql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertEquals(actualResult, expectedResult);
+        } else if (param.get("Validation_type").equals("double_equals")) {
+            Double expectedResult = Double.parseDouble(param.get("Expected_result"));
+            System.out.println("Expected: " + expectedResult);
+            Double actualResult = dingoHelperDruid.queryWithDoubleReturn(sql);
+            System.out.println("Actual: " + actualResult);
+            Assert.assertEquals(actualResult, expectedResult);
+        } else if (param.get("Validation_type").equals("assertNull")) {
+            Assert.assertNull(dingoHelperDruid.queryWithObjReturn(sql));
+        } else if (param.get("Validation_type").equals("justExec")) {
+            if (param.get("Component").equalsIgnoreCase("Explain")) {
+                Thread.sleep(330000);
+                dingoHelperDruid.execSql(sql);
+            } else {
+                dingoHelperDruid.execSql(sql);
+            }
+        }
+        if (tableList.size() > 0) {
+            if (param.get("Table_deletable").equalsIgnoreCase("yes")) {
+                for (String s : tableList) {
+                    dingoHelperDruid.doDropTable(s);
+                }
+            }
+        }
+    }
+
+    @Test(priority = 1, enabled = true, dataProvider = "indexData1", dataProviderClass = YamlDataHelper.class, description = "标量和向量索引测试")
     public void testIndex1(LinkedHashMap<String,String> param) throws SQLException, IOException, InterruptedException, ClassNotFoundException {
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
@@ -258,7 +449,7 @@ public class TestIndex extends BaseTestSuite {
         }
     }
 
-    @Test(priority = 1, enabled = true, dataProvider = "indexData2", dataProviderClass = YamlDataHelper.class, description = "标量和向量混合索引测试")
+    @Test(priority = 2, enabled = true, dataProvider = "indexData2", dataProviderClass = YamlDataHelper.class, description = "标量和向量混合索引测试")
     public void testIndex2(LinkedHashMap<String,String> param) throws SQLException, IOException, InterruptedException, ClassNotFoundException {
         if (param.get("Testable").trim().equals("n") || param.get("Testable").trim().equals("N")) {
             throw new SkipException("skip this test case");
