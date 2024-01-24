@@ -104,6 +104,15 @@ public class YamlDataHelper extends BaseDataHelper{
         return getMultiEngineCasesData(excelPathLSM, excelPathTXNLSM, excelPathBTREE, excelPathTXNBTREE);
     }
 
+    @DataProvider (name = "indexData0", parallel = true)
+    public Object[][] indexCases0() throws IOException, InterruptedException {
+        String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/cases/index/index_cases0.xlsx";
+        String excelPathTXNLSM = "src/test/resources/io.dingodb.test/testdata/txnlsmcases/index/index_cases0_txnlsm.xlsx";
+        String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreecases/index/index_cases0_btree.xlsx";
+        String excelPathTXNBTREE = "src/test/resources/io.dingodb.test/testdata/txnbtreecases/index/index_cases0_txnbtree.xlsx";
+        return getMultiEngineCasesData(excelPathLSM, excelPathTXNLSM, excelPathBTREE, excelPathTXNBTREE);
+    }
+
     @DataProvider (name = "indexData1", parallel = false)
     public Object[][] indexCases1() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/cases/index/index_cases1.xlsx";
@@ -131,7 +140,7 @@ public class YamlDataHelper extends BaseDataHelper{
         return getMultiEngineCasesData(excelPathLSM, excelPathTXNLSM, excelPathBTREE, excelPathTXNBTREE);
     }
 
-    @DataProvider (name = "psDMLData", parallel = false)
+    @DataProvider (name = "psDMLData", parallel = true)
     public Object[][] psDMLCases() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/cases/prepareStatement/sql_ps_dml_cases.xlsx";
         String excelPathTXNLSM = "src/test/resources/io.dingodb.test/testdata/txnlsmcases/prepareStatement/sql_ps_dml_cases_txnlsm.xlsx";

@@ -37,6 +37,7 @@ public class DruidUtilsDingo extends BaseJDBCUtils {
             InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("druid_dingo.properties");
             properties.load(inputStream);
             String defaultConnectIP = CommonArgs.getDefaultDingoClusterIP();
+//            String defaultConnectIP = "172.20.61.101";
             String port = CommonArgs.getDefaultExecutorPort();
             String jdbcUrl = "jdbc:dingo:thin:url=" + defaultConnectIP + ":" + port + "/" + SCHEMANAME + "?timeout=420";
             properties.setProperty("url", jdbcUrl);

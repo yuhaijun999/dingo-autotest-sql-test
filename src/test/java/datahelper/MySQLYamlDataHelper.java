@@ -114,7 +114,7 @@ public class MySQLYamlDataHelper extends BaseDataHelper{
         return getMultiEngineCasesData(excelPathLSM, excelPathTXNLSM, excelPathBTREE, excelPathTXNBTREE);
     }
 
-    @DataProvider (name = "mysqlPSDMLData", parallel = false)
+    @DataProvider (name = "mysqlPSDMLData", parallel = true)
     public Object[][] mysqlPSDMLCases() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/prepareStatement/mysql_ps_dml_cases.xlsx";
         String excelPathTXNLSM = "src/test/resources/io.dingodb.test/testdata/txnlsmmysqlcases/prepareStatement/mysql_ps_dml_cases_txnlsm.xlsx";
