@@ -89,11 +89,27 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
             throw new SkipException("skip this test case");
         }
         
+        List<String> tableList = CastUtils.construct1DListIncludeBlank(param.get("Table_name"),",");
+        if (tableList.size() > 0) {
+            for (String tbl : tableList) {
+                if (param.get("Sub_component").trim().equalsIgnoreCase("Schema")) {
+                    mySQLHelperDruid.doDropTable(tbl);
+                } else {
+                    mySQLHelperDruid.doDropTable("mysql_" + tbl);
+                }
+            }
+        }
+
         if ((param.get("Schema").trim().length() > 0)) {
             List<String> schemaList = CastUtils.construct1DListIncludeBlank(param.get("Schema"),",");
+            if (schemaList.size() > 0) {
+                for (String scm : schemaList) {
+                    mySQLHelperDruid.doDropSchema(scm);
+                }
+            }
             createSchemaSet.addAll(schemaList);
         }
-        List<String> tableList = CastUtils.construct1DListIncludeBlank(param.get("Table_name"),",");
+        
         createTableSet.addAll(tableList);
         String querySql1 = param.get("Query_sql1");
         String querySql2 = param.get("Query_sql2");
@@ -188,7 +204,6 @@ public class TestBatchSQLMySQL extends BaseTestSuiteMySQL {
                 } else {
                     mySQLHelperDruid.doDropTable("mysql_" + ts);
                 }
-                
             }
         }
     }

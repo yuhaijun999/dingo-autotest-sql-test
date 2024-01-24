@@ -96,6 +96,7 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                 String tableName = "";
                 if (!schemaList.get(i).contains("_")) {
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
+                    mySQLHelperDruid.doDropTable(tableName);
                     if (param.get("TestID").contains("txnlsm")) {
                         mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else if (param.get("TestID").contains("txnbt")) {
@@ -108,6 +109,7 @@ public class TestDDLMySQL extends BaseTestSuiteMySQL{
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
+                    mySQLHelperDruid.doDropTable(tableName);
                     if (param.get("TestID").contains("txnlsm")) {
                         mySQLHelperDruid.execFile(TestDDLMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("TableSchema",schemaName)), tableName);
                     } else if (param.get("TestID").contains("txnbt")) {

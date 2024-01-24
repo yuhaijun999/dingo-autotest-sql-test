@@ -87,6 +87,7 @@ public class TestPreparedStatement extends BaseTestSuite {
                 String tableName = "";
                 if (!schemaList.get(i).trim().contains("_")) {
                     tableName = param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
+                    dingoHelperDruid.doDropTable(tableName);
                     if (param.get("TestID").contains("txnlsm")) {
                         dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                     } else if (param.get("TestID").contains("txnbt")) {
@@ -100,6 +101,7 @@ public class TestPreparedStatement extends BaseTestSuite {
                 } else {
                     String schemaName = schemaList.get(i).trim().substring(0,schemaList.get(i).trim().indexOf("_"));
                     tableName = param.get("TestID").trim() + "_0" + i + schemaName;
+                    dingoHelperDruid.doDropTable(tableName);
                     if (param.get("TestID").contains("txnlsm")) {
                         dingoHelperDruid.execFile(TestPreparedStatement.class.getClassLoader().getResourceAsStream(iniReaderTXNLSM.getValue("TableSchema",schemaName)), tableName);
                     } else if (param.get("TestID").contains("txnbt")) {

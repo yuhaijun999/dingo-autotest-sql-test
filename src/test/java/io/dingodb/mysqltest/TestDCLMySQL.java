@@ -76,6 +76,13 @@ public class TestDCLMySQL extends BaseTestSuiteMySQL {
         String passStr = param.get("Pass_str");
         String hostStr = param.get("Host").trim();
         String createSql = param.get("Create_state");
+        String userStr;
+        if (hostStr.length() > 0) {
+            userStr = "'" + userName + "'@'" + hostStr + "'";
+        } else {
+            userStr = userName;
+        }
+//        mySQLHelperDruid.doDropUser(userStr);
         mySQLHelperDruid.execSql(createSql);
         String queryUser = param.get("Query_user");
         if (param.get("Validation_type").equals("csv_containsAll")) {
@@ -94,10 +101,12 @@ public class TestDCLMySQL extends BaseTestSuiteMySQL {
             connectionWithUser.close();
         }
         
-        if (hostStr.length() > 0) {
-            mySQLHelperDruid.execSql("drop user '" + userName + "'@'" + hostStr + "'");
-        } else {
-            mySQLHelperDruid.execSql("drop user '" + userName + "'");
-        }
+        mySQLHelperDruid.doDropUser(userStr);
+        
+//        if (hostStr.length() > 0) {
+//            mySQLHelperDruid.execSql("drop user '" + userName + "'@'" + hostStr + "'");
+//        } else {
+//            mySQLHelperDruid.execSql("drop user '" + userName + "'");
+//        }
     }
 }

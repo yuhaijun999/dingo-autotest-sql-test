@@ -21,7 +21,15 @@ import org.testng.annotations.DataProvider;
 import java.io.IOException;
 
 public class YamlDataHelper extends BaseDataHelper{
-    @DataProvider (name = "dqlData1", parallel = false)
+    @DataProvider (name = "dqlData0", parallel = true)
+    public Object[][] dqlCaseGroup0() throws IOException, InterruptedException {
+        String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/cases/dql/casegroup1/sql_dql_cases0.xlsx";
+        String excelPathTXNLSM = "src/test/resources/io.dingodb.test/testdata/txnlsmcases/dql/casegroup1/sql_dql_cases0_txnlsm.xlsx";
+        String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreecases/dql/casegroup1/sql_dql_cases0_btree.xlsx";
+        String excelPathTXNBTREE = "src/test/resources/io.dingodb.test/testdata/txnbtreecases/dql/casegroup1/sql_dql_cases0_txnbtree.xlsx";
+        return getMultiEngineCasesData(excelPathLSM, excelPathTXNLSM, excelPathBTREE, excelPathTXNBTREE);
+    }
+    @DataProvider (name = "dqlData1", parallel = true)
     public Object[][] dqlCaseGroup1() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/cases/dql/casegroup1/sql_dql_cases1.xlsx";
         String excelPathTXNLSM = "src/test/resources/io.dingodb.test/testdata/txnlsmcases/dql/casegroup1/sql_dql_cases1_txnlsm.xlsx";

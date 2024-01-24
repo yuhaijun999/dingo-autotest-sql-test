@@ -17,6 +17,7 @@
 package io.dingodb.dailytest;
 
 import io.dingodb.common.utils.DruidUtilsDingo;
+import io.dingodb.common.utils.DruidUtilsMySQL;
 import io.dingodb.common.utils.GetRandomValue;
 import org.apache.commons.io.IOUtils;
 
@@ -630,6 +631,18 @@ public class DingoHelperDruid {
             statement.execute(sql);
         } finally {
             DruidUtilsDingo.closeResource(connection, null, statement);
+        }
+    }
+    public void doDropUser(String userName) throws SQLException {
+        Connection connection = null;
+        Statement statement = null;
+        try {
+            connection = DruidUtilsDingo.getDruidDingoConnection();
+            statement = connection.createStatement();
+            String sql = "drop user if exists " + userName;
+            statement.execute(sql);
+        } finally {
+            DruidUtilsMySQL.closeResource(connection, null, statement);
         }
     }
 

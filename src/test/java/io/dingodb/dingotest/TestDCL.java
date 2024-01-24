@@ -41,12 +41,14 @@ import java.util.List;
 
 public class TestDCL extends BaseTestSuite {
     private static DingoHelperDruid dingoHelperDruid;
+    private static String tableName1 = "studentdc";
+    private static String tableName2 = "classesdc";
 
     @BeforeClass (alwaysRun = true)
     public static void setupAll() throws SQLException, ClassNotFoundException {
         dingoHelperDruid = new DingoHelperDruid();
         //权限测试类执行前，先创建若干表用于测试。
-        String createSql1 = "create table studentdc (\n" +
+        String createSql1 = "create table if not exists " + tableName1 + " (\n" +
                 "    sno varchar(6), \n" +
                 "    sname varchar(20), \n" +
                 "    sage int, \n" +
@@ -54,7 +56,7 @@ public class TestDCL extends BaseTestSuite {
                 "    class_no varchar(6), \n" +
                 "    primary key(sno)\n" +
                 ")";
-        String createSql2 = "create table classesdc (\n" +
+        String createSql2 = "create table if not exists " + tableName2 + " (\n" +
                 "    class_no varchar(6),\n" +
                 "    class_name varchar(12),\n" +
                 "    primary key(class_no)\n" +
@@ -74,6 +76,8 @@ public class TestDCL extends BaseTestSuite {
                 "('903','class1-3'),\n" +
                 "('904','class1-4'),\n" +
                 "('906','class1-6')";
+        dingoHelperDruid.doDropTable(tableName1);
+        dingoHelperDruid.doDropTable(tableName2);
         dingoHelperDruid.execSql(createSql1);
         dingoHelperDruid.execSql(createSql2);
         dingoHelperDruid.execSql(insertSql1);
@@ -82,8 +86,8 @@ public class TestDCL extends BaseTestSuite {
 
     @AfterClass (alwaysRun = true)
     public static void tearDownAll() throws SQLException, IOException, ClassNotFoundException {
-        dingoHelperDruid.doDropTable("studentdc");
-        dingoHelperDruid.doDropTable("classesdc");
+        dingoHelperDruid.doDropTable(tableName1);
+        dingoHelperDruid.doDropTable(tableName2);
     }
 
     @BeforeMethod (alwaysRun = true)
@@ -110,7 +114,7 @@ public class TestDCL extends BaseTestSuite {
         } else {
             userStr = userName;
         }
-        
+//        dingoHelperDruid.doDropUser(userStr);
         String createSql = param.get("Create_state");
         dingoHelperDruid.execSql(createSql);
         
@@ -229,7 +233,7 @@ public class TestDCL extends BaseTestSuite {
         }
         
         //测试完后，删除用户
-        dingoHelperDruid.execSql("drop user " + userStr);
+        dingoHelperDruid.doDropUser(userStr);
         
     }
 }

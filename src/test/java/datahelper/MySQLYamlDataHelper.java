@@ -21,8 +21,16 @@ import org.testng.annotations.DataProvider;
 import java.io.IOException;
 
 public class MySQLYamlDataHelper extends BaseDataHelper{
+    @DataProvider (name = "mysqlDQLData0", parallel = true)
+    public Object[][] mysqlDQLCaseGroup0() throws IOException, InterruptedException {
+        String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/dql/casegroup1/mysql_dql_cases0.xlsx";
+        String excelPathTXNLSM = "src/test/resources/io.dingodb.test/testdata/txnlsmmysqlcases/dql/casegroup1/mysql_dql_cases0_txnlsm.xlsx";
+        String excelPathBTREE = "src/test/resources/io.dingodb.test/testdata/btreemysqlcases/dql/casegroup1/mysql_dql_cases0_btree.xlsx";
+        String excelPathTXNBTREE = "src/test/resources/io.dingodb.test/testdata/txnbtreemysqlcases/dql/casegroup1/mysql_dql_cases0_txnbtree.xlsx";
+        return getMultiEngineCasesData(excelPathLSM, excelPathTXNLSM, excelPathBTREE, excelPathTXNBTREE);
+    }
 
-    @DataProvider (name = "mysqlDQLData1", parallel = false)
+    @DataProvider (name = "mysqlDQLData1", parallel = true)
     public Object[][] mysqlDQLCaseGroup1() throws IOException, InterruptedException {
         String excelPathLSM = "src/test/resources/io.dingodb.test/testdata/mysqlcases/dql/casegroup1/mysql_dql_cases1.xlsx";
         String excelPathTXNLSM = "src/test/resources/io.dingodb.test/testdata/txnlsmmysqlcases/dql/casegroup1/mysql_dql_cases1_txnlsm.xlsx";
@@ -31,7 +39,7 @@ public class MySQLYamlDataHelper extends BaseDataHelper{
         return getMultiEngineCasesData(excelPathLSM, excelPathTXNLSM, excelPathBTREE, excelPathTXNBTREE);
     }
 
-    @DataProvider (name = "mysqlDQLData2", parallel = false)
+    @DataProvider (name = "mysqlDQLData2", parallel = true)
     public Object[][] mysqlDQLCaseGroup2() throws IOException, InterruptedException {
         String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/dql/casegroup2/mysql_dql_cases2.xlsx";
         return getSingleEngineCasesData(excelPath);
@@ -64,7 +72,7 @@ public class MySQLYamlDataHelper extends BaseDataHelper{
         return getMultiEngineCasesData(excelPathLSM, excelPathTXNLSM, excelPathBTREE, excelPathTXNBTREE);
     }
 
-    @DataProvider (name = "mysqlDCLData", parallel = true)
+    @DataProvider (name = "mysqlDCLData", parallel = false)
     public Object[][] mysqlDCLCases() throws IOException, InterruptedException {
         String excelPath = "src/test/resources/io.dingodb.test/testdata/mysqlcases/dcl/mysql_dcl_cases.xlsx";
         return getSingleEngineCasesData(excelPath);

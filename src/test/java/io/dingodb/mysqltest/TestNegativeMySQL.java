@@ -94,6 +94,7 @@ public class TestNegativeMySQL extends BaseTestSuiteMySQL {
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
                     } else {
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaList.get(i).trim();
+                        mySQLHelperDruid.doDropTable(tableName);
                         if (param.get("TestID").contains("txnlsm")) {
                             mySQLHelperDruid.execFile(TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("TableSchema",schemaList.get(i).trim())), tableName);
                         } else if (param.get("TestID").contains("txnbt")) {
@@ -113,6 +114,7 @@ public class TestNegativeMySQL extends BaseTestSuiteMySQL {
                         sql = sql.replace("$" + schemaList.get(i).trim(), tableName);
                     } else {
                         tableName = "mysql" + param.get("TestID").trim() + "_0" + i + schemaName;
+                        mySQLHelperDruid.doDropTable(tableName);
                         if (param.get("TestID").contains("txnlsm")) {
                             mySQLHelperDruid.execFile(TestNegativeMySQL.class.getClassLoader().getResourceAsStream(mysqlIniReaderTXNLSM.getValue("TableSchema",schemaName)), tableName);
                         } else if (param.get("TestID").contains("txnbt")) {
