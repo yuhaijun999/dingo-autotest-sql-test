@@ -20,6 +20,7 @@
     <suite-files>
         <suite-file path="MySQLTest.xml"></suite-file>
         <suite-file path="DingoTest.xml"></suite-file>
+        <suite-file path="DingoIndexTest.xml"></suite-file>
     </suite-files>
     <listeners>
         <listener class-name="listener.EmailableReporterListener"/>
