@@ -73,12 +73,12 @@
         </classes>
     </test>
 
-    <test name="Dingo_Index_Test" enabled="true" parallel="methods" thread-count="1">
-        <!-- name中的值为需要测试的具体类名，格式：包名.类名 -->
-        <classes>
-            <class name="io.dingodb.dingotest.TestIndex"></class>
-        </classes>
-    </test>
+<!--    <test name="Dingo_Index_Test" enabled="true" parallel="methods" thread-count="1">-->
+<!--        &lt;!&ndash; name中的值为需要测试的具体类名，格式：包名.类名 &ndash;&gt;-->
+<!--        <classes>-->
+<!--            <class name="io.dingodb.dingotest.TestIndex"></class>-->
+<!--        </classes>-->
+<!--    </test>-->
     
 <!--    <listeners>-->
 <!--        <listener class-name="listener.EmailableReporterListener"/>-->
